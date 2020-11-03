@@ -5,16 +5,24 @@
     "test": "jest"
   },
   "dependencies": {
-    "svelte": "^3.24.0"
+    "d3-scale": "^3.2.3",
+    "d3-shape": "^2.0.0",
+    "lodash": "^4.17.20",
+    "svelte": "^3.29.0"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.12.1",
     "@snowpack/app-scripts-svelte": "^1.9.2",
+    "@snowpack/plugin-babel": "^2.1.4",
     "@snowpack/plugin-dotenv": "^2.0.4",
     "@snowpack/plugin-run-script": "^2.2.0",
     "@snowpack/plugin-svelte": "^3.2.0",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/svelte": "^3.0.0",
     "jest": "^26.2.2",
-    "snowpack": "^2.16.0"
+    "prettier": "^2.1.2",
+    "prettier-plugin-svelte": "^1.4.1",
+    "snowpack": "^2.16.0",
+    "typescript": "^4.0.5"
   }
 }
