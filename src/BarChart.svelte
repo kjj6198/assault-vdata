@@ -5,6 +5,7 @@
   import { stack, stackOrderDescending } from "d3-shape";
   import colors from "./utils/colors";
   import { createEventDispatcher } from "svelte";
+  export let selected = [];
   export let data = [];
   export let xTicks;
   export let yTicks;
@@ -61,6 +62,14 @@
       data: groupData,
     });
   }
+
+  function getSelected(selected, key) {
+    if (selected.length === 0) {
+      return null;
+    } else {
+      return selected.includes(key) ? null : "0.1";
+    }
+  }
 </script>
 
 <style>
@@ -101,6 +110,7 @@
       on:mouseleave={(e) => hideTooltip(e, groupData[key])}>
       {#each groupData[key] as d, i (i)}
         <rect
+          opacity={getSelected(selected, d.key)}
           y={yScale(key) - 15}
           x={padding.left + xScale(d[0])}
           fill={colors[d.key]}

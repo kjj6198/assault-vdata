@@ -3,10 +3,9 @@
   const dispatch = createEventDispatcher();
   export let years = [];
   export let initialYear = years[0];
-  let idx = 0;
+  
   let list;
-
-  idx = years.findIndex((y) => y === initialYear) || 0;
+  $: idx = years.findIndex((y) => y === initialYear) || 0;
 
   $: {
     dispatch("change", {
@@ -14,14 +13,6 @@
     });
   }
 
-  afterUpdate(() => {
-    if (list) {
-      const target = list.querySelector("[data-current=true]");
-      if (target) {
-        target.scrollIntoView({ inline: "center" });
-      }
-    }
-  });
 </script>
 
 <style>

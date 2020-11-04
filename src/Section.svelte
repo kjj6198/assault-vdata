@@ -1,14 +1,16 @@
 <script>
+  import LabelTitle from "./LabelTitle.svelte";
+
   export let num;
   export let title;
   export let description;
-  export let size = 'medium';
+  export let size = "medium";
 </script>
 
 <style>
   section {
     width: 95%;
-    margin: 0 auto;
+    margin: 4rem auto;
   }
 
   .small {
@@ -24,11 +26,10 @@
   }
 </style>
 
-<section class="{size}">
-  <span>議題 {num}</span>
-  <h2>{title}</h2>
-  
+<section class={size}>
+  <LabelTitle {title} id={title} type="anchor" />
+
   <p>{description}</p>
-  
-  <slot></slot>
+
+  <slot />
 </section>

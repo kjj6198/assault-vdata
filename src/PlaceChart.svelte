@@ -5,8 +5,10 @@
   export let data;
   export let xTicks;
   export let yTicks;
+  export let fillColor;
+  export let barHeight = 10;
   let width = 800;
-  let height = 700;
+  let height = 600;
 
   let padding = {
     left: 80,
@@ -26,6 +28,7 @@
 
 <style>
   text {
+    font-family: Oswald;
     font-size: 12px;
   }
   line {
@@ -43,8 +46,6 @@
   }
 </style>
 
-<h2>性侵害發生地點</h2>
-<p>性侵害事件通報統計當中發生地點</p>
 <SVG viewBox="0 0 {width * 1.08} {height * 1}">
   <g transform="translate({padding.left}, {height - padding.bottom})">
     {#each xTicks as tick, i (tick)}
@@ -68,9 +69,9 @@
       {#if k !== '年份'}
         <rect
           y={yScale(k) - 8}
-          fill="#27cc95"
+          fill={fillColor}
           x={padding.left}
-          height={10}
+          height={barHeight}
           width={xScale(+data[k].replace(',', '')) - padding.left} />
         <text y={yScale(k) + 1} x={5 + xScale(+data[k].replace(',', ''))}>
           {data[k]}

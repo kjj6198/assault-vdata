@@ -1,5 +1,5 @@
 <script>
-  import omit from "lodash/omit";
+  import BackgroundImage from "./BackgroundImage.svelte";
   import ByPlaceChart from "./ByPlaceChart.svelte";
   import CaseByCityChart from "./CaseByCityChart.svelte";
   import place from "./place";
@@ -7,30 +7,83 @@
   import RelationshipChart from "./RelationshipChart.svelte";
   import Section from "./Section.svelte";
   import SexualCaseMap from "./SexualCaseMap.svelte";
-  import YearSwitch from "./YearSwitch.svelte";
   let currentYear = 2018;
 
   $: data = place.find((p) => p["年份"] === currentYear.toString());
 </script>
 
 <style>
+  .App {
+    margin-right: 320px;
+  }
   .container {
     position: relative;
     max-width: 1080px;
     width: 90%;
     margin: 0 auto;
   }
+  .hero {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 
-  .block {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
+  .bannerTitle {
+    color: var(--main);
+    text-shadow: 3px 3px 0 0 var(--white);
+  }
+
+  .wrapper {
+    margin-bottom: 4rem;
+  }
+
+  .category {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 320px;
+    padding: 20px;
+    border: 3px solid #000;
+  }
+
+  .category .title {
+    color: var(--main);
+    font-weight: 500;
+  }
+
+  .list {
+    padding: 0;
+    list-style-position: inside;
+    color: var(--main);
+  }
+
+  .list > li:not(:last-child) {
+    margin-bottom: 40px;
+  }
+
+  .list > li {
+    font-size: 20px;
+    font-weight: 500;
+    list-style-type: decimal-leading-zero;
   }
 </style>
 
 <main class="App">
+  <div class="wrapper">
+    <BackgroundImage height="600px" imageURL="/background.jpg">
+      <div class="hero">
+        <h1 class="bannerTitle">台灣性侵害事件統計</h1>
+      </div>
+    </BackgroundImage>
+  </div>
+
   <Section
-    title="台灣性侵害事件統計"
+    title="性侵害發生地點"
     description="台灣有多少性侵害案件，其中又有哪些驚人的數據？我們一起來看看統計資料！"
     num={1}>
     <ByPlaceChart />
@@ -64,3 +117,13 @@
     <CaseByCityChart />
   </Section>
 </main>
+
+<aside class="category">
+  <h2 class="title">目錄</h2>
+  <ol class="list">
+    <li>性侵害發生地點</li>
+    <li>受害者年齡與兩造關係</li>
+    <li>台灣各大縣市案件數</li>
+    <li>性騷擾案件統計</li>
+  </ol>
+</aside>
