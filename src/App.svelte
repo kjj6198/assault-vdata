@@ -1,21 +1,12 @@
 <script>
   import BackgroundImage from "./BackgroundImage.svelte";
   import ByPlaceChart from "./ByPlaceChart.svelte";
-  import CaseByCityChart from "./CaseByCityChart.svelte";
-  import place from "./place";
-  import PlaceChart from "./PlaceChart.svelte";
   import RelationshipChart from "./RelationshipChart.svelte";
   import Section from "./Section.svelte";
   import SexualCaseMap from "./SexualCaseMap.svelte";
-  let currentYear = 2018;
-
-  $: data = place.find((p) => p["年份"] === currentYear.toString());
 </script>
 
 <style>
-  .App {
-    margin-right: 320px;
-  }
   .container {
     position: relative;
     max-width: 1080px;
@@ -39,41 +30,9 @@
   .wrapper {
     margin-bottom: 4rem;
   }
-
-  .category {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    height: 100%;
-    width: 320px;
-    padding: 20px;
-    border: 3px solid #000;
-  }
-
-  .category .title {
-    color: var(--main);
-    font-weight: 500;
-  }
-
-  .list {
-    padding: 0;
-    list-style-position: inside;
-    color: var(--main);
-  }
-
-  .list > li:not(:last-child) {
-    margin-bottom: 40px;
-  }
-
-  .list > li {
-    font-size: 20px;
-    font-weight: 500;
-    list-style-type: decimal-leading-zero;
-  }
 </style>
 
-<main class="App">
+<main>
   <div class="wrapper">
     <BackgroundImage height="600px" imageURL="/background.jpg">
       <div class="hero">
@@ -112,18 +71,4 @@
       從圖表上可發現，性侵害案件大多集中在直轄市，包含新北市、台中市、台南市、高雄市，其中以新北市居第一，下圖的統計圖表可查看更多。
     </p>
   </Section>
-
-  <Section num={4} title="縣市分析" description="Test">
-    <CaseByCityChart />
-  </Section>
 </main>
-
-<aside class="category">
-  <h2 class="title">目錄</h2>
-  <ol class="list">
-    <li>性侵害發生地點</li>
-    <li>受害者年齡與兩造關係</li>
-    <li>台灣各大縣市案件數</li>
-    <li>性騷擾案件統計</li>
-  </ol>
-</aside>
