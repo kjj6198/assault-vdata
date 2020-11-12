@@ -2,16 +2,19 @@
   import { flip } from "svelte/animate";
   import SVG from "./SVG.svelte";
   import { scaleLinear, scaleBand } from "d3-scale";
+  import chartConfig from "./store/chartConfig";
   export let data;
   export let xTicks;
   export let yTicks;
   export let fillColor;
   export let barHeight = 10;
-  let width = 800;
-  let height = 600;
+  $: config = $chartConfig.placeChart;
 
-  let padding = {
-    left: 80,
+  $: width = config.width;
+  $: height = config.height;
+
+  $: padding = {
+    left: config.padding,
     bottom: 10,
     top: 10,
     right: 10,
@@ -54,7 +57,11 @@
         <line y1="-15" y2="-100%" />
       </g>
     {/each}
-    <text y={-20} x={width - padding.left}>(通報件數)</text>
+    <text
+      y={-20}
+      x={width - padding.left - $chartConfig.placeChart.xTickTextOffset}>
+      (通報件數)
+    </text>
   </g>
   <g transform="translate(0, 0)">
     {#each yTicks as tick, i}

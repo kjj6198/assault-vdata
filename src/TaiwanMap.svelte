@@ -5,6 +5,7 @@
   import toPair from "./utils/toPair";
   import polygonCentroid from "./utils/centroid";
   import hover from "./utils/useHover";
+  import viewport from "./store/viewport";
   export let color;
   export let transform;
   let current = "";
@@ -75,7 +76,7 @@
   }
 </style>
 
-<SVG viewBox="0 0 280 266">
+<SVG viewBox="0 0 {$viewport === 'mobile' ? 180 : 280} 266">
   <g {transform} fill="none" fill-rule="evenodd">
     <g
       stroke="#fff"

@@ -63,6 +63,23 @@
     color: var(--white);
     background-color: var(--em3);
   }
+
+  @media screen and (max-width: 960px) {
+    table {
+      font-size: 14px;
+    }
+    thead th,
+    tbody td {
+      padding: 5px 5px;
+    }
+
+    .no {
+      font-size: 12px;
+      line-height: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
 </style>
 
 <table>

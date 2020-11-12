@@ -1,32 +1,45 @@
 <script>
   import omit from "lodash/omit";
-  import pick from "lodash/pick";
   import BarChart from "./BarChart.svelte";
-  import RankingTable from "./RankingTable.svelte";
   import relation from "./relation";
+  import RelationModel from "./models/relation";
   import Tooltip from "./Tooltip.svelte";
   import colors from "./utils/colors";
   import step from "./utils/step";
   import YearSwitch from "./YearSwitch.svelte";
+  import RankingTable from "./RankingTable.svelte";
+  import chartConfig from "./store/chartConfig";
+  import viewport from "./store/viewport";
   let currentYear = 2018;
 
   $: currentData = relation[currentYear + "年"].filter(
     (d) => d["年齡層"] !== "總計"
   );
 
+  $: model = new RelationModel(currentData);
+
   let selected = [];
   let tooltip = false;
   let tooltipData;
   let tooltipPosition;
+
+  const headers = [
+    { name: "兩造關係", accessor: (d) => d[0], align: "left", width: "30%" },
+    {
+      name: "案件數 （排除其他與不詳）",
+      accessor: (d) => d[1],
+      align: "right",
+      type: "number",
+    },
+    {
+      name: "比例",
+      accessor: (d) => (model.getProbabilityFor(d[0]) * 100).toFixed(2) + "%",
+      align: "right",
+    },
+  ];
 </script>
 
 <style>
-  .block {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-  }
-
   .container {
     position: relative;
   }
@@ -42,6 +55,13 @@
   }
   .active {
     color: var(--white);
+  }
+
+  .spacer {
+    padding: 0;
+    margin: 50px 0;
+    height: 0;
+    border: 0;
   }
 </style>
 
@@ -73,8 +93,14 @@
           tooltip = true;
           tooltipData = e.detail.data;
           const bbox = e.detail.target.getBoundingClientRect();
-          tooltipPosition = { x: bbox.width + 120, y: bbox.top - 150 };
+          if ($viewport === 'mobile') {
+            tooltipPosition = { x: bbox.width + 80, y: bbox.top - 100 };
+          } else {
+            tooltipPosition = { x: bbox.width + 120, y: bbox.top - 150 };
+          }
         }}
+        width={$chartConfig.relationChart.width}
+        height={$chartConfig.relationChart.height}
         on:hide={() => {
           tooltip = false;
         }}
@@ -86,5 +112,21 @@
     {#if tooltip}
       <Tooltip data={tooltipData} position={tooltipPosition} />
     {/if}
+  </div>
+</YearSwitch>
+
+<hr class="spacer" />
+
+<YearSwitch
+  initialYear={currentYear}
+  years={Object.keys(relation)
+    .map((k) => k.replace('年', ''))
+    .map(Number)}
+  on:change={(e) => (currentYear = e.detail.year)}>
+  <div slot="chart">
+    <RankingTable
+      caption="受害者與加害者關係 （{currentYear} 年）"
+      {headers}
+      data={model.getRanking().slice(0, 10)} />
   </div>
 </YearSwitch>

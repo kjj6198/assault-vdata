@@ -1,10 +1,10 @@
 <script>
   import omit from "lodash/omit";
-  import step from "./utils/step";
   import place from "./place";
   import PlaceChart from "./PlaceChart.svelte";
   import YearSwitch from "./YearSwitch.svelte";
   import RankingTable from "./RankingTable.svelte";
+  import chartConfig from "./store/chartConfig";
   let currentYear = 2018;
 
   $: data = place.find((p) => p["年份"] === currentYear.toString());
@@ -45,7 +45,7 @@
   fillColor="var(--main)"
   barHeight={10}
   yTicks={Object.keys(omit(place[0], ['年份']))}
-  xTicks={step(0, 4500, 400)}
+  xTicks={$chartConfig.placeChart.xTicks}
   {data} />
 <RankingTable
   caption={currentYear}

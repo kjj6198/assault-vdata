@@ -1,9 +1,9 @@
 <script>
-  import { createEventDispatcher, afterUpdate, onMount } from "svelte";
+  import { createEventDispatcher, afterUpdate, onMount, tick } from "svelte";
   const dispatch = createEventDispatcher();
   export let years = [];
   export let initialYear = years[0];
-  
+
   let list;
   $: idx = years.findIndex((y) => y === initialYear) || 0;
 
@@ -13,6 +13,26 @@
     });
   }
 
+  onMount(() => {
+    const target = list.querySelector("[data-current=true]");
+    if (target) {
+      list.scrollLeft = target.offsetLeft;
+    }
+  });
+
+  afterUpdate(() => {
+    const target = list.querySelector("[data-current=true]");
+    if (target) {
+      if (target.offsetLeft - target.offsetWidth < list.scrollLeft) {
+        list.scrollLeft = target.offsetLeft - target.offsetWidth;
+      } else if (
+        target.offsetLeft + target.offsetWidth / 2 >
+        list.scrollLeft + list.clientWidth
+      ) {
+        list.scrollLeft = target.offsetLeft + target.offsetWidth;
+      }
+    }
+  });
 </script>
 
 <style>
@@ -28,8 +48,12 @@
     color: #444;
     font-size: 1.5rem;
     cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+
+  @media screen and (max-width: 960px) {
+    .title {
+      font-size: 1rem;
+    }
   }
 
   .title:focus {
@@ -40,7 +64,7 @@
   .next {
     vertical-align: super;
     line-height: 30px;
-    color: #444;
+    color: var(--main);
     padding: 0;
     margin: 0;
     width: 30px;
@@ -51,13 +75,14 @@
   }
 
   .active {
-    color: #27cca5;
+    color: var(--em3);
   }
 
   .list {
     position: relative;
     display: inline-block;
-    width: 600px;
+    width: 80%;
+    max-width: 600px;
     white-space: nowrap;
     overflow-x: hidden;
   }
