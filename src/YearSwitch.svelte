@@ -36,7 +36,8 @@
 </script>
 
 <style>
-  .container {
+  .year-switch-container {
+    margin: 30px auto;
     text-align: center;
   }
 
@@ -88,7 +89,7 @@
   }
 </style>
 
-<div class="container">
+<div class="year-switch-container">
   <button
     class="prev"
     aria-label="上一年"
@@ -117,5 +118,5 @@
     }}>
     <span aria-hidden="true">&#x25B6;</span>
   </button>
-  <slot name="chart" />
 </div>
+<slot name="chart" />

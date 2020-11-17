@@ -2,6 +2,7 @@
   import { scaleLinear } from "d3-scale";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
+  import extent from "./utils/extent";
   import TaiwanMap from "./TaiwanMap.svelte";
   import YearSwitch from "./YearSwitch.svelte";
   import data from "./data";
@@ -19,11 +20,21 @@
   });
 
   $: colorScale = scaleLinear()
-    .domain([
-      Math.min(...currentData.map((d) => d["合計"])),
-      Math.max(...currentData.map((d) => d["合計"])),
-    ])
+    .domain(extent(currentData, (d) => d["合計"]))
     .range([93, 24]);
+
+  $: scaleLabel = [
+    0,
+    200,
+    400,
+    600,
+    800,
+    1000,
+    1200,
+    1400,
+    1600,
+    1800,
+  ].map((n) => [n, `hsl(214, 77%, ${Math.round(colorScale(n))}%)`]);
 
   function openTooltip(city) {
     currentCity = city;
@@ -40,6 +51,20 @@
   .btn-group {
     margin-bottom: 3em;
   }
+
+  .block {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+  }
+
+  .block > .scale {
+    position: absolute;
+    bottom: 100%;
+    left: -50%;
+    font-size: 0.6rem;
+  }
 </style>
 
 <div class="container">
@@ -55,6 +80,13 @@
             onClick={() => openTooltip(city)}>
             {city}
           </Button>
+        {/each}
+      </div>
+      <div class="scale-label">
+        {#each scaleLabel as label, idx (label[0])}
+          <span class="block" style="background-color: {label[1]}">
+            {#if idx % 3 === 0}<span class="scale"> {label[0]} </span>{/if}
+          </span>
         {/each}
       </div>
       {#key currentYear}

@@ -7,12 +7,6 @@
 </script>
 
 <style>
-  .container {
-    position: relative;
-    max-width: 1080px;
-    width: 90%;
-    margin: 0 auto;
-  }
   .hero {
     position: relative;
     height: 100%;

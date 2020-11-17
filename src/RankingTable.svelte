@@ -14,6 +14,7 @@
     table-layout: fixed;
     font-family: Oswald, "PingFang TC";
     border-collapse: collapse;
+    margin: 50px 0;
   }
 
   thead th {
