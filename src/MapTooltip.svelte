@@ -106,7 +106,11 @@
   <h4>性侵害通報案件數 ({data['年份']}年)</h4>
   <h3>{data['縣市']}</h3>
   <ul>
-    <li>男<br /><strong class="number">{Math.floor($male)}</strong> 人</li>
+    <li>
+      <img src="icons/male.svg" alt="" />
+      男<br /><strong class="number">{Math.floor($male)}</strong>
+      人
+    </li>
     <li>女<br /><strong class="number">{Math.floor($female)}</strong> 人</li>
   </ul>
 </div>
