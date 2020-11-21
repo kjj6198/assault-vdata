@@ -1,6 +1,7 @@
 <script>
   import BackgroundImage from "./BackgroundImage.svelte";
   import ByPlaceChart from "./ByPlaceChart.svelte";
+  import Footer from "./Footer.svelte";
   import GenderChart from "./GenderChart.svelte";
   import RelationshipChart from "./RelationshipChart.svelte";
   import Section from "./Section.svelte";
@@ -71,3 +72,5 @@
     <SexualCaseMap />
   </Section>
 </main>
+
+<Footer />

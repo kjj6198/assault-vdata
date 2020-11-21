@@ -16,6 +16,10 @@ html {
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+p {
+  line-height: 1.67;
+}
+
 *,
 *:before,
 *:after {

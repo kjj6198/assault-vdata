@@ -1,5 +1,7 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
+  import { fade } from "svelte/transition";
+  import Loading from "./Loading.svelte";
   const dispatch = createEventDispatcher();
   let loaded = false;
   let data;
@@ -24,5 +26,9 @@
 </script>
 
 {#if loaded}
-  <slot />
-{:else}<span>loading</span>{/if}
+  <div in:fade>
+    <slot />
+  </div>
+{:else}
+  <Loading height={400} />
+{/if}
