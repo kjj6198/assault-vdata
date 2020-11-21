@@ -90,6 +90,7 @@
 </style>
 
 <div class="year-switch-container">
+  <div hidden role="status">目前選擇的年份為: {years[idx]}年</div>
   <button
     class="prev"
     aria-label="上一年"

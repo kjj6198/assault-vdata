@@ -1,7 +1,7 @@
 <script>
   import omit from "lodash/omit";
   import BarChart from "./BarChart.svelte";
-  import relation from "./relation";
+
   import RelationModel from "./models/relation";
   import Tooltip from "./Tooltip.svelte";
   import colors from "./utils/colors";
@@ -10,11 +10,14 @@
   import RankingTable from "./RankingTable.svelte";
   import chartConfig from "./store/chartConfig";
   import viewport from "./store/viewport";
-  let currentYear = 2018;
+  import Api from "./API.svelte";
 
-  $: currentData = relation[currentYear + "年"].filter(
-    (d) => d["年齡層"] !== "總計"
-  );
+  let currentYear = 2018;
+  let relation = null;
+
+  $: currentData = relation
+    ? relation[currentYear + "年"].filter((d) => d["年齡層"] !== "總計")
+    : [];
 
   $: model = new RelationModel(currentData);
 
@@ -65,68 +68,76 @@
   }
 </style>
 
-<YearSwitch
-  initialYear={2018}
-  years={Object.keys(relation)
-    .map((k) => k.replace('年', ''))
-    .map(Number)}
-  on:change={(e) => (currentYear = e.detail.year)}>
-  <div class="container" slot="chart">
-    {#each Object.keys(omit(currentData[0], ['年齡層', '年份', '總計'])) as key}
-      <button
-        style="border-color: {colors[key]}; background-color: {selected.includes(key) ? colors[key] : '#ffffff'};"
-        class="capsule"
-        class:active={selected.includes(key)}
-        on:click={() => {
-          const idx = selected.findIndex((s) => s === key);
-          if (idx >= 0) {
-            selected = selected.filter((s) => s !== key);
-          } else {
-            selected = selected.concat([key]);
-          }
-        }}>{key}</button>
-    {/each}
-    {#key currentYear}
-      <BarChart
-        {selected}
-        on:show={(e) => {
-          tooltip = true;
-          tooltipData = e.detail.data;
-          const bbox = e.detail.target.getBoundingClientRect();
-          if ($viewport === 'mobile') {
-            tooltipPosition = { x: bbox.width + 80, y: bbox.top - 100 };
-          } else {
-            tooltipPosition = { x: bbox.width + 120, y: bbox.top - 150 };
-          }
-        }}
-        width={$chartConfig.relationChart.width}
-        height={$chartConfig.relationChart.height}
-        on:hide={() => {
-          tooltip = false;
-        }}
-        keys={Object.keys(omit(currentData[0], ['年齡層', '年份', '總計']))}
-        xTicks={step(0, 7000, 1000)}
-        yTicks={currentData.map((d) => d['年齡層'])}
-        data={currentData} />
-    {/key}
-    {#if tooltip}
-      <Tooltip data={tooltipData} position={tooltipPosition} />
-    {/if}
-  </div>
-</YearSwitch>
+<Api
+  api={() => fetch('https://vdata.kalan.dev/api/v1/data/sexual_assault/age_relation')}
+  on:loaded={(e) => (relation = e.detail.data)}>
+  <YearSwitch
+    initialYear={2018}
+    years={Object.keys(relation)
+      .map((k) => k.replace('年', ''))
+      .map(Number)}
+    on:change={(e) => (currentYear = e.detail.year)}>
+    <div class="container" slot="chart">
+      {#each Object.keys(omit(currentData[0], [
+          '年齡層',
+          '年份',
+          '總計',
+        ])) as key}
+        <button
+          style="border-color: {colors[key]}; background-color: {selected.includes(key) ? colors[key] : '#ffffff'};"
+          class="capsule"
+          class:active={selected.includes(key)}
+          on:click={() => {
+            const idx = selected.findIndex((s) => s === key);
+            if (idx >= 0) {
+              selected = selected.filter((s) => s !== key);
+            } else {
+              selected = selected.concat([key]);
+            }
+          }}>{key}</button>
+      {/each}
+      {#key currentYear}
+        <BarChart
+          {selected}
+          on:show={(e) => {
+            tooltip = true;
+            tooltipData = e.detail.data;
+            const bbox = e.detail.target.getBoundingClientRect();
+            if ($viewport === 'mobile') {
+              tooltipPosition = { x: bbox.width + 80, y: bbox.top - 100 };
+            } else {
+              tooltipPosition = { x: bbox.width + 120, y: bbox.top - 150 };
+            }
+          }}
+          width={$chartConfig.relationChart.width}
+          height={$chartConfig.relationChart.height}
+          on:hide={() => {
+            tooltip = false;
+          }}
+          keys={Object.keys(omit(currentData[0], ['年齡層', '年份', '總計']))}
+          xTicks={step(0, 7000, 1000)}
+          yTicks={currentData.map((d) => d['年齡層'])}
+          data={currentData} />
+      {/key}
+      {#if tooltip}
+        <Tooltip data={tooltipData} position={tooltipPosition} />
+      {/if}
+    </div>
+  </YearSwitch>
 
-<hr class="spacer" />
+  <hr class="spacer" />
 
-<YearSwitch
-  initialYear={currentYear}
-  years={Object.keys(relation)
-    .map((k) => k.replace('年', ''))
-    .map(Number)}
-  on:change={(e) => (currentYear = e.detail.year)}>
-  <div slot="chart">
-    <RankingTable
-      caption="受害者與加害者關係 （{currentYear} 年）"
-      {headers}
-      data={model.getRanking().slice(0, 10)} />
-  </div>
-</YearSwitch>
+  <YearSwitch
+    initialYear={currentYear}
+    years={Object.keys(relation)
+      .map((k) => k.replace('年', ''))
+      .map(Number)}
+    on:change={(e) => (currentYear = e.detail.year)}>
+    <div slot="chart">
+      <RankingTable
+        caption="受害者與加害者關係 （{currentYear} 年）"
+        {headers}
+        data={model.getRanking().slice(0, 10)} />
+    </div>
+  </YearSwitch>
+</Api>

@@ -1,6 +1,7 @@
 <script>
   import BackgroundImage from "./BackgroundImage.svelte";
   import ByPlaceChart from "./ByPlaceChart.svelte";
+  import GenderChart from "./GenderChart.svelte";
   import RelationshipChart from "./RelationshipChart.svelte";
   import Section from "./Section.svelte";
   import SexualCaseMap from "./SexualCaseMap.svelte";
@@ -36,6 +37,13 @@
   </div>
 
   <Section
+    title="性侵害案件統計"
+    description="台灣歷年性侵害案件統計與男女比例"
+    num={0}>
+    <GenderChart />
+  </Section>
+
+  <Section
     title="性侵害發生地點"
     description="台灣有多少性侵害案件，其中又有哪些驚人的數據？我們一起來看看統計資料！"
     num={1}>
@@ -61,8 +69,5 @@
     description="將性侵害案件用縣市作劃分，觀察性侵害案件的多寡。點擊地圖中的縣市區域查看詳細的性侵害案件統計。顏色越深代表案件數越多。"
     num={3}>
     <SexualCaseMap />
-    <p>
-      從圖表上可發現，性侵害案件大多集中在直轄市，包含新北市、台中市、台南市、高雄市，其中以新北市居第一，下圖的統計圖表可查看更多。
-    </p>
   </Section>
 </main>

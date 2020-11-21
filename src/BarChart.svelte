@@ -5,6 +5,7 @@
   import { stack, stackOrderDescending } from "d3-shape";
   import colors from "./utils/colors";
   import { createEventDispatcher } from "svelte";
+  import formatNumber from "./utils/formatNumber";
   export let selected = [];
   export let data = [];
   export let xTicks;
@@ -75,6 +76,7 @@
 <style>
   text {
     font-size: 12px;
+    font-family: Oswald;
   }
 
   line {
@@ -125,7 +127,7 @@
       <text
         x={xScale(+d['總計']) + padding.left + 10}
         y={yScale(d['年齡層']) + 4}>
-        {d['總計']}
+        {formatNumber(d['總計'])}
       </text>
     {/each}
   </g>
