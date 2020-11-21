@@ -2,7 +2,6 @@
   import { fade } from "svelte/transition";
   import YearSwitch from "./YearSwitch.svelte";
   import { tweened } from "svelte/motion";
-  export let probability = 0.5;
   export let total = 100;
   let currentYear = 2019;
   let data;
@@ -57,7 +56,7 @@
       display: block;
     }
     .inner {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(10, 7vw);
       grid-template-rows: initial;
     }
     .title {

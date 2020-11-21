@@ -21,6 +21,10 @@
   li {
     margin-bottom: 10px;
   }
+
+  a {
+    color: var(--main);
+  }
 </style>
 
 <footer>
@@ -31,6 +35,30 @@
       <li>
         資料來源：<a
           href="https://dep.mohw.gov.tw/dops/lp-1303-105-xCat-cat02.html">衛生福利部</a>
+      </li>
+      <li>
+        <div>
+          Cover image made by
+          <a
+            href="https://www.flaticon.com/authors/freepik"
+            title="Freepik">Freepik</a>
+          from
+          <a
+            href="https://www.flaticon.com/"
+            title="Flaticon">www.flaticon.com</a>
+        </div>
+      </li>
+      <li>
+        <div>
+          Icons made by
+          <a
+            href="https://www.flaticon.com/authors/iconixar"
+            title="iconixar">iconixar</a>
+          from
+          <a
+            href="https://www.flaticon.com/"
+            title="Flaticon">www.flaticon.com</a>
+        </div>
       </li>
     </ul>
   </div>
