@@ -28,7 +28,6 @@
     duration: 400,
     easing: cubicOut,
   });
-  $: console.log(currentData);
   $: colorScale =
     currentData.length > 0
       ? scaleLinear()
