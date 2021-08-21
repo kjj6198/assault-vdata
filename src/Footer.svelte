@@ -30,8 +30,8 @@
 <footer>
   <div class="container">
     <ul>
-      <li>資料整理、設計：@kalan</li>
-      <li>程式：@kalan</li>
+      <li>資料整理、設計：<a href="https://twitter.com/kalanyei">@kalan</a></li>
+      <li>程式：<a href="https://twitter.com/kalanyei">@kalan</a></li>
       <li>
         資料來源：<a
           href="https://dep.mohw.gov.tw/dops/lp-1303-105-xCat-cat02.html">衛生福利部</a>
