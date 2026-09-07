@@ -1,0 +1,20 @@
+{
+  "provider": "內政部國土測繪中心",
+  "source": "https://data.gov.tw/dataset/7442",
+  "redistribution": "https://github.com/dkaoster/taiwan-atlas",
+  "version": "2021.9.20",
+  "license": "政府資料開放授權條款第1版；Taiwan Atlas redistribution: MIT",
+  "note": "縣市名稱的台統一為臺；展示採 mercatorTw 離島內嵌投影，離島位置經移置，不用於測距。所有年度套用此縣市界線快照。",
+  "files": [
+    {
+      "file": "counties.topo.json",
+      "url": "https://cdn.jsdelivr.net/npm/taiwan-atlas@2021.9.20/counties-10t.json",
+      "sha256": "cd4be67df3c7497d3dd49106b17e6f337aeb2466140e4499287799892c15ac7b"
+    },
+    {
+      "file": "counties-mercator.topo.json",
+      "url": "https://cdn.jsdelivr.net/npm/taiwan-atlas@2021.9.20/counties-mercator-10t.json",
+      "sha256": "de257818a6e132486d7bfb6c0aefba4f92966afd934f58e27c9ef9f1dce68104"
+    }
+  ]
+}

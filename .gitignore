@@ -1,4 +1,9 @@
-.build
-build
-web_modules
-node_modules
+node_modules/
+.output/
+dist/
+.tanstack/
+.venv/
+__pycache__/
+.env*
+!.env.example
+artifacts/

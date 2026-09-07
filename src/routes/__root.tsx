@@ -1,0 +1,46 @@
+import { MotionConfig } from "motion/react";
+import { HeadContent, Scripts, Outlet, createRootRoute } from "@tanstack/react-router";
+import stylesheet from "../styles.css?url";
+export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      { charSet: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: "看見數字背後｜台灣性侵害統計" },
+      {
+        name: "description",
+        content: "從2008至2025年官方資料，認識台灣性侵害通報、被害人年齡、兩造關係與縣市分布。",
+      },
+    ],
+    links: [
+      { rel: "stylesheet", href: stylesheet },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  }),
+  component: () => (
+    <html lang="zh-Hant">
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <MotionConfig reducedMotion="user">
+          <Outlet />
+        </MotionConfig>
+        <Scripts />
+      </body>
+    </html>
+  ),
+  notFoundComponent: () => (
+    <main className="error-page">
+      <h1>找不到這個頁面</h1>
+      <a href="/">回到統計專題</a>
+    </main>
+  ),
+  errorComponent: ({ reset }) => (
+    <main className="error-page">
+      <h1>資料暫時無法載入</h1>
+      <p>請稍後再試。</p>
+      <button onClick={reset}>重新載入</button>
+    </main>
+  ),
+});

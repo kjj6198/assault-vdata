@@ -1,0 +1,158 @@
+{
+  "background": {
+    "css": "oklch(0.986 0.005 255)",
+    "hex": "#f8fbfe"
+  },
+  "foreground": {
+    "css": "oklch(0.25 0.028 255)",
+    "hex": "#18222f"
+  },
+  "card": {
+    "css": "oklch(0.994 0.001 255)",
+    "hex": "#fdfdfe"
+  },
+  "card-foreground": {
+    "css": "oklch(0.25 0.028 255)",
+    "hex": "#18222f"
+  },
+  "popover": {
+    "css": "oklch(0.994 0.001 255)",
+    "hex": "#fdfdfe"
+  },
+  "popover-foreground": {
+    "css": "oklch(0.25 0.028 255)",
+    "hex": "#18222f"
+  },
+  "primary": {
+    "css": "oklch(0.425 0.085 255)",
+    "hex": "#2c507c"
+  },
+  "primary-foreground": {
+    "css": "oklch(0.992 0.003 255)",
+    "hex": "#fbfdfe"
+  },
+  "secondary": {
+    "css": "oklch(0.938 0.018 255)",
+    "hex": "#e3ebf7"
+  },
+  "secondary-foreground": {
+    "css": "oklch(0.32 0.045 255)",
+    "hex": "#23344a"
+  },
+  "muted": {
+    "css": "oklch(0.956 0.013 255)",
+    "hex": "#ebf1f9"
+  },
+  "muted-foreground": {
+    "css": "oklch(0.435 0.024 255)",
+    "hex": "#48525e"
+  },
+  "accent": {
+    "css": "oklch(0.927 0.026 255)",
+    "hex": "#dce8f9"
+  },
+  "accent-foreground": {
+    "css": "oklch(0.32 0.045 255)",
+    "hex": "#23344a"
+  },
+  "destructive": {
+    "css": "oklch(0.47 0.16 25)",
+    "hex": "#a12628"
+  },
+  "border": {
+    "css": "oklch(0.853 0.022 255)",
+    "hex": "#c5d0dd"
+  },
+  "input": {
+    "css": "oklch(0.635 0.035 255)",
+    "hex": "#7d8ca0"
+  },
+  "ring": {
+    "css": "oklch(0.425 0.085 255)",
+    "hex": "#2c507c"
+  },
+  "surface-alt": {
+    "css": "oklch(0.967 0.008 255)",
+    "hex": "#f1f4fa"
+  },
+  "hero-background": {
+    "css": "oklch(0.275 0.038 255)",
+    "hex": "#1b283a"
+  },
+  "hero-foreground": {
+    "css": "oklch(0.985 0.004 255)",
+    "hex": "#f8fafd"
+  },
+  "hero-muted": {
+    "css": "oklch(0.84 0.025 255)",
+    "hex": "#c0ccdb"
+  },
+  "hero-dot": {
+    "css": "oklch(0.55 0.041 255)",
+    "hex": "#62738a"
+  },
+  "hero-border": {
+    "css": "oklch(0.495 0.034 255)",
+    "hex": "#556375"
+  },
+  "data-people": {
+    "css": "oklch(0.425 0.085 255)",
+    "hex": "#2c507c"
+  },
+  "data-relationships": {
+    "css": "oklch(0.495 0.09 72)",
+    "hex": "#81581f"
+  },
+  "data-secondary": {
+    "css": "oklch(0.665 0.12 78)",
+    "hex": "#bc8930"
+  },
+  "data-unknown": {
+    "css": "oklch(0.53 0.02 255)",
+    "hex": "#646d78"
+  },
+  "section-marker": {
+    "css": "oklch(0.59 0.04 255)",
+    "hex": "#6e7f95"
+  },
+  "map-highlight": {
+    "css": "oklch(0.56 0.11 70)",
+    "hex": "#9d671c"
+  },
+  "map-missing": {
+    "css": "oklch(0.855 0 0)",
+    "hex": "#cfcfcf"
+  },
+  "notice-background": {
+    "css": "oklch(0.963 0.026 85)",
+    "hex": "#fbf2e0"
+  },
+  "selection": {
+    "css": "oklch(0.878 0.048 255)",
+    "hex": "#c2d9f7"
+  },
+  "map-1": {
+    "css": "oklch(0.9 0.029 255)",
+    "hex": "#d2dff2"
+  },
+  "map-2": {
+    "css": "oklch(0.79 0.054 255)",
+    "hex": "#a4bddd"
+  },
+  "map-3": {
+    "css": "oklch(0.68 0.079 255)",
+    "hex": "#779bc9"
+  },
+  "map-4": {
+    "css": "oklch(0.57 0.095 255)",
+    "hex": "#5079ae"
+  },
+  "map-5": {
+    "css": "oklch(0.46 0.099 255)",
+    "hex": "#2f598e"
+  },
+  "map-6": {
+    "css": "oklch(0.35 0.079 255)",
+    "hex": "#1b3b63"
+  }
+}

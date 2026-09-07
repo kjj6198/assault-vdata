@@ -1,0 +1,116 @@
+{
+  "checks": 27421,
+  "records": 5722,
+  "years": [
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "qualityNotes": [
+    {
+      "kind": "published-row-total-difference",
+      "year": 2024,
+      "age": "0~6歲未滿",
+      "source": "relationships-2024.ods",
+      "row": 7,
+      "published": 269,
+      "computed": 266
+    },
+    {
+      "kind": "published-row-total-difference",
+      "year": 2024,
+      "age": "12~18歲未滿",
+      "source": "relationships-2024.ods",
+      "row": 9,
+      "published": 3694,
+      "computed": 3696
+    },
+    {
+      "kind": "published-row-total-difference",
+      "year": 2024,
+      "age": "30~40歲未滿",
+      "source": "relationships-2024.ods",
+      "row": 12,
+      "published": 1079,
+      "computed": 1080
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "婚姻中",
+      "source": "relationships-2019-2020.ods",
+      "column": 4,
+      "published": 134,
+      "computed": 130
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "離婚",
+      "source": "relationships-2019-2020.ods",
+      "column": 5,
+      "published": 55,
+      "computed": 54
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "同居伴侶",
+      "source": "relationships-2019-2020.ods",
+      "column": 6,
+      "published": 61,
+      "computed": 60
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "現為/曾為直系親屬／父(含養、繼父)",
+      "source": "relationships-2019-2020.ods",
+      "column": 8,
+      "published": 439,
+      "computed": 444
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "現為/曾為家長家屬或家屬間關係者／母之同居人",
+      "source": "relationships-2019-2020.ods",
+      "column": 13,
+      "published": 113,
+      "computed": 114
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "未同居伴侶(含男女朋友)",
+      "source": "relationships-2019-2020.ods",
+      "column": 17,
+      "published": 1327,
+      "computed": 1326
+    },
+    {
+      "kind": "published-column-total-difference",
+      "year": 2020,
+      "relationship": "不詳",
+      "source": "relationships-2019-2020.ods",
+      "column": 38,
+      "published": 296,
+      "computed": 297
+    }
+  ]
+}
