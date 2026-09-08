@@ -16,8 +16,9 @@ export const ja = {
   skipLink: "年度の概要へ移動",
   footer: {
     site: "台湾の性暴力被害統計",
-    design: "データ整理、デザイン：@kalan / codex / claude code",
-    code: "プログラム：@kalan / codex / claude code",
+    design: "データ整理、デザイン：Kalan / Codex / Claude Code",
+    code: "プログラム：Kalan / Codex / Claude Code",
+    social: "ソーシャルリンク",
     top: "ページの先頭へ",
   },
   year: (year: number) => `${year}年`,
@@ -54,15 +55,15 @@ export const ja = {
     explore: (label: string) => `${label}を見る`,
     minors: {
       label: "18歳未満の被害者の割合",
-      lede: "記録されているのは、人生です。",
       caption: "その年の被害者のうち",
-      strong: "18歳未満",
-      note: "1つの点は被害者数の約1%を表し、年齢不詳を含みます。",
+      strong: "未成年",
+      majority: "過半数",
+      note: "1つの点は被害者数の約1%を表します",
     },
     gender: {
       label: "被害者の性別の割合",
       allAges: "全年齢",
-      note: "被害者総数を分母とし、その他と不詳を含みます。四捨五入のため合計が100%にならない場合があります。",
+      note: "被害者総数を分母とし、その他と不詳を含みます",
     },
     change: {
       label: "前年との比較",
@@ -74,7 +75,6 @@ export const ja = {
     },
     topRate: {
       label: "人口10万人当たりの比率が最も高い地域",
-      lede: "被害者数 県市別分布",
       per: "人口10万人当たり",
       note: "県市の人口で換算した値で、件数の総数による順位ではありません",
     },
@@ -82,7 +82,7 @@ export const ja = {
       label: "被害者と加害者の関係",
       lede: "最も多く記録された関係",
       share: "関係記録に占める割合",
-      note: "その年の関係記録の総数を分母とし、不詳を含みます",
+      note: "その年の関係記録の総数を分母とします",
     },
   },
   trend: {
@@ -92,8 +92,6 @@ export const ja = {
       `${first}年から${last}年まで、通報システムに記録された被害者数はどのように変化したでしょうか。`,
     chartTitle: "年別被害者数",
     hint: "折れ線上の年を選ぶか、上の年セレクターを使ってください。",
-    footnote:
-      "人数は発生率ではありません。このグラフは未通報の事件を推定するものではなく、犯罪の傾向を直接示すものでもありません。",
   },
   demographics: {
     eyebrow: "年齢と性別 / Demographics",
@@ -259,29 +257,6 @@ export const ja = {
       `${age}：性別表では${demographics}人、関係表のセル合計では${relationships}人。各表の値をそのまま保持します。`,
     totalDifference: (label: string, published: string, computed: string) =>
       `${label}：関係表の印字合計は${published}人、セル合計は${computed}人。グラフはセル合計を使います。`,
-    exploreHeading: "さらに調べる、または自分で分析する。",
-    exploreBody:
-      "出典列を含むクリーンなデータをダウンロードできます。全データは公開APIから取得できます。",
-    downloadYear: (year: number) => `${year}年のCSVをダウンロード`,
-    fullJson: "完全なJSON",
-    api: "APIの使い方",
-    apiUsage: (
-      <>
-        <code>GET /api/v1/data</code> は全データを返します。<code>year</code>、<code>dataset</code>
-        、<code>city</code>、<code>format=csv</code> で絞り込めます。
-      </>
-    ),
-    apiDatasets: (
-      <>
-        dataset は demographics、relationships、victims、reports に対応します。city
-        は県市統計のみに使えます。年と出典は{" "}
-        <a href="/api/v1/meta" className="underline">
-          /api/v1/meta
-        </a>
-        を参照してください。
-      </>
-    ),
-    apiExample: "例：2025年の県市別被害者数",
   },
   labels: {
     city: {

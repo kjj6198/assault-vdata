@@ -12,8 +12,9 @@ export const en = {
   skipLink: "Skip to the annual overview",
   footer: {
     site: "Sexual Assault Statistics in Taiwan",
-    design: "Data and design: @kalan / codex / claude code",
-    code: "Code: @kalan / codex / claude code",
+    design: "Data and design: Kalan / Codex / Claude Code",
+    code: "Code: Kalan / Codex / Claude Code",
+    social: "Social links",
     top: "Back to top",
   },
   year: (year: number) => String(year),
@@ -50,15 +51,15 @@ export const en = {
     explore: (label: string) => `Explore: ${label}`,
     minors: {
       label: "Share of victims under 18",
-      lede: "Each record is a life.",
       caption: "of victims that year were",
-      strong: "under 18",
-      note: "Each dot is about 1% of victims, including those of unknown age.",
+      strong: "minors",
+      majority: "Over half",
+      note: "Each dot is about 1% of victims",
     },
     gender: {
       label: "Victims by gender",
       allAges: "All ages",
-      note: "Denominator: all victims, including other and unknown. Rounded shares may not sum to 100%.",
+      note: "Denominator: all victims, including other and unknown",
     },
     change: {
       label: "Compared with the previous year",
@@ -70,7 +71,6 @@ export const en = {
     },
     topRate: {
       label: "Highest rate per 100,000",
-      lede: "Victims by county and city",
       per: "per 100,000 population",
       note: "Adjusted for population, not a ranking by total cases",
     },
@@ -78,7 +78,7 @@ export const en = {
       label: "Victim-offender relationship",
       lede: "Most recorded relationship",
       share: "of relationship records",
-      note: "Denominator: all relationship records that year, including unknown",
+      note: "Denominator: all relationship records that year",
     },
   },
   trend: {
@@ -88,8 +88,6 @@ export const en = {
       `From ${first} to ${last}, how did the number of victims in the reporting system change?`,
     chartTitle: "Victims by year",
     hint: "Select a year on the line, or use the year selector above.",
-    footnote:
-      "Counts are not incidence rates. This chart does not estimate unreported cases and does not directly represent crime trends.",
   },
   demographics: {
     eyebrow: "Demographics",
@@ -258,29 +256,6 @@ export const en = {
       `${age}: the gender table has ${demographics} people, the relationship table cells sum to ${relationships}. Each table keeps its own figure.`,
     totalDifference: (label: string, published: string, computed: string) =>
       `${label}: the relationship table prints a total of ${published}, the cells sum to ${computed}. Charts use the cell sum.`,
-    exploreHeading: "Keep exploring, or analyze it yourself.",
-    exploreBody:
-      "Download the clean data with source columns. The full dataset is available through the public API.",
-    downloadYear: (year: number) => `Download ${year} CSV`,
-    fullJson: "Full JSON",
-    api: "API usage",
-    apiUsage: (
-      <>
-        <code>GET /api/v1/data</code> returns the full dataset. Filter with <code>year</code>,{" "}
-        <code>dataset</code>, <code>city</code> and <code>format=csv</code>.
-      </>
-    ),
-    apiDatasets: (
-      <>
-        dataset accepts demographics, relationships, victims and reports. city applies only to
-        regional statistics. Years and sources are listed at{" "}
-        <a href="/api/v1/meta" className="underline">
-          /api/v1/meta
-        </a>
-        .
-      </>
-    ),
-    apiExample: "Example: 2025 victims by region",
   },
   labels: {
     city: {

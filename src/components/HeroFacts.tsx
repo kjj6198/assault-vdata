@@ -59,7 +59,7 @@ function FactCard({
         <a
           href={href}
           aria-label={t.facts.explore(label)}
-          className="-my-2.25 -mr-2.5 ml-auto grid min-h-11 min-w-11 place-items-center rounded-[4px] text-(--overview-muted) hover:bg-(--overview-hover) hover:text-(--overview-ink)"
+          className="-my-2.25 -mr-2.5 ml-auto grid min-h-11 min-w-11 place-items-center rounded-lg text-(--overview-muted) hover:bg-(--overview-hover) hover:text-(--overview-ink)"
         >
           <RiArrowRightUpLine className="size-4.25" aria-hidden="true" />
         </a>
@@ -88,19 +88,21 @@ export function HeroFacts({
   const leading = relationships[0];
   return (
     <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:gap-6">
-      <FactCard number={String(year)} label={t.facts.minors.label} href="#ages">
+      <FactCard number="01" label={t.facts.minors.label} href="#ages">
         <div className="grid flex-1 grid-cols-[minmax(0,1fr)_42%] items-center gap-4 py-6">
           <div>
-            <p className="text-caption leading-[1.8] text-(--overview-muted)">
-              {t.facts.minors.lede}
-            </p>
-            <p className="mt-3.75 mb-1.5 font-numeric text-[clamp(2.5rem,4.3vw,3.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums">
+            <p className="mt-3.75 mb-1.5 font-numeric text-[clamp(2.5rem,10vw,5.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums">
               <AnimatedNumber value={minorShare} format={fixed1} />
               <small className="ml-1 font-sans text-[1.375rem] tracking-[-0.015em]">%</small>
             </p>
+            {minorShare >= 50 && (
+              <p className="mb-1 text-caption font-bold tracking-wide text-(--overview-accent)">
+                {t.facts.minors.majority}
+              </p>
+            )}
             <p className="text-label leading-[1.8]">
               {t.facts.minors.caption}
-              <strong className="block">{t.facts.minors.strong}</strong>
+              <strong className="block text-4xl leading-tight">{t.facts.minors.strong}</strong>
             </p>
           </div>
           <div
@@ -116,11 +118,11 @@ export function HeroFacts({
             ))}
           </div>
         </div>
-        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-caption leading-[1.8] text-pretty text-(--overview-muted)">
-          {t.facts.minors.note}
+        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
+          * {t.facts.minors.note}
         </p>
       </FactCard>
-      <FactCard number={String(year)} label={t.facts.gender.label} href="#ages">
+      <FactCard number="02" label={t.facts.gender.label} href="#ages">
         <div className="flex-1 py-6">
           <p className="text-caption leading-[1.8] text-(--overview-muted)">
             {t.facts.gender.allAges}
@@ -163,12 +165,12 @@ export function HeroFacts({
             ))}
           </dl>
         </div>
-        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-caption leading-[1.8] text-pretty text-(--overview-muted)">
-          {t.facts.gender.note}
+        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
+          * {t.facts.gender.note}
         </p>
       </FactCard>
       <FactCard
-        number="01"
+        number="03"
         label={t.facts.change.label}
         href="#trend"
         className="max-[36.25rem]:grid max-[36.25rem]:grid-cols-[1fr_1fr] max-[36.25rem]:gap-x-4"
@@ -176,7 +178,7 @@ export function HeroFacts({
         <p className="mt-4 mb-1.25 text-caption leading-[1.8] text-(--overview-muted) max-[36.25rem]:col-start-1">
           {t.facts.change.lede}
         </p>
-        <p className="font-numeric text-[clamp(2.5rem,4.3vw,3.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums max-[36.25rem]:col-start-1 max-[36.25rem]:mb-4.5 max-[36.25rem]:text-[2.875rem]">
+        <p className="font-numeric text-[clamp(2.5rem,10vw,5.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums max-[36.25rem]:col-start-1 max-[36.25rem]:mb-4.5 max-[36.25rem]:text-[2.875rem]">
           {change === null ? "—" : <AnimatedNumber value={change} format={formatChange} />}
           {change !== null && (
             <small className="ml-1 font-sans text-[1.375rem] tracking-[-0.015em]">%</small>
@@ -206,7 +208,8 @@ export function HeroFacts({
           <span>{trend[0]?.year}</span>
           <span>{trend.at(-1)?.year}</span>
         </div>
-        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-caption leading-[1.8] text-pretty text-(--overview-muted) max-[36.25rem]:col-span-full">
+        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted) max-[36.25rem]:col-span-full">
+          *{" "}
           {previous ? (
             <>
               {t.facts.change.at(previous.year)} <AnimatedNumber value={previous.victims} />{" "}
@@ -219,16 +222,13 @@ export function HeroFacts({
         </p>
       </FactCard>
 
-      <FactCard number="02" label={t.facts.topRate.label} href="#regions">
+      <FactCard number="04" label={t.facts.topRate.label} href="#regions">
         <div className="grid flex-1 grid-cols-[minmax(0,1fr)_32%] items-center gap-3 py-6">
           <div>
-            <p className="text-caption leading-[1.8] text-(--overview-muted)">
-              {t.facts.topRate.lede}
-            </p>
             <p className="mt-0.75 mb-3.75 text-[1.75rem] leading-[1.6] font-bold tracking-[0.015em] max-[36.25rem]:mt-0.5 max-[36.25rem]:mb-2">
               <AnimatedValue value={topCity ? name("city", topCity.city) : t.noData} />
             </p>
-            <p className="font-numeric text-[clamp(2.25rem,3.5vw,3.25rem)] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
+            <p className="font-numeric text-[clamp(2.25rem,10vw,5.625rem)] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
               {topCity ? <AnimatedNumber value={topCity.rate} format={formatRate} /> : "—"}
               <small className="ml-1.75 font-sans text-caption tracking-[-0.015em]">
                 {t.unit.people}
@@ -253,13 +253,13 @@ export function HeroFacts({
             ))}
           </svg>
         </div>
-        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-caption leading-[1.8] text-pretty text-(--overview-muted)">
-          {t.facts.topRate.note}
+        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
+          * {t.facts.topRate.note}
         </p>
       </FactCard>
 
       <FactCard
-        number="03"
+        number="05"
         label={t.facts.relation.label}
         href="#relationships"
         className="col-span-full"
@@ -272,7 +272,7 @@ export function HeroFacts({
             <p className="mt-1 mb-2 text-[1.75rem] leading-[1.6] font-bold tracking-[0.015em] wrap-anywhere max-[36.25rem]:text-[1.5rem]">
               <AnimatedValue value={leading ? name("relationship", leading.label) : t.noData} />
             </p>
-            <p className="mb-1.5 font-numeric text-[2.375rem] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
+            <p className="mb-1.5 font-numeric text-[3.375rem] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
               {leading ? <AnimatedNumber value={leading.value} /> : "—"}
               <small className="ml-2 font-sans text-caption tracking-[-0.015em]">
                 {t.unit.people}
@@ -295,7 +295,10 @@ export function HeroFacts({
                 className="motion-reduce:transform-none!"
                 layout="position"
                 initial={false}
-                transition={{ duration: reduced ? 0 : 0.6, ease: [0.25, 1, 0.5, 1] }}
+                transition={{
+                  duration: reduced ? 0 : 0.6,
+                  ease: [0.25, 1, 0.5, 1],
+                }}
               >
                 <div className="mb-2 flex items-baseline justify-between gap-4 text-caption">
                   <span className="wrap-anywhere">
@@ -313,15 +316,17 @@ export function HeroFacts({
                       "block size-full origin-left rounded-full bg-(--overview-bar-strong) transition-[transform,background-color] duration-600 ease-out-quart motion-reduce:transition-colors motion-reduce:duration-120",
                       index === 0 && "bg-(--overview-accent)",
                     )}
-                    style={{ transform: `scaleX(${share(row.value, relationshipTotal) / 100})` }}
+                    style={{
+                      transform: `scaleX(${share(row.value, relationshipTotal) / 100})`,
+                    }}
                   />
                 </div>
               </motion.li>
             ))}
           </ol>
         </div>
-        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-caption leading-[1.8] text-pretty text-(--overview-muted)">
-          {t.facts.relation.note}
+        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
+          * {t.facts.relation.note}
         </p>
       </FactCard>
     </div>

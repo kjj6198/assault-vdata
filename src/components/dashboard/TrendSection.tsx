@@ -7,7 +7,6 @@ import {
   INK,
   pageWidth,
   heading3,
-  footnote,
   panelHeading,
   storySection,
   sum,
@@ -60,7 +59,6 @@ export function TrendSection({
           selectedLabel={String(year)}
           onSelectLabel={(label) => onYearChange(Number(label))}
         />
-        <p className={footnote}>{t.trend.footnote}</p>
       </div>
     </section>
   );

@@ -1,6 +1,5 @@
-import { RiArrowRightUpLine, RiDownloadLine } from "react-icons/ri";
+import { RiArrowRightUpLine } from "react-icons/ri";
 import { formatNumber as num } from "../../lib/data";
-import { Button } from "../ui/button";
 import { useI18n } from "../../i18n";
 import { pageWidth, heading3, type DashboardData } from "./shared";
 
@@ -74,37 +73,6 @@ export function SourcesSection({ data }: { data: DashboardData }) {
             </ul>
           </details>
         )}
-        <div className="mt-9.5 flex flex-col items-start justify-between gap-8 border-y border-border py-7.5 lg:flex-row lg:items-center">
-          <div>
-            <h3 className={heading3}>{t.sources.exploreHeading}</h3>
-            <p className="mt-2 text-xs leading-[1.9] text-muted-foreground">
-              {t.sources.exploreBody}
-            </p>
-          </div>
-          <div className="flex shrink-0 gap-3 max-sm:w-full max-sm:flex-wrap">
-            <Button asChild className="max-sm:flex-1">
-              <a href={`/api/v1/data?year=${year}&format=csv`}>
-                {t.sources.downloadYear(year)} <RiDownloadLine aria-hidden="true" />
-              </a>
-            </Button>
-            <Button variant="outline" asChild className="max-sm:flex-1">
-              <a href="/api/v1/data">
-                {t.sources.fullJson} <RiArrowRightUpLine aria-hidden="true" />
-              </a>
-            </Button>
-          </div>
-        </div>
-        <details className="mt-3 text-xs [&_code]:bg-secondary [&_code]:px-1.25 [&_code]:py-0.5 [&_code]:text-[0.6875rem]">
-          <summary className="min-h-11 content-center">{t.sources.api}</summary>
-          <p className="my-3 leading-loose wrap-anywhere">{t.sources.apiUsage}</p>
-          <p className="my-3 leading-loose wrap-anywhere">{t.sources.apiDatasets}</p>
-          <a
-            href="/api/v1/data?year=2025&dataset=victims"
-            className="inline-flex items-center gap-1.5 underline"
-          >
-            {t.sources.apiExample} <RiArrowRightUpLine aria-hidden="true" />
-          </a>
-        </details>
       </div>
     </section>
   );

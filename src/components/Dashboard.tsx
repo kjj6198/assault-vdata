@@ -1,4 +1,4 @@
-import { RiArrowUpLine } from "react-icons/ri";
+import { RiArrowUpLine, RiGithubLine, RiThreadsLine, RiTwitterXLine } from "react-icons/ri";
 import { cn } from "../lib/utils";
 import { useI18n } from "../i18n";
 import { pageWidth, type DashboardData } from "./dashboard/shared";
@@ -10,6 +10,12 @@ import { RelationshipsSection } from "./dashboard/RelationshipsSection";
 import { RegionsSection } from "./dashboard/RegionsSection";
 import { SourcesSection } from "./dashboard/SourcesSection";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+
+const socialLinks = [
+  { label: "GitHub", href: "https://github.com/kjj6198/assault-vdata", Icon: RiGithubLine },
+  { label: "X", href: "https://x.com/kalanyei", Icon: RiTwitterXLine },
+  { label: "Threads", href: "https://www.threads.com/@kalan_jp_log", Icon: RiThreadsLine },
+];
 
 type Props = {
   data: DashboardData;
@@ -42,11 +48,28 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         )}
       >
         <div className="space-y-1 leading-relaxed text-muted-foreground max-sm:order-3 max-sm:w-full">
-          <p>{t.footer.site}</p>
+          <p className="font-bold">{t.footer.site}</p>
           <p>{t.footer.design}</p>
           <p>{t.footer.code}</p>
         </div>
-        <LanguageSwitcher className="ml-auto max-sm:order-1" />
+        <nav
+          aria-label={t.footer.social}
+          className="ml-auto flex items-center gap-1 max-sm:order-1"
+        >
+          {socialLinks.map(({ label, href, Icon }) => (
+            <a
+              key={href}
+              href={href}
+              aria-label={label}
+              target="_blank"
+              rel="noreferrer"
+              className="grid size-11 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground"
+            >
+              <Icon className="size-4" aria-hidden="true" />
+            </a>
+          ))}
+        </nav>
+        <LanguageSwitcher className="max-sm:order-2" />
         <a
           href="#main"
           className="inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem] max-sm:order-2"

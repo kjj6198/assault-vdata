@@ -12,8 +12,9 @@ export const zh = {
   skipLink: "跳至年度重點",
   footer: {
     site: "台灣性侵害統計",
-    design: "資料整理、設計：@kalan / codex / claude code",
-    code: "程式：@kalan / codex / claude code",
+    design: "資料整理、設計：Kalan / Codex / Claude Code",
+    code: "程式：Kalan / Codex / Claude Code",
+    social: "社群連結",
     top: "回到頂端",
   },
   year: (year: number) => `${year} 年`,
@@ -50,15 +51,15 @@ export const zh = {
     explore: (label: string) => `探索${label}`,
     minors: {
       label: "未滿 18 歲受暴人比例",
-      lede: "被記錄的，是人生。",
       caption: "當年受暴人中",
-      strong: "未滿 18 歲",
-      note: "每個圓點約代表 1% 的受暴人數，含年齡不詳者。",
+      strong: "未成年",
+      majority: "過半",
+      note: "每個圓點約代表 1% 的受暴人數",
     },
     gender: {
       label: "受暴人的性別比例",
       allAges: "全部年齡",
-      note: "以全部受暴人數為分母，含其他與不詳；四捨五入後合計可能不為 100%。",
+      note: "以全部受暴人數為分母，含其他與不詳",
     },
     change: {
       label: "與前一年相比",
@@ -70,7 +71,6 @@ export const zh = {
     },
     topRate: {
       label: "每十萬人口比率最高",
-      lede: "受暴人數・縣市分布",
       per: "每 10 萬人口",
       note: "依縣市人口換算，並非案件總數排名",
     },
@@ -78,7 +78,7 @@ export const zh = {
       label: "被害人與加害人的關係",
       lede: "最多紀錄的兩造關係",
       share: "占關係紀錄",
-      note: "以當年度兩造關係紀錄總數為分母，包含不詳",
+      note: "以當年度兩造關係紀錄總數為分母",
     },
   },
   trend: {
@@ -88,7 +88,6 @@ export const zh = {
       `從 ${first} 年到 ${last} 年，通報系統記錄下的受暴人數如何改變？`,
     chartTitle: "歷年受暴人數",
     hint: "點選折線上的年份，或使用上方年度選單。",
-    footnote: "人數不等於發生率；本圖不推論未通報案件，也不直接代表犯罪趨勢。",
   },
   demographics: {
     eyebrow: "年齡與性別 / Demographics",
@@ -248,28 +247,6 @@ export const zh = {
       `${age}：性別表為 ${demographics} 人，關係表儲存格合計為 ${relationships} 人，保留各表口徑。`,
     totalDifference: (label: string, published: string, computed: string) =>
       `${label}：關係表印列合計 ${published} 人，儲存格合計 ${computed} 人；圖表採儲存格合計。`,
-    exploreHeading: "繼續探索，或自己分析。",
-    exploreBody: "下載含來源欄位的乾淨資料；完整資料可透過公開 API 取得。",
-    downloadYear: (year: number) => `下載 ${year} 年 CSV`,
-    fullJson: "完整 JSON",
-    api: "API 使用方式",
-    apiUsage: (
-      <>
-        <code>GET /api/v1/data</code> 提供完整資料。可加上 <code>year</code>、<code>dataset</code>、
-        <code>city</code> 與 <code>format=csv</code> 篩選。
-      </>
-    ),
-    apiDatasets: (
-      <>
-        dataset 支援 demographics、relationships、victims、reports。city
-        僅適用縣市統計。年份與來源請見{" "}
-        <a href="/api/v1/meta" className="underline">
-          /api/v1/meta
-        </a>
-        。
-      </>
-    ),
-    apiExample: "範例：2025 年各縣市受暴人數",
   },
   labels: {
     city: {},
