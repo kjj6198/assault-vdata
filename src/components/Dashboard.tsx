@@ -116,10 +116,10 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
   const yearIndex = years.indexOf(year);
   const genders = ["女", "男", ...(year >= 2019 ? ["其他"] : []), "不詳"];
   const safeGender = genders.includes(gender) ? gender : "全部";
-  const genderTotals = genders.map((label, i) => ({
+  const genderTotals = genders.map((label) => ({
     label,
     value: sum(demo.filter((r) => r.gender === label)),
-    color: [INK, GOLD, CORAL, GRAY][i],
+    color: label === "女" ? INK : label === "男" ? GOLD : label === "其他" ? CORAL : GRAY,
   }));
   const trendChart = useMemo(
     () => ({
@@ -224,13 +224,13 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 </p>
                 <p className="hero-total-label">通報紀錄中的受暴人數</p>
                 <p className="hero-total">
-                  {num(victimTotal)}
+                  <AnimatedNumber value={victimTotal} />
                   <small>人</small>
                 </p>
                 <div className="hero-summary-footer">
                   <span>同年度通報件數</span>
                   <span>
-                    {num(reportTotal)} <small>件</small>
+                    <AnimatedNumber value={reportTotal} /> <small>件</small>
                   </span>
                 </div>
                 <p className="hero-summary-note">人數與件數為不同統計口徑，不能直接相加。</p>
@@ -352,7 +352,10 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               </div>
               <p className="trend-selected">
                 <span>{year} 年</span>
-                <strong>{num(victimTotal)}</strong>人
+                <strong>
+                  <AnimatedNumber value={victimTotal} />
+                </strong>
+                人
               </p>
             </div>
             <DataChart
@@ -407,14 +410,17 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               <p className={eyebrow}>{year} 年・全部年齡</p>
               <h3 className={cn(heading3, "mt-3.5 mb-6 text-[23px]")}>性別分布</h3>
               <div
-                className="mb-6 flex h-3.5 gap-px overflow-hidden rounded-full"
+                className="gender-strip mb-6 h-3.5 overflow-hidden rounded-full"
                 aria-hidden="true"
               >
-                {genderTotals.map((g) => (
+                {genderTotals.map((g, index) => (
                   <i
                     key={g.label}
                     style={{
-                      width: `${(g.value / victimTotal) * 100}%`,
+                      transform: `translateX(${share(
+                        genderTotals.slice(0, index).reduce((total, row) => total + row.value, 0),
+                        victimTotal,
+                      )}%) scaleX(${share(g.value, victimTotal) / 100})`,
                       background: g.color,
                     }}
                   />
@@ -422,7 +428,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               </div>
               {genderTotals.map((g) => (
                 <div
-                  className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-[15px] text-[13px] tabular-nums"
+                  className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-[15px] text-[13px] tabular-nums font-numeric"
                   key={g.label}
                 >
                   <span className="flex items-center gap-2">

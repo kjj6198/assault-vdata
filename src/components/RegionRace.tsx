@@ -10,7 +10,7 @@ import {
   ratePosition,
 } from "../lib/regions";
 import { formatNumber } from "../lib/data";
-import { AnimatedValue } from "./StoryMotion";
+import { AnimatedDigits } from "./StoryMotion";
 import { Button } from "./ui/button";
 
 export type RegionHistoryRow = {
@@ -118,7 +118,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
         >
           <span>播放年度</span>
           <strong className="font-numeric text-[clamp(44px,5vw,64px)] leading-none font-semibold tracking-[-0.02em] text-foreground tabular-nums">
-            <AnimatedValue value={String(year0)} />
+            <AnimatedDigits value={year0} />
           </strong>
         </div>
         <div className="flex flex-1 items-center justify-between gap-5 sm:min-w-70 sm:justify-end">

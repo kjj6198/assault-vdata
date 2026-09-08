@@ -92,7 +92,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                     data-county={county.name}
                     fill={fillFor(county.name)}
                     className={cn(
-                      "cursor-pointer stroke-background stroke-1 outline-none [transition:fill_400ms_ease,opacity_200ms_ease] [vector-effect:non-scaling-stroke]",
+                      "county-fill cursor-pointer stroke-background stroke-1 outline-none [vector-effect:non-scaling-stroke]",
                       active === county.name && "opacity-40",
                     )}
                     tabIndex={0}
@@ -121,7 +121,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 key={activeCounty.code}
                 d={activeCounty.path}
                 fill={fillFor(activeCounty.name)}
-                className="pointer-events-none -translate-x-1 -translate-y-1.5 animate-county-lift stroke-map-highlight stroke-[2.5] drop-shadow-[0_6px_8px_oklch(0.2_0.03_255/0.3)] [vector-effect:non-scaling-stroke] motion-reduce:translate-none motion-reduce:animate-none motion-reduce:drop-shadow-none"
+                className="county-fill pointer-events-none -translate-x-1 -translate-y-1.5 animate-county-lift stroke-map-highlight stroke-[2.5] drop-shadow-[0_6px_8px_oklch(0.2_0.03_255/0.3)] [vector-effect:non-scaling-stroke] motion-reduce:translate-none motion-reduce:animate-none motion-reduce:drop-shadow-none"
                 aria-hidden="true"
               />
             )}

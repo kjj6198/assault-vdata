@@ -420,6 +420,7 @@
     min-height: 1px;
     background: oklch(0.77 0.025 245);
     border-radius: 4px;
+    transition: background-color 600ms var(--ease-out-quart);
   }
   .fact-history-column span[data-selected] {
     background: var(--overview-accent);
@@ -459,6 +460,7 @@
     fill: var(--overview-track);
     stroke: var(--overview-panel);
     stroke-width: 2.5;
+    transition: fill 600ms var(--ease-out-quart);
   }
   .fact-map path[data-selected] {
     fill: var(--overview-accent);
@@ -480,6 +482,7 @@
   .gauge-value {
     stroke: var(--overview-ink);
     stroke-width: 12px;
+    transition: stroke-dasharray 600ms var(--ease-out-quart);
   }
   .gauge-ticks {
     stroke: var(--overview-muted);
@@ -537,6 +540,7 @@
     aspect-ratio: 1;
     background: var(--overview-track);
     border-radius: 1px;
+    transition: background-color 240ms var(--ease-out-quart);
   }
   .fact-waffle i[data-filled] {
     background: var(--overview-accent);
@@ -603,12 +607,51 @@
   }
   .fact-rank-track i {
     display: block;
+    width: 100%;
     height: 100%;
     background: oklch(0.64 0.025 245);
     border-radius: 999px;
+    transform-origin: left center;
+    transition:
+      transform 600ms var(--ease-out-quart),
+      background-color 600ms var(--ease-out-quart);
   }
   .fact-ranking li:first-child .fact-rank-track i {
     background: var(--overview-accent);
+  }
+  .gender-strip {
+    position: relative;
+  }
+  .gender-strip > i {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: left center;
+    transition: transform 600ms var(--ease-out-quart);
+  }
+  .county-fill {
+    transition:
+      fill 600ms var(--ease-out-quart),
+      opacity 200ms var(--ease-out-quart);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fact-history-column span,
+    .fact-map path,
+    .fact-waffle i,
+    .county-fill {
+      transition-duration: 120ms;
+    }
+    .gauge-value,
+    .gender-strip > i {
+      transition: none;
+    }
+    .fact-rank-track i {
+      transition: background-color 120ms var(--ease-out-quart);
+    }
+    .fact-ranking > li {
+      transform: none !important;
+    }
   }
   .facts-source {
     display: flex;

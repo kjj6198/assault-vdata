@@ -1,8 +1,13 @@
 import type { ReactNode } from "react";
+import { motion } from "motion/react";
 import { RiArrowRightUpLine } from "react-icons/ri";
 import { fixed1, formatNumber, share } from "../lib/data";
 import { formatRate } from "../lib/regions";
 import { taiwanMap } from "../lib/map";
+import { useReducedMotionPreference } from "../lib/use-reduced-motion";
+import { AnimatedNumber, AnimatedValue } from "./StoryMotion";
+
+const formatChange = (value: number) => `${value < 0 ? "−" : "+"}${fixed1(Math.abs(value))}`;
 
 type Props = {
   year: number;
@@ -58,6 +63,7 @@ export function HeroFacts({
   minors,
   relationships,
 }: Props) {
+  const reduced = useReducedMotionPreference();
   const femaleShare = share(female, total);
   const minorShare = share(minors, total);
   const maxVictims = Math.max(1, ...trend.map((row) => row.victims));
@@ -68,7 +74,7 @@ export function HeroFacts({
       <FactCard number="01" label="與前一年相比" href="#trend" className="fact-trend">
         <p className="fact-kicker">受暴人數的年度變化</p>
         <p className="fact-number">
-          {change === null ? "—" : `${change < 0 ? "−" : "+"}${fixed1(Math.abs(change))}`}
+          {change === null ? "—" : <AnimatedNumber value={change} format={formatChange} />}
           {change !== null && <small>%</small>}
         </p>
         <div
@@ -90,9 +96,14 @@ export function HeroFacts({
           <span>{trend.at(-1)?.year}</span>
         </div>
         <p className="fact-note">
-          {previous
-            ? `${previous.year} 年 ${formatNumber(previous.victims)} 人 → ${year} 年 ${formatNumber(total)} 人`
-            : "資料起始年度，無前一年可比較"}
+          {previous ? (
+            <>
+              {previous.year} 年 <AnimatedNumber value={previous.victims} /> 人 → {year} 年{" "}
+              <AnimatedNumber value={total} /> 人
+            </>
+          ) : (
+            "資料起始年度，無前一年可比較"
+          )}
         </p>
       </FactCard>
 
@@ -100,9 +111,11 @@ export function HeroFacts({
         <div className="fact-region-body">
           <div>
             <p className="fact-kicker">受暴人數・縣市分布</p>
-            <p className="fact-name">{topCity?.city ?? "無資料"}</p>
+            <p className="fact-name">
+              <AnimatedValue value={topCity?.city ?? "無資料"} />
+            </p>
             <p className="fact-number">
-              {topCity ? formatRate(topCity.rate) : "—"}
+              {topCity ? <AnimatedNumber value={topCity.rate} format={formatRate} /> : "—"}
               <small>人</small>
             </p>
             <p className="fact-unit">每 10 萬人口</p>
@@ -149,7 +162,7 @@ export function HeroFacts({
           <div>
             <p className="fact-kicker">女性占比</p>
             <p className="fact-number">
-              {fixed1(femaleShare)}
+              <AnimatedNumber value={femaleShare} format={fixed1} />
               <small>%</small>
             </p>
           </div>
@@ -157,9 +170,11 @@ export function HeroFacts({
         <p className="fact-note fact-legend">
           <span>
             <i />
-            女性 {formatNumber(female)} 人
+            女性 <AnimatedNumber value={female} /> 人
           </span>
-          <span>男性 {fixed1(share(male, total))}%</span>
+          <span>
+            男性 <AnimatedNumber value={share(male, total)} format={fixed1} />%
+          </span>
         </p>
       </FactCard>
 
@@ -167,10 +182,12 @@ export function HeroFacts({
         <div className="fact-minors-body">
           <div>
             <p className="fact-number">
-              {fixed1(minorShare)}
+              <AnimatedNumber value={minorShare} format={fixed1} />
               <small>%</small>
             </p>
-            <p className="fact-unit">{formatNumber(minors)} 位未滿 18 歲受暴人</p>
+            <p className="fact-unit">
+              <AnimatedNumber value={minors} /> 位未滿 18 歲受暴人
+            </p>
           </div>
           <div className="fact-waffle" aria-hidden="true">
             {Array.from({ length: 100 }, (_, i) => (
@@ -190,32 +207,47 @@ export function HeroFacts({
         <div className="fact-relationships-body">
           <div className="fact-relationship-lead">
             <p className="fact-kicker">最多紀錄的兩造關係</p>
-            <p className="fact-name">{leading?.label ?? "無資料"}</p>
+            <p className="fact-name">
+              <AnimatedValue value={leading?.label ?? "無資料"} />
+            </p>
             <p className="fact-number">
-              {leading ? formatNumber(leading.value) : "—"}
+              {leading ? <AnimatedNumber value={leading.value} /> : "—"}
               <small>人</small>
             </p>
             <p className="fact-unit">
-              占關係紀錄 {leading ? fixed1(share(leading.value, relationshipTotal)) : "—"}%
+              占關係紀錄{" "}
+              {leading ? (
+                <AnimatedNumber value={share(leading.value, relationshipTotal)} format={fixed1} />
+              ) : (
+                "—"
+              )}
+              %
             </p>
           </div>
           <ol className="fact-ranking">
             {relationships.slice(0, 3).map((row, index) => (
-              <li key={row.label}>
+              <motion.li
+                key={row.label}
+                layout="position"
+                initial={false}
+                transition={{ duration: reduced ? 0 : 0.6, ease: [0.25, 1, 0.5, 1] }}
+              >
                 <div>
                   <span>
                     <b>{String(index + 1).padStart(2, "0")}</b>
                     {row.label}
                   </span>
                   <strong>
-                    {fixed1(share(row.value, relationshipTotal))}
+                    <AnimatedNumber value={share(row.value, relationshipTotal)} format={fixed1} />
                     <small>%</small>
                   </strong>
                 </div>
                 <div className="fact-rank-track" aria-hidden="true">
-                  <i style={{ width: `${share(row.value, relationshipTotal)}%` }} />
+                  <i
+                    style={{ transform: `scaleX(${share(row.value, relationshipTotal) / 100})` }}
+                  />
                 </div>
-              </li>
+              </motion.li>
             ))}
           </ol>
         </div>
