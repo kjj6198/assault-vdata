@@ -4,8 +4,20 @@
 @theme {
   --color-paper: var(--background);
   --color-ink: var(--foreground);
-  --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-sans: "LINE Seed TW", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
   --font-numeric: "Space Grotesk", "Noto Sans TC", sans-serif;
+}
+@font-face {
+  font-family: "LINE Seed TW";
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/LINESeedTW-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "LINE Seed TW";
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/LINESeedTW-Bold.woff2") format("woff2");
 }
 @layer components {
   :root {
