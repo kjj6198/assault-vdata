@@ -24,16 +24,18 @@ export const Route = createFileRoute("/{-$locale}/")({
   validateSearch: z.object({ year: z.coerce.number().int().optional().catch(undefined) }),
   loaderDeps: ({ search }) => ({ year: search.year }),
   loader: ({ deps, params }) => loadDashboard({ data: { ...deps, locale: params.locale } }),
-  head: ({ params }) => {
+  head: ({ params, match }) => {
     const locale = toLocale(params.locale);
     const { meta } = messages[locale];
+    const { year } = match.loaderDeps;
+    const search = year === undefined ? "" : `?year=${year}`;
     return {
       meta: [{ title: meta.title }, { name: "description", content: meta.description }],
       links: [
         ...locales.map((alternate) => ({
           rel: "alternate",
           hrefLang: htmlLang[alternate],
-          href: `/${toParam(alternate) ?? ""}`,
+          href: `/${toParam(alternate) ?? ""}${search}`,
         })),
         ...(locale === "ja"
           ? [

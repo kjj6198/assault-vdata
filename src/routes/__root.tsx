@@ -2,7 +2,7 @@ import { MotionConfig } from "motion/react";
 import { HeadContent, Scripts, Outlet, createRootRoute } from "@tanstack/react-router";
 import stylesheet from "../styles.css?url";
 import { useI18n } from "../i18n";
-import { htmlLang } from "../i18n/locales";
+import { htmlLang, toParam } from "../i18n/locales";
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -48,11 +48,11 @@ function Document() {
   );
 }
 function NotFound() {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   return (
     <main className="mx-auto my-[15vh] max-w-150 p-7.5">
       <h1 className="text-4xl font-bold">{t.notFound.title}</h1>
-      <a href="/">{t.notFound.home}</a>
+      <a href={`/${toParam(locale) ?? ""}`}>{t.notFound.home}</a>
     </main>
   );
 }
