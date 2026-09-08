@@ -1,4 +1,4 @@
-import { RiArrowUpLine } from "react-icons/ri";
+import { RiArrowUpLine, RiGithubLine, RiThreadsLine, RiTwitterXLine } from "react-icons/ri";
 import { cn } from "../lib/utils";
 import { pageWidth, type DashboardData } from "./dashboard/shared";
 import { HeroSection } from "./dashboard/HeroSection";
@@ -8,6 +8,12 @@ import { DemographicsSection } from "./dashboard/DemographicsSection";
 import { RelationshipsSection } from "./dashboard/RelationshipsSection";
 import { RegionsSection } from "./dashboard/RegionsSection";
 import { SourcesSection } from "./dashboard/SourcesSection";
+
+const socialLinks = [
+  { label: "GitHub", href: "https://github.com/kjj6198/assault-vdata", Icon: RiGithubLine },
+  { label: "X", href: "https://x.com/kalanyei", Icon: RiTwitterXLine },
+  { label: "Threads", href: "https://www.threads.com/@kalan_jp_log", Icon: RiThreadsLine },
+];
 
 type Props = {
   data: DashboardData;
@@ -39,14 +45,25 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         )}
       >
         <div className="space-y-1 leading-relaxed text-muted-foreground max-sm:order-3 max-sm:w-full">
-          <p>台灣性侵害統計</p>
-          <p>資料整理、設計：@kalan / codex / claude code</p>
-          <p>程式：@kalan / codex / claude code</p>
+          <p className="font-bold">台灣性侵害統計</p>
+          <p>資料整理、設計：Kalan / Codex / Claude Code</p>
+          <p>程式：Kalan / Codex / Claude Code</p>
         </div>
-        <a
-          href="#main"
-          className="ml-auto inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem]"
-        >
+        <nav aria-label="社群連結" className="ml-auto flex items-center gap-1">
+          {socialLinks.map(({ label, href, Icon }) => (
+            <a
+              key={href}
+              href={href}
+              aria-label={label}
+              target="_blank"
+              rel="noreferrer"
+              className="grid size-11 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground"
+            >
+              <Icon className="size-4" aria-hidden="true" />
+            </a>
+          ))}
+        </nav>
+        <a href="#main" className="inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem]">
           回到頂端 <RiArrowUpLine aria-hidden="true" />
         </a>
       </footer>

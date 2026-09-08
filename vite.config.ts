@@ -12,7 +12,8 @@ export default defineConfig(({ mode }) => ({
       : [
           tailwindcss(),
           tanstackStart(),
-          nitro({ preset: "cloudflare_module" }),
+          // Plain Node in dev; no Cloudflare bindings are used yet, so workerd emulation buys nothing.
+          nitro({ preset: "cloudflare_module", devServer: { runner: "node-worker" } }),
           react({ compiler: true }),
         ],
   lint: {

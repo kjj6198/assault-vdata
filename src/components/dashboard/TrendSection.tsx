@@ -6,7 +6,6 @@ import {
   INK,
   pageWidth,
   heading3,
-  footnote,
   panelHeading,
   storySection,
   sum,
@@ -63,7 +62,6 @@ export function TrendSection({
           selectedLabel={String(year)}
           onSelectLabel={(label) => onYearChange(Number(label))}
         />
-        <p className={footnote}>人數不等於發生率；本圖不推論未通報案件，也不直接代表犯罪趨勢。</p>
       </div>
     </section>
   );
