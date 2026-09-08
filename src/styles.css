@@ -1739,10 +1739,11 @@
   font-size: 11px;
   margin-left: 2px;
 }
-.hero-gender-legend dd span {
+.hero-gender-legend dd > span:last-child {
   display: block;
   color: var(--hero-muted);
   font-size: 10px;
+  white-space: nowrap;
   margin-top: 3px;
 }
 .hero-gender-legend > div:nth-child(n + 3) dd {
