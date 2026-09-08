@@ -22,6 +22,11 @@ const dataTransition = { duration: 600, easing: "easeOutQuart" } satisfies Anima
 type DisplayValue = { value: number; target: number };
 const numericFont = () =>
   getComputedStyle(document.documentElement).getPropertyValue("--font-numeric").trim();
+// Chart.js requires numeric pixel sizes; resolve 0.75rem from the browser's root size.
+const chartFont = () => ({
+  size: Number.parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.75,
+  family: numericFont(),
+});
 const toLabels = (labels: string[], horizontal: boolean) =>
   labels.map((label) => (horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label));
 const toDatasets = ({ series }: ChartData, type: "line" | "bar") =>
@@ -94,7 +99,7 @@ export function DataChart({
         ctx.save();
         if (horizontal) {
           ctx.fillStyle = palette.foreground.css;
-          ctx.font = `500 12px ${numericFont()}`;
+          ctx.font = `500 0.75rem ${numericFont()}`;
           ctx.textBaseline = "middle";
           chart.data.datasets.forEach((dataset, seriesIndex) => {
             chart.getDatasetMeta(seriesIndex).data.forEach((bar, index) => {
@@ -187,6 +192,9 @@ export function DataChart({
                 footerColor: palette["primary-foreground"].css,
                 multiKeyBackground: palette.card.css,
                 padding: 12,
+                titleFont: () => ({ ...chartFont(), weight: "bold" }),
+                bodyFont: chartFont,
+                footerFont: () => ({ ...chartFont(), weight: "bold" }),
                 callbacks: {
                   title: (items) => latest.current.labels[items[0]?.dataIndex ?? 0] ?? "",
                   label: (context) =>
@@ -202,7 +210,7 @@ export function DataChart({
                 ticks: {
                   color: palette["muted-foreground"].css,
                   maxRotation: 0,
-                  font: { size: 12, family: numericFont() },
+                  font: chartFont,
                 },
               },
               y: {
@@ -211,7 +219,7 @@ export function DataChart({
                 border: { display: false },
                 ticks: {
                   color: horizontal ? "transparent" : palette["muted-foreground"].css,
-                  font: { size: 12, family: numericFont() },
+                  font: chartFont,
                 },
               },
             },
@@ -282,8 +290,8 @@ export function DataChart({
     };
   }, [type, horizontal]);
   return (
-    <figure className="data-figure">
-      <div className="chart-legend">
+    <figure>
+      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-caption text-muted-foreground [&_i]:size-2 [&_i]:rounded-full [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2 [&>span:last-child]:ml-auto">
         {series.map((s) => (
           <span key={s.label}>
             <i style={{ background: s.color }} />
@@ -292,9 +300,9 @@ export function DataChart({
         ))}
         <span>單位：{unit}</span>
       </div>
-      <div style={{ height }} className="chart-canvas" aria-busy={!ready && !failed}>
+      <div style={{ height }} className="relative min-w-0" aria-busy={!ready && !failed}>
         {!ready && (
-          <p className="chart-loading">
+          <p className="absolute inset-0 grid place-content-center bg-muted p-6 text-caption leading-[1.9] text-muted-foreground">
             {failed
               ? "圖表無法載入，完整數據仍可在下方表格查閱。"
               : "圖表載入中，數據也可在下方表格查閱。"}
@@ -307,15 +315,26 @@ export function DataChart({
           aria-describedby={tableId}
         />
       </div>
-      <details className="chart-table-disclosure" open={failed || undefined}>
+      <details
+        className="mt-4.5 border-t border-border [&_summary_svg]:size-4.5 [&_summary::-webkit-details-marker]:hidden [&>summary]:flex [&>summary]:min-h-12 [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-3 [&>summary]:text-caption [&>summary]:text-primary [&>summary>span]:flex [&>summary>span]:items-center [&>summary>span]:gap-3 [&>summary>span]:text-caption [&>summary>span]:text-muted-foreground [&[open]>summary_svg]:rotate-45"
+        open={failed || undefined}
+      >
         <summary>
           查看完整數據表{" "}
           <span>
             {labels.length} 項<RiAddLine aria-hidden="true" />
           </span>
         </summary>
-        <div className="data-table-scroll" tabIndex={0} role="region" aria-label={`${title}數據表`}>
-          <table id={tableId} className="data-table">
+        <div
+          className="max-w-full overflow-x-auto overscroll-x-contain"
+          tabIndex={0}
+          role="region"
+          aria-label={`${title}數據表`}
+        >
+          <table
+            id={tableId}
+            className="w-full border-collapse text-caption leading-[1.7] [&_[data-emphasis]]:font-bold [&_[data-emphasis]]:text-primary [&_button]:inline-flex [&_button]:min-h-11 [&_button]:items-center [&_button]:gap-3 [&_button]:text-primary [&_button]:underline [&_button]:underline-offset-4 [&_button_span]:text-caption [&_button_span]:no-underline [&_caption]:text-left [&_small]:font-normal [&_small]:whitespace-nowrap [&_tbody_tr:hover]:bg-muted [&_td]:border-b [&_td]:border-border [&_td]:tabular-nums [&_td:not([colspan])]:px-3.5 [&_td:not([colspan])]:py-3.25 [&_td:not([colspan])]:text-right [&_td:not([colspan])]:font-numeric [&_td:not([colspan])]:text-label [&_td:not([colspan])]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-3.5 [&_th]:py-3.25 [&_th]:text-right [&_th]:font-normal [&_th:first-child]:text-left [&_thead]:bg-muted [&_thead]:text-caption [&_thead]:text-muted-foreground [&_tr[data-selected]]:bg-muted"
+          >
             <caption className="sr-only">
               {title}，單位：{unit}
             </caption>

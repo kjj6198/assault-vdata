@@ -9,6 +9,8 @@
     "start": "node .output/server/index.mjs",
     "check": "vp check",
     "lint": "vp lint",
+    "lint:tw": "node scripts/lint-tailwind.mjs",
+    "lint:tw:fix": "node scripts/lint-tailwind.mjs --fix",
     "fmt": "vp fmt",
     "test": "vp test run",
     "data:build": ".venv/bin/python scripts/build_data.py",

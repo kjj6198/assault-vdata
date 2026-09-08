@@ -78,9 +78,11 @@ export function RegionsSection({ data }: { data: DashboardData }) {
           </TabsTrigger>
         </TabsList>
         <TabsContent value={regionMetric}>
-          <div className="race-primary">
-            <div className="race-section-heading">
-              <p className="race-eyebrow">2019—{years.at(-1)} / 縣市動態比較</p>
+          <div className="rounded-[6px] border border-t-3 border-border border-t-primary bg-card px-3.5 pt-5.5 pb-4 sm:px-8 sm:pt-7 sm:pb-6">
+            <div className="pt-0 pb-6 [&_h3]:text-[1.375rem] [&_h3]:font-bold [&_h3]:tracking-[0.02em] sm:[&_h3]:text-[1.625rem] [&>p:last-child]:mt-2 [&>p:last-child]:text-caption [&>p:last-child]:leading-[1.8] [&>p:last-child]:text-muted-foreground">
+              <p className="mb-2.5 font-numeric text-caption tracking-[0.08em] text-primary">
+                2019—{years.at(-1)} / 縣市動態比較
+              </p>
               <h3>縣市排序，隨時間變化</h3>
               <p>按下播放，看前十名縣市如何變化。也可拖曳時間軸，停在你想看的年份。</p>
             </div>
@@ -93,15 +95,17 @@ export function RegionsSection({ data }: { data: DashboardData }) {
           </div>
         </TabsContent>
       </Tabs>
-      <div className="region-map-section">
-        <div className="region-map-heading">
-          <p className="race-eyebrow">{year} / 縣市地圖</p>
+      <div className="mt-8 sm:mt-11">
+        <div className="mb-6 [&_h3]:mt-2.5 [&_h3]:text-[1.375rem] [&_h3]:font-bold [&_h3]:tracking-[0.02em] sm:[&_h3]:text-[1.625rem] [&>p:last-child]:mt-2.5 [&>p:last-child]:max-w-[65ch] [&>p:last-child]:text-label [&>p:last-child]:leading-[1.9] [&>p:last-child]:text-muted-foreground">
+          <p className="mb-2.5 font-numeric text-caption tracking-[0.08em] text-primary">
+            {year} / 縣市地圖
+          </p>
           <h3>在地圖上，找到你的縣市。</h3>
           <p>點選縣市，查看 {year} 年的數量、人口與全國排序。可使用上方年度選單切換年份。</p>
         </div>
         <TaiwanMap year={year} metric={regionMetric} measure={regionMeasure} rows={allRegionRows} />
       </div>
-      <details className="history-disclosure">
+      <details className="mt-7 border-y border-border py-1 [&_small]:mt-1.5 [&_small]:block [&_small]:text-caption [&_small]:font-normal [&_small]:text-muted-foreground [&_summary_svg]:size-4.5 [&_summary::-webkit-details-marker]:hidden [&>summary]:flex [&>summary]:min-h-19 [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-5 [&>summary]:text-label [&>summary]:font-bold [&[open]>summary>svg]:rotate-45">
         <summary>
           <span>
             查詢 {year} 年各縣市完整數據

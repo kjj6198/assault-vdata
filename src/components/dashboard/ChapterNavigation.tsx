@@ -18,22 +18,36 @@ export function ChapterNavigation({
   const activeSection = useActiveSection(sectionIds);
   const yearIndex = years.indexOf(year);
   return (
-    <div id="explore" className="explore-nav">
-      <div className={cn(pageWidth, "explore-nav-inner")}>
-        <nav aria-label="專題章節" className="chapter-links">
+    <div
+      id="explore"
+      className="sticky top-0 z-20 border-y border-border bg-transparent shadow-[0_3px_8px_oklch(0.25_0.028_255/0.035)] backdrop-blur-lg"
+    >
+      <div
+        className={cn(
+          pageWidth,
+          "flex flex-col-reverse items-center justify-between gap-0 lg:flex-row lg:gap-5",
+        )}
+      >
+        <nav
+          aria-label="專題章節"
+          className="flex min-w-0 items-stretch gap-4 max-lg:w-full max-sm:[scrollbar-width:thin] max-sm:[scrollbar-color:var(--border)_transparent] max-sm:justify-start max-sm:overflow-x-auto sm:max-lg:justify-between lg:gap-6.5"
+        >
           {sectionLinks.map((link) => (
             <a
               href={`#${link.id}`}
               key={link.id}
               aria-current={activeSection === link.id ? "true" : undefined}
-              className="chapter-link"
+              className="inline-flex min-h-10 items-center border-b-3 border-transparent pt-0.75 text-caption whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:text-foreground hover:no-underline aria-[current=true]:border-primary aria-[current=true]:font-bold aria-[current=true]:text-primary sm:min-h-13 lg:min-h-17.5"
             >
               {link.name}
             </a>
           ))}
         </nav>
-        <div className="nav-year-control">
-          <label htmlFor="year" className="nav-year-label">
+        <div className="flex shrink-0 items-center gap-0.5 pt-0.5 pb-0 max-lg:self-end max-sm:w-full sm:pt-2 lg:pb-2">
+          <label
+            htmlFor="year"
+            className="mr-auto text-caption whitespace-nowrap text-muted-foreground sm:mr-2"
+          >
             統計年度
           </label>
           <Button
@@ -48,7 +62,7 @@ export function ChapterNavigation({
           <DataSelect
             id="year"
             label="統計年度"
-            className="min-w-[92px] font-semibold tabular-nums max-sm:min-h-9 max-sm:min-w-20 max-sm:px-2 max-sm:py-1 max-sm:text-sm"
+            className="min-w-[92px] border-border bg-card font-semibold tabular-nums max-sm:min-h-9 max-sm:min-w-20 max-sm:px-2 max-sm:py-1 max-sm:text-sm"
             value={String(year)}
             onValueChange={(value) => onYearChange(Number(value))}
             options={[...years].reverse().map((y) => ({ value: String(y), label: String(y) }))}

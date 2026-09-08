@@ -37,7 +37,10 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
   const relationTotal = relationships.reduce((n, r) => n + r.value, 0);
   const leadingRelation = relationships[0];
   return (
-    <section id="relationships" className="story-section mt-4.5 bg-surface-alt sm:mt-8">
+    <section
+      id="relationships"
+      className="mt-4.5 scroll-mt-35 bg-surface-alt sm:mt-8 lg:scroll-mt-24"
+    >
       <div className={cn(pageWidth, storySection, "pb-[65px]")}>
         <SectionHeading
           number="03"
@@ -67,10 +70,10 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
                 <p className="text-xs leading-[1.9] text-muted-foreground">
                   此年齡範圍中，最多紀錄的關係為
                 </p>
-                <h3 className={cn(heading3, "my-3 text-[26px] [overflow-wrap:anywhere]")}>
+                <h3 className={cn(heading3, "my-3 text-[1.625rem] [overflow-wrap:anywhere]")}>
                   <AnimatedValue value={leadingRelation.label} />
                 </h3>
-                <strong className="font-numeric text-[40px] font-normal text-data-relationships tabular-nums sm:text-[46px]">
+                <strong className="font-numeric text-[2.5rem] font-normal text-data-relationships tabular-nums sm:text-[2.875rem]">
                   <AnimatedNumber value={leadingRelation.value} />
                   <small className={unitLabel}>人</small>
                 </strong>

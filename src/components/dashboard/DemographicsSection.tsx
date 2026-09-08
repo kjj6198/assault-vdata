@@ -92,8 +92,11 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
         </div>
         <aside className="self-start rounded-xl border border-border bg-card p-6 sm:p-7">
           <p className={eyebrow}>{year} 年・全部年齡</p>
-          <h3 className={cn(heading3, "mt-3.5 mb-6 text-[23px]")}>性別分布</h3>
-          <div className="gender-strip mb-6 h-3.5 overflow-hidden rounded-full" aria-hidden="true">
+          <h3 className={cn(heading3, "mt-3.5 mb-6 text-[1.4375rem]")}>性別分布</h3>
+          <div
+            className="relative mb-6 h-3.5 overflow-hidden rounded-full [&>i]:absolute [&>i]:inset-0 [&>i]:size-full [&>i]:origin-left [&>i]:transition-transform [&>i]:duration-600 [&>i]:ease-out-quart motion-reduce:[&>i]:transition-none"
+            aria-hidden="true"
+          >
             {genderTotals.map((g, index) => (
               <i
                 key={g.label}
@@ -109,7 +112,7 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
           </div>
           {genderTotals.map((g) => (
             <div
-              className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-[15px] text-[13px] tabular-nums font-numeric"
+              className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-[15px] font-numeric text-[0.8125rem] tabular-nums"
               key={g.label}
             >
               <span className="flex items-center gap-2">
@@ -117,7 +120,7 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
                 {g.label}
               </span>
               <b className="text-right font-medium">
-                <AnimatedNumber value={g.value} /> <small className="text-[10px]">人</small>
+                <AnimatedNumber value={g.value} /> <small className="text-[0.625rem]">人</small>
               </b>
               <span className="text-right text-xs text-muted-foreground">
                 {g.value > 0 && g.value / victimTotal < 0.001 ? (
@@ -129,7 +132,7 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
               </span>
             </div>
           ))}
-          <p className="mt-6 text-[11px] leading-[1.9] text-muted-foreground">
+          <p className="mt-6 text-[0.6875rem] leading-[1.9] text-muted-foreground">
             性別「其他」自 2019 年起新增。此前未設此欄位，不以零人代替。
           </p>
         </aside>

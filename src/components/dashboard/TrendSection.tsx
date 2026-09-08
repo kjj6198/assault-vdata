@@ -47,7 +47,7 @@ export function TrendSection({
               點選折線上的年份，或使用上方年度選單。
             </p>
           </div>
-          <p className="trend-selected">
+          <p className="flex items-baseline gap-2 text-caption text-muted-foreground max-sm:mb-1 [&_strong]:font-numeric [&_strong]:text-[2rem] [&_strong]:leading-none [&_strong]:font-medium [&_strong]:tracking-[-0.04em] [&_strong]:text-primary [&_strong]:tabular-nums [&>span]:mr-2">
             <span>{year} 年</span>
             <strong>
               <AnimatedNumber value={victimTotal} />

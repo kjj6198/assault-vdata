@@ -110,20 +110,19 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
     setPlaying(!playing);
   };
   return (
-    <div className="region-race">
+    <div>
       <div className="flex flex-col items-stretch gap-4 pt-1 pb-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-x-8 sm:gap-y-5">
         <div
           className="flex flex-col gap-1.5 text-xs text-muted-foreground"
           aria-live={running ? "off" : "polite"}
         >
-          <span>播放年度</span>
-          <strong className="font-numeric text-[clamp(44px,5vw,64px)] leading-none font-semibold tracking-[-0.02em] text-foreground tabular-nums">
+          <strong className="font-numeric text-[clamp(2.75rem,5vw,5rem)] leading-none font-semibold tracking-[-0.02em] text-foreground tabular-nums">
             <AnimatedDigits value={year0} />
           </strong>
         </div>
         <div className="flex flex-1 items-center justify-between gap-5 sm:min-w-70 sm:justify-end">
           <Button
-            className="min-w-25 race-play-button"
+            className="min-h-12 min-w-25"
             onClick={togglePlay}
             aria-label={label}
             aria-pressed={running}
@@ -153,7 +152,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               }}
             />
             <span
-              className="flex justify-between text-[11px] text-muted-foreground tabular-nums"
+              className="flex justify-between text-[0.6875rem] text-muted-foreground tabular-nums"
               aria-hidden="true"
             >
               <span>{startYear}</span>
@@ -162,12 +161,11 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
           </label>
         </div>
       </div>
-      <p className="pt-3 pb-1 text-[11px] leading-[1.8] text-muted-foreground">
-        {measure === "rate"
-          ? `長條刻度：0–${scale.rate}／十萬人・${startYear}–${lastYear} 年共用同一刻度，年與年之間的數值為線性內插`
-          : `長條刻度依 ${startYear}–${lastYear} 年最大值固定，年與年之間的數值為線性內插`}
-      </p>
-      <div className="race-column-headings" aria-hidden="true">
+
+      <div
+        className="grid grid-cols-[16px_78px_minmax(0,1fr)_60px] items-center gap-1.75 pt-4.5 pb-3 text-caption text-muted-foreground sm:grid-cols-[26px_112px_minmax(0,1fr)_80px_80px] sm:gap-4 max-sm:[&>span:last-child]:hidden max-sm:[&>span:nth-child(3)]:text-[0] [&>span:nth-last-child(-n+2)]:text-right"
+        aria-hidden="true"
+      >
         <span>#</span>
         <span>縣市／年底人口</span>
         <span>{measure === "rate" ? "每十萬人口比率" : "原始數量"}</span>
@@ -184,7 +182,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
           const rank = rankOf.get(r.city) ?? 0;
           return (
             <div
-              className="race-row absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] items-center border-b border-border font-numeric text-[13px] tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none"
+              className="absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] grid-cols-[16px_78px_minmax(0,1fr)_60px] items-center gap-1.75 border-b border-border font-numeric text-[0.8125rem] tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none sm:grid-cols-[26px_112px_minmax(0,1fr)_80px_80px] sm:gap-4 [&>b]:text-base max-sm:[&>span:last-child]:hidden"
               key={r.city}
               data-out={rank >= TOP || undefined}
               aria-hidden={rank >= TOP || undefined}
@@ -195,13 +193,16 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               </span>
               <span className="text-lg">
                 {r.city}
-                <small className="mt-1.25 block text-[10px] whitespace-nowrap text-muted-foreground [&_svg]:mr-1 [&_svg]:inline [&_svg]:align-[-0.15em]">
+                <small className="mt-1.25 block text-[0.625rem] whitespace-nowrap text-muted-foreground [&_svg]:mr-1 [&_svg]:inline [&_svg]:align-[-0.15em]">
                   <RiGroupLine aria-hidden="true" />
                   <span className="sr-only">人口</span>
                   {r.population === null ? "無資料" : formatNumber(Math.round(r.population))}
                 </small>
               </span>
-              <span className="race-bar-track" aria-hidden="true">
+              <span
+                className="block h-3.5 rounded-full bg-secondary sm:h-4.5 [&>i]:rounded-[inherit]"
+                aria-hidden="true"
+              >
                 <i
                   className="block h-full w-full origin-left bg-map-4 transition-[transform,background-color] duration-500 ease-out-quart motion-reduce:transition-none"
                   style={{
@@ -212,13 +213,13 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               </span>
               <b className="text-right font-medium">
                 {measure === "rate" ? formatRate(r.rate) : formatNumber(Math.round(r.value))}
-                <small className="race-mobile-secondary">
+                <small className="mt-1 block text-caption font-normal whitespace-nowrap text-muted-foreground sm:hidden">
                   {measure === "rate"
                     ? `${formatNumber(Math.round(r.value))} ${unit}`
                     : `${formatRate(r.rate)}／十萬人`}
                 </small>
               </b>
-              <span className="text-right text-[11px] text-muted-foreground">
+              <span className="text-right text-[0.6875rem] text-muted-foreground">
                 {measure === "rate"
                   ? `${formatNumber(Math.round(r.value))} ${unit}`
                   : formatRate(r.rate)}

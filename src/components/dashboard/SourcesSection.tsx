@@ -82,7 +82,7 @@ export function SourcesSection({ data }: { data: DashboardData }) {
             </Button>
           </div>
         </div>
-        <details className="mt-3 text-xs [&_code]:bg-secondary [&_code]:px-1.25 [&_code]:py-0.5 [&_code]:text-[11px]">
+        <details className="mt-3 text-xs [&_code]:bg-secondary [&_code]:px-1.25 [&_code]:py-0.5 [&_code]:text-[0.6875rem]">
           <summary className="min-h-11 content-center">API 使用方式</summary>
           <p className="my-3 leading-loose wrap-anywhere">
             <code>GET /api/v1/data</code> 提供完整資料。可加上 <code>year</code>、
