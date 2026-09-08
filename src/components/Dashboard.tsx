@@ -1,13 +1,5 @@
-import {
-  ratePer100k,
-  ratePosition,
-  rateAxisMax,
-  rateColor,
-  formatRate,
-  type RegionMeasure,
-} from "../lib/regions";
+import { ratePer100k, formatRate, type RegionMeasure } from "../lib/regions";
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import {
   RiAddLine,
   RiArrowDownLine,
@@ -24,8 +16,8 @@ import type { DataRecord } from "../lib/data";
 import { fixed1, formatNumber as num, share } from "../lib/data";
 import { DataChart } from "./DataChart";
 import { TaiwanMap } from "./TaiwanMap";
+import { RegionRace } from "./RegionRace";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
@@ -59,12 +51,6 @@ const rankRelationships = (records: DataRecord[], age: string) => {
   return [...counts].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 };
 const signed = (value: number) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(1)}%`;
-const RateNumber = ({ rate }: { rate: number | null }) =>
-  rate === null ? "—" : <AnimatedNumber key="rate" value={rate} format={formatRate} />;
-const listTransition = {
-  layout: { type: "spring", visualDuration: 0.4, bounce: 0 },
-  opacity: { duration: 0.2 },
-} as const;
 function SectionHeading({
   number,
   eyebrow,
@@ -97,8 +83,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
   const [relationAge, setRelationAge] = useState("全部");
   const [regionMetric, setRegionMetric] = useState<"victims" | "reports">("victims");
   const [regionMeasure, setRegionMeasure] = useState<RegionMeasure>("rate");
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("descending");
   const [showAllRelations, setShowAllRelations] = useState(false);
   const activeSection = useActiveSection(sectionIds);
   const demo = records.filter((r) => r.dataset === "demographics");
@@ -166,17 +150,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
       const population = populationByCity.get(r.city) ?? null;
       return { ...r, population, rate: ratePer100k(r.value, population) };
     });
-  const regionRows = allRegionRows
-    .filter((r) => r.city.includes(query.replaceAll("台", "臺").trim()))
-    .sort((a, b) => {
-      if (sort === "name") return a.city.localeCompare(b.city, "zh-Hant");
-      const av = regionMeasure === "rate" ? a.rate : a.value;
-      const bv = regionMeasure === "rate" ? b.rate : b.value;
-      if (av === null) return bv === null ? 0 : 1;
-      if (bv === null) return -1;
-      return sort === "ascending" ? av - bv : bv - av;
-    });
-  const regionRateMax = rateAxisMax(allRegionRows.map((r) => r.rate));
   const topRateCity = records
     .filter((r) => r.dataset === "victims")
     .map((r) => ({
@@ -262,7 +235,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
       ),
     },
   ];
-  const regionMax = Math.max(...allRegionRows.map((r) => r.value));
   const relationTotal = relationships.reduce((n, r) => n + r.value, 0);
   const leadingRelation = relationships[0];
   return (
@@ -450,10 +422,10 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           </div>
         </div>
         <div className="page-width">
-          <div className="year-status" role="status">
+          <output className="year-status">
             {pending ? "正在載入資料…" : `正在閱讀 ${year} 年資料`}
             <span>民國 {year - 1911} 年・全國統計</span>
-          </div>
+          </output>
           <div className="stat-grid">
             <div>
               <p>受暴人數</p>
@@ -518,7 +490,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             <div>
               <div className="panel-heading">
                 <h3>{year} 年・年齡分布</h3>
-                <label className="inline-filter">
+                <span className="inline-filter">
                   性別
                   <DataSelect
                     label="年齡分布的性別"
@@ -526,7 +498,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                     onValueChange={setGender}
                     options={["全部", ...genders].map((g) => ({ value: g, label: g }))}
                   />
-                </label>
+                </span>
               </div>
               <DataChart
                 title={`${year} 年年齡分布（${safeGender}）`}
@@ -653,7 +625,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             縣市的通報紀錄。每十萬人口比率可減少人口規模的影響，但不代表未通報事件的實際發生率。
           </SectionHeading>
           <div className="population-controls">
-            <label className="inline-filter">
+            <span className="inline-filter">
               比較方式
               <DataSelect
                 label="縣市比較方式"
@@ -666,7 +638,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                   { value: "count", label: "原始數量・線性刻度" },
                 ]}
               />
-            </label>
+            </span>
             <p>
               {regionMeasure === "rate"
                 ? "每十萬人口比率 = 人數或件數 ÷ 當年年底戶籍人口 × 100,000"
@@ -693,114 +665,26 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             </TabsContent>
           </Tabs>
           <div className="region-toolbar region-table-toolbar">
-            <h3>縣市數據列表</h3>
-            <label className="search-field">
-              搜尋縣市
-              <Input
-                type="search"
-                placeholder="輸入縣市名稱"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-            </label>
-            <label className="inline-filter">
-              排序
-              <DataSelect
-                label="排序"
-                value={sort}
-                onValueChange={setSort}
-                options={[
-                  {
-                    value: "descending",
-                    label: regionMeasure === "rate" ? "比率由高到低" : "數量由多到少",
-                  },
-                  {
-                    value: "ascending",
-                    label: regionMeasure === "rate" ? "比率由低到高" : "數量由少到多",
-                  },
-                  { value: "name", label: "縣市名稱" },
-                ]}
-              />
-            </label>
-          </div>
-          <div className="region-result" role="status">
-            {year} 年・{regionRows.length} 個縣市
+            <h3>縣市排名，逐年變化</h3>
             <span>
-              {regionMeasure === "rate" ? "每十萬人口比率／原始數量" : "原始數量／每十萬人口比率"}
+              2019—{years.at(-1)}・依{regionMeasure === "rate" ? "每十萬人口比率" : "原始數量"}
+              排序
             </span>
           </div>
-          {regionMeasure === "rate" && (
-            <p className="region-axis-note">
-              長條刻度：0–{regionRateMax}／十萬人・同年度共用，搜尋不改變刻度
-            </p>
-          )}
-          {regionRows.length ? (
-            <div className="region-grid population-grid">
-              <AnimatePresence mode="sync" initial={false}>
-                {regionRows.map((r) => (
-                  <motion.div
-                    className="region-row"
-                    key={r.city}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={listTransition}
-                  >
-                    <span className="region-city">
-                      {r.city}
-                      <small>
-                        人口{" "}
-                        {r.population === null ? "無資料" : <AnimatedNumber value={r.population} />}
-                      </small>
-                    </span>
-                    <span className="region-track" aria-hidden="true">
-                      <i
-                        style={{
-                          background: regionMeasure === "rate" ? rateColor(r.rate) : undefined,
-                          transform: `scaleX(${regionMeasure === "rate" ? ratePosition(r.rate ?? 0, regionRateMax) : r.value / regionMax})`,
-                        }}
-                      />
-                    </span>
-                    <b>
-                      {regionMeasure === "rate" ? (
-                        <RateNumber rate={r.rate} />
-                      ) : (
-                        <AnimatedNumber key="count" value={r.value} />
-                      )}
-                    </b>
-                    <span>
-                      {regionMeasure === "rate" ? (
-                        <>
-                          <AnimatedNumber key="count" value={r.value} />{" "}
-                          {regionMetric === "victims" ? "人" : "件"}
-                        </>
-                      ) : (
-                        <RateNumber rate={r.rate} />
-                      )}
-                    </span>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <div className="empty-state">
-              <h3>沒有符合「{query}」的縣市</h3>
-              <p>試試完整名稱或部分文字，例如「新竹」。</p>
-              <Button variant="ghost" onClick={() => setQuery("")}>
-                清除搜尋
-              </Button>
-            </div>
-          )}
+          <RegionRace
+            history={data.regionHistory}
+            metric={regionMetric}
+            measure={regionMeasure}
+            startYear={2019}
+          />
           <p className="population-note">
             人口來源：
             <a href={data.populationSource.page} target="_blank" rel="noreferrer">
               內政部戶政司・縣市人口統計
             </a>
-            ，採 {year} 年底戶籍人口。改制前縣市人口合併為現行 22
+            ，採各年年底戶籍人口。改制前縣市人口合併為現行 22
             縣市口徑。這是未經年齡標準化的粗比率；小人口縣市的比率較易隨少數通報波動。
-            {regionMeasure === "rate" &&
-              "長條從零起算，長度與比率成正比；上限依當年全部縣市調整。顏色使用各年度共用的固定六級比率區間，零值獨立留白。"}
+            {regionMeasure === "rate" && "顏色使用各年度共用的固定六級比率區間，零值獨立留白。"}
           </p>
           <a
             className="download-link"

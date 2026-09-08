@@ -9,24 +9,20 @@ export const yearSchema = z
   .number()
   .int()
   .refine((year) => database.years.includes(year), "Year outside available coverage");
-export function getDashboard(year: number) {
-  yearSchema.parse(year);
-  return {
-    year,
-    populations: populationDatabase.records.filter((r) => r.year === year),
-    populationSource: populationDatabase.source,
-    years: database.years,
-    ages: database.ages,
-    records: database.records.filter((r) => r.year === year),
-    trend: database.years.map((y) => ({
-      year: y,
-      victims: database.totals.find((t) => t.year === y && t.dataset === "victims")?.value ?? 0,
-      reports: database.totals.find((t) => t.year === y && t.dataset === "reports")?.value ?? 0,
-    })),
-    sources: database.sources,
-    qualityNotes: database.qualityNotes.filter((n) => n.year === year),
-  };
-}
+const regionHistory = database.records
+  .filter((r) => r.dataset === "victims" && "city" in r)
+  .map((r) => ({
+    year: r.year,
+    city: r.city,
+    victims: r.value,
+    reports:
+      database.records.find(
+        (o) => o.dataset === "reports" && "city" in o && o.city === r.city && o.year === r.year,
+      )?.value ?? 0,
+    population:
+      populationDatabase.records.find((p) => p.city === r.city && p.year === r.year)?.population ??
+      null,
+  }));
 export const querySchema = z.object({
   dataset: z.enum(datasetNames).optional(),
   year: z
@@ -122,4 +118,23 @@ export function dataResponse(request: Request) {
     },
     { headers },
   );
+}
+export function getDashboard(year: number) {
+  yearSchema.parse(year);
+  return {
+    year,
+    populations: populationDatabase.records.filter((r) => r.year === year),
+    populationSource: populationDatabase.source,
+    years: database.years,
+    ages: database.ages,
+    records: database.records.filter((r) => r.year === year),
+    trend: database.years.map((y) => ({
+      year: y,
+      victims: database.totals.find((t) => t.year === y && t.dataset === "victims")?.value ?? 0,
+      reports: database.totals.find((t) => t.year === y && t.dataset === "reports")?.value ?? 0,
+    })),
+    sources: database.sources,
+    qualityNotes: database.qualityNotes.filter((n) => n.year === year),
+    regionHistory,
+  };
 }

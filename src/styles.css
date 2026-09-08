@@ -763,6 +763,87 @@
     background: transparent;
     margin-top: 10px;
   }
+  .race-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px 32px;
+    padding-block: 4px 12px;
+  }
+  .race-year {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted-foreground);
+  }
+  .race-year strong {
+    font-family: var(--font-numeric);
+    font-size: clamp(44px, 5vw, 64px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+    font-variant-numeric: tabular-nums;
+  }
+  .race-controls {
+    display: flex;
+    flex: 1;
+    min-width: 280px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+  }
+  .race-controls [data-slot="button"] {
+    min-width: 100px;
+  }
+  .race-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: min(360px, 100%);
+  }
+  .race-slider input[type="range"] {
+    width: 100%;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    accent-color: var(--primary);
+  }
+  .race-slider-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+  }
+  .race-list {
+    --row-height: 64px;
+    position: relative;
+    height: calc(var(--rows) * var(--row-height));
+    border-top: 1px solid var(--border);
+  }
+  .race-list .race-row {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: var(--row-height);
+    padding-block: 0;
+    grid-template-columns: 26px 96px 1fr 64px 72px;
+    transform: translateY(calc(var(--rank) * var(--row-height)));
+    transition: transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+  }
+  .race-list .region-track i {
+    transition: background-color 400ms ease;
+  }
+  .race-rank {
+    font-size: 12px;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+  }
   .region-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -786,13 +867,6 @@
     background: var(--primary);
     color: var(--primary-foreground);
   }
-  .search-field {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-    margin-left: auto;
-  }
   input {
     min-height: 44px;
     border: 1px solid var(--border);
@@ -801,21 +875,6 @@
     background: transparent;
     width: 170px;
     font-size: 13px;
-  }
-  .region-result {
-    font-size: 11px;
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-    color: var(--muted-foreground);
-  }
-  .region-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 56px;
-    grid-auto-flow: row;
   }
   .region-row {
     display: grid;
@@ -859,20 +918,6 @@
     font-size: 12px;
     text-decoration: underline;
     text-underline-offset: 5px;
-  }
-  .empty-state {
-    text-align: center;
-    padding: 55px 20px;
-  }
-  .empty-state p {
-    margin-top: 12px;
-    font-size: 13px;
-  }
-  .empty-state button {
-    background: var(--secondary);
-    padding-inline: 20px;
-    border-radius: 4px;
-    margin-top: 20px;
   }
   .sources-section {
     background: var(--muted);
@@ -1062,12 +1107,6 @@
     }
     .region-toolbar {
       gap: 16px;
-    }
-    .search-field {
-      margin-left: 0;
-    }
-    .region-grid {
-      column-gap: 30px;
     }
     .relationship-layout {
       gap: 40px;
@@ -1268,22 +1307,22 @@
       width: 50%;
       font-size: 13px;
     }
-    .search-field {
-      width: 100%;
-      justify-content: space-between;
-    }
-    .search-field input {
-      width: 70%;
-    }
-    .region-grid {
-      grid-template-columns: 1fr;
-    }
     .region-row {
       grid-template-columns: 48px 1fr 46px 40px;
       gap: 12px;
     }
-    .region-result {
-      font-size: 10px;
+    .race-toolbar {
+      align-items: stretch;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .race-controls {
+      min-width: 0;
+      justify-content: space-between;
+    }
+    .race-list .race-row {
+      grid-template-columns: 20px 78px 1fr 50px 56px;
+      gap: 8px;
     }
     .sources-section {
       padding-block: 48px;
@@ -1817,6 +1856,7 @@ summary svg {
     transform: none;
   }
   .region-track i,
+  .race-list .race-row,
   .gender-stack i,
   .hero-gender-bar i,
   .explore-link svg,
@@ -1878,9 +1918,6 @@ summary svg {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.population-grid .region-row {
-  grid-template-columns: 110px 1fr 55px 62px;
-}
 .region-city small {
   display: block;
   font-size: 10px;
@@ -1888,17 +1925,10 @@ summary svg {
   margin-top: 5px;
   white-space: nowrap;
 }
-.search-field {
-  white-space: nowrap;
-}
 .map-population {
   margin-top: 12px;
 }
 @media (max-width: 720px) {
-  .population-grid .region-row {
-    grid-template-columns: 92px 1fr 47px 56px;
-    gap: 8px;
-  }
   .population-controls {
     align-items: flex-start;
   }
