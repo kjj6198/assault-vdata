@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vp dev --host 0.0.0.0 --port 3000",
     "build": "vp build",
-    "start": "node .output/server/index.mjs",
+    "preview": "npx wrangler@latest dev",
+    "deploy": "npx wrangler@latest deploy",
     "check": "vp check",
     "lint": "vp lint",
     "lint:tw": "node scripts/lint-tailwind.mjs",

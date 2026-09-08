@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => ({
       : [
           tailwindcss(),
           tanstackStart(),
-          nitro({ preset: "node-server" }),
+          nitro({ preset: "cloudflare_module" }),
           react({ compiler: true }),
         ],
   lint: {

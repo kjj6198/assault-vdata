@@ -14,13 +14,25 @@ npm run dev
 Open the URL printed by Vite+ (port 3000 by default; another free port is selected if occupied). The website and API run in the same application. No external API, Python installation, credentials, or database server is needed to run the site: the verified dataset is checked in.
 
 ```sh
-npm run check       # TypeScript and Vite+ lint
-npm test            # Data integrity and API handler tests
-npm run build       # Client + SSR + Nitro Node server
-PORT=3001 npm start # Run the production build locally
+npm run check   # TypeScript and Vite+ lint
+npm test        # Data integrity and API handler tests
+npm run build   # Client + SSR + Cloudflare Worker bundle
+npm run preview # Run the built Worker locally in workerd
 ```
 
-Vite+ is the actual development, build, test, lint, and format toolchain (`vite-plus`, with its Vite core alias in npm overrides). Nitro packages the production Node server. The server-only data module validates the checked-in snapshot with Zod. TanStack Start server functions load the selected year; HTTP API routes expose the same records. Chart.js loads on the client after hydration; every chart includes an HTML data table that also works without JavaScript. The year is stored in the URL; unsupported numeric years redirect to the latest available year.
+Vite+ is the actual development, build, test, lint, and format toolchain (`vite-plus`, with its Vite core alias in npm overrides). Nitro packages the production Cloudflare Worker. The server-only data module validates the checked-in snapshot with Zod. TanStack Start server functions load the selected year; HTTP API routes expose the same records. Chart.js loads on the client after hydration; every chart includes an HTML data table that also works without JavaScript. The year is stored in the URL; unsupported numeric years redirect to the latest available year.
+
+## Deploy
+
+The site deploys to Cloudflare Workers. Nitro's `cloudflare_module` preset emits the Worker entry and generates `.output/server/wrangler.json` from the root `wrangler.json`, so Wrangler needs no separate configuration.
+
+```sh
+npx wrangler@latest login
+npm run build
+npm run deploy
+```
+
+Static files under `public/` are served by the `ASSETS` binding; everything else runs in the Worker. The dataset is bundled into the Worker, so no filesystem, KV, or database binding is required. Change `name` in `wrangler.json` to pick the workers.dev subdomain.
 
 ## Sources and coverage
 
@@ -95,7 +107,7 @@ Button, Select, Tabs, Input, Badge, and Card come from shadcn/ui, with Radix key
 
 Motion for React handles chapter headings entering the viewport once and short annual-number transitions. CSS handles the hero entrance, select popovers, and button press feedback. Movement uses transform/opacity, with opacity-only alternatives under `prefers-reduced-motion`. Charts and map geometry update immediately so intermediate shapes do not imply intermediate values. Server-rendered content remains readable without JavaScript.
 
-Browser verification covers the production server, desktop and 390/320px layouts, year navigation, gender and relationship filters, full data tables, region metric/search/sort controls, empty results, JSON/CSV, and invalid URLs. No deployment has been made; the requested deliverable runs locally.
+Browser verification covers the production server, desktop and 390/320px layouts, year navigation, gender and relationship filters, full data tables, region metric/search/sort controls, empty results, JSON/CSV, and invalid URLs.
 
 ## Taiwan county map
 
