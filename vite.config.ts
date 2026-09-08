@@ -9,7 +9,35 @@ export default defineConfig(({ mode }) => ({
   plugins:
     mode === "test"
       ? []
-      : [tailwindcss(), tanstackStart(), nitro({ preset: "node-server" }), react()],
-  fmt: { ignorePatterns: ["data/**", "src/routeTree.gen.ts", "package-lock.json"] },
+      : [
+          tailwindcss(),
+          tanstackStart(),
+          nitro({ preset: "node-server" }),
+          react({ compiler: true }),
+        ],
+  lint: {
+    plugins: [
+      "eslint",
+      "typescript",
+      "unicorn",
+      "oxc",
+      "import",
+      "promise",
+      "react",
+      "react-perf",
+      "jsx-a11y",
+    ],
+    ignorePatterns: ["data/**", "src/routeTree.gen.ts", ".output/**"],
+    rules: {
+      // SVG and canvas have no tag equivalent for `role="button"`, `"group"` or `"img"`.
+      "jsx-a11y/prefer-tag-over-role": "off",
+      // A scrollable container needs `tabIndex={0}` to stay keyboard reachable (WCAG 2.1.1).
+      "jsx-a11y/no-noninteractive-tabindex": "off",
+    },
+    options: { typeAware: true, typeCheck: true },
+  },
+  fmt: {
+    ignorePatterns: ["data/**", "src/routeTree.gen.ts", "package-lock.json"],
+  },
   test: { include: ["tests/**/*.test.ts"] },
 }));

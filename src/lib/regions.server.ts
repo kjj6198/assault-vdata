@@ -67,7 +67,7 @@ export function regionsResponse(request: Request) {
       "countRow",
       "countColumn",
     ];
-    const cell = (v: unknown) => `"${String(v ?? "").replaceAll('"', '""')}"`;
+    const cell = (v: string | number | null) => `"${String(v ?? "").replaceAll('"', '""')}"`;
     const rows = records.map((r) =>
       [
         r.year,
