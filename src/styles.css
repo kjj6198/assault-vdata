@@ -1629,3 +1629,238 @@
     }
   }
 }
+
+@layer components {
+  .hero-facts {
+    padding-top: 0;
+    padding-bottom: 40px;
+  }
+  .facts-grid {
+    grid-template-columns: 1.15fr 1fr 1fr;
+    gap: 22px;
+    align-items: stretch;
+  }
+  .fact-card {
+    --overview-panel: #1c293b;
+    --overview-ink: #f3f5fa;
+    --overview-muted: #bbc7d7;
+    --overview-line: #536073;
+    --overview-accent: #bc892b;
+    --overview-track: #60738b;
+    color: var(--overview-ink);
+    background: var(--overview-panel);
+    border: 0;
+    border-radius: 20px;
+    padding: 26px 26px 8px;
+  }
+  .fact-detail-link:hover {
+    background: #304057;
+    color: var(--overview-ink);
+  }
+  .fact-people {
+    grid-row: span 2;
+    padding: 28px;
+  }
+  .people-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--overview-line);
+    color: var(--overview-muted);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+  }
+  .people-heading > span:last-child {
+    font-family: var(--font-numeric);
+    font-size: 23px;
+  }
+  .people-dots {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 9px;
+    width: 82%;
+    margin: 26px auto;
+  }
+  .people-dots i {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--overview-track);
+  }
+  .people-dots i[data-filled] {
+    background: var(--overview-accent);
+  }
+  .people-age {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .people-age .fact-number {
+    font-size: clamp(48px, 4.8vw, 76px);
+    white-space: nowrap;
+  }
+  .people-age h3 {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .people-age strong {
+    display: block;
+  }
+  .people-caption {
+    color: var(--overview-muted);
+    font-size: 11px;
+    line-height: 1.9;
+    margin-top: 18px;
+  }
+  .people-gender {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--overview-line);
+  }
+  .people-gender-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  .people-gender-bar {
+    display: flex;
+    height: 9px;
+    gap: 2px;
+    margin-block: 20px;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .people-gender-bar i {
+    min-width: 1px;
+  }
+  .fact-people [data-gender="女"] {
+    background: #c1ccdc;
+  }
+  .fact-people [data-gender="男"] {
+    background: var(--overview-accent);
+  }
+  .fact-people [data-gender="其他"] {
+    background: #7c9fc7;
+  }
+  .fact-people [data-gender="不詳"] {
+    background: #71839b;
+  }
+  .people-gender-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .people-gender-list > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .people-gender-list dt {
+    font-size: 13px;
+    padding-top: 5px;
+    white-space: nowrap;
+  }
+  .people-gender-list dt i {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 7px;
+    border-radius: 50%;
+  }
+  .people-gender-list dd {
+    text-align: right;
+    font-family: var(--font-numeric);
+    font-size: 23px;
+    line-height: 1.4;
+  }
+  .people-gender-list dd small {
+    margin-left: 2px;
+    font-size: 13px;
+  }
+  .people-gender-list dd > span {
+    display: block;
+  }
+  .people-gender-list dd > span:last-child {
+    color: var(--overview-muted);
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  .people-footnote {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+  .fact-relationships {
+    grid-column: 2 / 4;
+  }
+  .fact-card-heading h3 {
+    font-size: 14px;
+  }
+  .fact-history {
+    margin-block: 20px 0;
+  }
+  .fact-region .fact-number {
+    font-size: clamp(36px, 3.5vw, 52px);
+  }
+  .fact-region .fact-name {
+    font-size: 28px;
+  }
+  @media (width < 1100px) {
+    .facts-grid {
+      grid-template-columns: 1.1fr 1fr;
+    }
+    .fact-people {
+      grid-row: span 2;
+    }
+    .fact-relationships {
+      grid-column: 1 / -1;
+    }
+    .people-age {
+      gap: 16px;
+    }
+    .people-age .fact-number {
+      font-size: 60px;
+    }
+  }
+  @media (width < 640px) {
+    .facts-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+    .fact-card {
+      padding: 24px 22px 8px;
+    }
+    .fact-people {
+      grid-row: auto;
+      padding: 26px;
+    }
+    .fact-relationships {
+      grid-column: auto;
+    }
+    .people-dots {
+      max-width: 300px;
+    }
+    .people-age .fact-number {
+      font-size: clamp(52px, 15vw, 76px);
+    }
+    .people-age h3 {
+      font-size: 13px;
+    }
+    .people-gender-list {
+      gap: 22px 18px;
+    }
+    .people-gender-list dd {
+      font-size: 24px;
+    }
+  }
+}
+
+@layer components {
+  .facts-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}

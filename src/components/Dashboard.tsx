@@ -178,8 +178,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
     }))
     .filter((r): r is { city: string; rate: number } => r.rate !== null)
     .sort((a, b) => b.rate - a.rate)[0];
-  const female = genderTotals[0];
-  const male = genderTotals[1];
   const relationTotal = relationships.reduce((n, r) => n + r.value, 0);
   const leadingRelation = relationships[0];
   return (
@@ -236,6 +234,53 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 <p className="hero-summary-note">人數與件數為不同統計口徑，不能直接相加。</p>
               </aside>
             </section>
+            <section
+              id="overview"
+              tabIndex={-1}
+              className={cn(pageWidth, "hero-facts", pendingFade)}
+              aria-labelledby="facts-heading"
+              aria-busy={pending}
+            >
+              <div className="facts-toolbar">
+                <div>
+                  <output className="facts-eyebrow">
+                    {pending ? "正在載入資料…" : `${year} 年・民國 ${year - 1911} 年`}
+                  </output>
+                  <h2 id="facts-heading">這一年，值得看見的數字</h2>
+                </div>
+                <div className="facts-controls">
+                  <DataSelect
+                    id="hero-year"
+                    label="年度重點統計年度"
+                    value={String(year)}
+                    onValueChange={(value) => onYearChange(Number(value))}
+                    options={[...years]
+                      .reverse()
+                      .map((y) => ({ value: String(y), label: `${y} 年` }))}
+                  />
+                  <a className="overview-download" href={`/api/v1/data?year=${year}&format=csv`}>
+                    下載 {year} 年資料 <RiDownloadLine aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+              <HeroFacts
+                year={year}
+                total={victimTotal}
+                change={change}
+                previous={previous}
+                trend={trend}
+                topCity={topRateCity}
+                genders={genderTotals}
+                minors={minors}
+                relationships={overallRelations}
+              />
+              <p className="facts-source">
+                資料來源：衛生福利部保護服務司・百分比依同年度資料計算，含不詳類別。
+                <a href="#sources">
+                  資料與計算方式 <RiArrowRightUpLine aria-hidden="true" />
+                </a>
+              </p>
+            </section>
           </div>
         </div>
         <div id="explore" className="explore-nav">
@@ -284,45 +329,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               </Button>
             </div>
           </div>
-        </div>
-        <div className="hero-overview">
-          <section
-            id="overview"
-            tabIndex={-1}
-            className={cn(pageWidth, "hero-facts", pendingFade)}
-            aria-labelledby="facts-heading"
-            aria-busy={pending}
-          >
-            <div className="facts-toolbar">
-              <div>
-                <output className="facts-eyebrow">
-                  {pending ? "正在載入資料…" : `${year} 年・民國 ${year - 1911} 年`}
-                </output>
-                <h2 id="facts-heading">這一年，值得看見的數字</h2>
-              </div>
-              <a className="overview-download" href={`/api/v1/data?year=${year}&format=csv`}>
-                下載 {year} 年資料 <RiDownloadLine aria-hidden="true" />
-              </a>
-            </div>
-            <HeroFacts
-              year={year}
-              total={victimTotal}
-              change={change}
-              previous={previous}
-              trend={trend}
-              topCity={topRateCity}
-              female={female.value}
-              male={male.value}
-              minors={minors}
-              relationships={overallRelations}
-            />
-            <p className="facts-source">
-              資料來源：衛生福利部保護服務司・百分比依同年度資料計算，含不詳類別。
-              <a href="#sources">
-                資料與計算方式 <RiArrowRightUpLine aria-hidden="true" />
-              </a>
-            </p>
-          </section>
         </div>
         <div className={cn(pageWidth, "reading-guide")}>
           <span className="reading-guide-label">閱讀前，先了解</span>

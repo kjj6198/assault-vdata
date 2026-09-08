@@ -16,8 +16,7 @@ type Props = {
   previous: { year: number; victims: number } | undefined;
   trend: { year: number; victims: number }[];
   topCity: { city: string; rate: number } | undefined;
-  female: number;
-  male: number;
+  genders: { label: string; value: number }[];
   minors: number;
   relationships: { label: string; value: number }[];
 };
@@ -58,19 +57,77 @@ export function HeroFacts({
   previous,
   trend,
   topCity,
-  female,
-  male,
+  genders,
   minors,
   relationships,
 }: Props) {
   const reduced = useReducedMotionPreference();
-  const femaleShare = share(female, total);
   const minorShare = share(minors, total);
   const maxVictims = Math.max(1, ...trend.map((row) => row.victims));
   const relationshipTotal = relationships.reduce((sum, row) => sum + row.value, 0);
   const leading = relationships[0];
   return (
     <div className="facts-grid">
+      <article className="fact-card fact-people" aria-label={`${year} 年受暴人的年齡與性別`}>
+        <div className="people-heading">
+          <span>被記錄的，是人生。</span>
+          <span>{year}</span>
+        </div>
+        <div className="people-dots" aria-hidden="true">
+          {Array.from({ length: 100 }, (_, i) => (
+            <i key={i} data-filled={i < Math.round(minorShare) || undefined} />
+          ))}
+        </div>
+        <div className="people-age">
+          <p className="fact-number">
+            <AnimatedNumber value={minorShare} format={fixed1} />
+            <small>%</small>
+          </p>
+          <h3>
+            當年受暴人中<strong>未滿 18 歲</strong>
+          </h3>
+        </div>
+        <p className="people-caption">每個圓點約代表 1% 的受暴人數，含年齡不詳者。</p>
+        <div className="people-gender">
+          <div className="people-gender-heading">
+            <h3>當年受暴人的性別比例</h3>
+            <a href="#ages" className="fact-detail-link" aria-label="探索年齡與性別">
+              <RiArrowRightUpLine aria-hidden="true" />
+            </a>
+          </div>
+          <div className="people-gender-bar" aria-hidden="true">
+            {genders.map((row) => (
+              <i
+                key={row.label}
+                data-gender={row.label}
+                style={{ width: `${share(row.value, total)}%` }}
+              />
+            ))}
+          </div>
+          <dl className="people-gender-list">
+            {genders.map((row) => (
+              <div key={row.label}>
+                <dt>
+                  <i data-gender={row.label} />
+                  {row.label}
+                </dt>
+                <dd>
+                  <span>
+                    {row.value > 0 && share(row.value, total) < 0.1
+                      ? "<0.1"
+                      : fixed1(share(row.value, total))}
+                    <small>%</small>
+                  </span>
+                  <span>{formatNumber(row.value)} 人</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <p className="people-caption people-footnote">
+          以全部受暴人數為分母，含其他與不詳；四捨五入後合計可能不為 100%。
+        </p>
+      </article>
       <FactCard number="01" label="與前一年相比" href="#trend" className="fact-trend">
         <p className="fact-kicker">受暴人數的年度變化</p>
         <p className="fact-number">
@@ -137,69 +194,8 @@ export function HeroFacts({
         <p className="fact-note">依縣市人口換算，並非案件總數排名</p>
       </FactCard>
 
-      <FactCard number="03" label="受暴人的性別比例" href="#ages" className="fact-gender">
-        <div className="fact-gauge">
-          <svg viewBox="0 0 200 200" aria-hidden="true">
-            <circle className="gauge-track" cx="100" cy="100" r="79" />
-            <circle
-              className="gauge-value"
-              cx="100"
-              cy="100"
-              r="79"
-              pathLength="100"
-              strokeDasharray={`${femaleShare} ${100 - femaleShare}`}
-              transform="rotate(-90 100 100)"
-            />
-            <circle
-              className="gauge-ticks"
-              cx="100"
-              cy="100"
-              r="94"
-              pathLength="100"
-              strokeDasharray="0.3 2.2"
-            />
-          </svg>
-          <div>
-            <p className="fact-kicker">女性占比</p>
-            <p className="fact-number">
-              <AnimatedNumber value={femaleShare} format={fixed1} />
-              <small>%</small>
-            </p>
-          </div>
-        </div>
-        <p className="fact-note fact-legend">
-          <span>
-            <i />
-            女性 <AnimatedNumber value={female} /> 人
-          </span>
-          <span>
-            男性 <AnimatedNumber value={share(male, total)} format={fixed1} />%
-          </span>
-        </p>
-      </FactCard>
-
-      <FactCard number="04" label="受暴人中，未滿 18 歲" href="#ages" className="fact-minors">
-        <div className="fact-minors-body">
-          <div>
-            <p className="fact-number">
-              <AnimatedNumber value={minorShare} format={fixed1} />
-              <small>%</small>
-            </p>
-            <p className="fact-unit">
-              <AnimatedNumber value={minors} /> 位未滿 18 歲受暴人
-            </p>
-          </div>
-          <div className="fact-waffle" aria-hidden="true">
-            {Array.from({ length: 100 }, (_, i) => (
-              <i key={i} data-filled={i < Math.round(minorShare) || undefined} />
-            ))}
-          </div>
-        </div>
-        <p className="fact-note">每格約代表 1%・分母包含年齡不詳者</p>
-      </FactCard>
-
       <FactCard
-        number="05"
+        number="03"
         label="被害人與加害人的關係"
         href="#relationships"
         className="fact-relationships"
