@@ -7,6 +7,7 @@ import {
   formatRate,
 } from "../lib/regions";
 import { useState } from "react";
+import { RiDownloadLine } from "react-icons/ri";
 import { DataSelect } from "./DataSelect";
 import { Card } from "./ui/card";
 import { taiwanMap, mapScale, countyColor } from "../lib/map";
@@ -194,7 +195,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
           </a>
         </p>
         <a href="/geo/taiwan-counties.geojson" download>
-          下載 GeoJSON ↓
+          下載 GeoJSON <RiDownloadLine aria-hidden="true" />
         </a>
       </div>
     </div>

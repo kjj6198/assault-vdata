@@ -1,6 +1,7 @@
 import palette from "../lib/palette.json";
 import { useEffect, useRef, useState } from "react";
 import type { Chart } from "chart.js";
+import { RiAddLine } from "react-icons/ri";
 import { formatNumber } from "../lib/data";
 
 type Series = { label: string; values: number[]; color: string };
@@ -117,7 +118,7 @@ export function DataChart({
       </div>
       <details className="data-details">
         <summary>
-          查看圖表數據 <span aria-hidden="true">＋</span>
+          查看圖表數據 <RiAddLine aria-hidden="true" />
         </summary>
         <div className="table-scroll" tabIndex={0} role="region" aria-label={`${title}數據表`}>
           <table>

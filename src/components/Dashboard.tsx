@@ -7,6 +7,16 @@ import {
   type RegionMeasure,
 } from "../lib/regions";
 import { useMemo, useState } from "react";
+import {
+  RiAddLine,
+  RiArrowDownLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiArrowRightUpLine,
+  RiArrowUpLine,
+  RiDownloadLine,
+  RiSubtractLine,
+} from "react-icons/ri";
 import type { getDashboard } from "../lib/data.server";
 import type { DataRecord } from "../lib/data";
 import { formatNumber as num, percent } from "../lib/data";
@@ -168,7 +178,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           看見數字背後<span className="brand-en">TAIWAN DATA STORIES</span>
         </a>
         <a href="#sources" className="header-link">
-          資料與方法 <span aria-hidden="true">↗</span>
+          資料與方法 <RiArrowRightUpLine aria-hidden="true" />
         </a>
       </header>
       <main id="main">
@@ -189,7 +199,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               透過年齡、關係與地域，理解數字背後的處境。
             </p>
             <a href="#explore" className="explore-link">
-              一起讀懂這些數據 <span aria-hidden="true">↓</span>
+                一起讀懂這些數據 <RiArrowDownLine aria-hidden="true" />
             </a>
             <p className="hero-source">資料來源：衛生福利部保護服務司</p>
           </div>
@@ -281,7 +291,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 disabled={yearIndex === 0}
                 onClick={() => onYearChange(years[yearIndex - 1])}
               >
-                ←
+                <RiArrowLeftSLine aria-hidden="true" />
               </Button>
               <DataSelect
                 id="year"
@@ -296,7 +306,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 disabled={yearIndex === years.length - 1}
                 onClick={() => onYearChange(years[yearIndex + 1])}
               >
-                →
+                <RiArrowRightSLine aria-hidden="true" />
               </Button>
             </div>
           </div>
@@ -473,7 +483,11 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                   onClick={() => setShowAllRelations(!showAllRelations)}
                 >
                   {showAllRelations ? "收合為前 8 項" : `展開全部 ${relationships.length} 項關係`}{" "}
-                  <span aria-hidden="true">{showAllRelations ? "−" : "＋"}</span>
+                  {showAllRelations ? (
+                    <RiSubtractLine aria-hidden="true" />
+                  ) : (
+                    <RiAddLine aria-hidden="true" />
+                  )}
                 </Button>
               </div>
             </div>
@@ -614,7 +628,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             className="download-link"
             href={`/api/v1/regions?dataset=${regionMetric}&year=${year}&format=csv`}
           >
-            下載 {year} 年縣市數據 CSV <span aria-hidden="true">↓</span>
+            下載 {year} 年縣市數據 CSV <RiDownloadLine aria-hidden="true" />
           </a>
         </section>
         <section id="sources" className="sources-section">
@@ -634,7 +648,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                     return source ? (
                       <li key={kind}>
                         <a href={source.page} target="_blank" rel="noreferrer">
-                          {source.title.split("(")[0]} <span aria-hidden="true">↗</span>
+                          {source.title.split("(")[0]} <RiArrowRightUpLine aria-hidden="true" />
                         </a>
                       </li>
                     ) : null;
@@ -682,12 +696,12 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               <div className="download-actions">
                 <Button asChild>
                   <a href={`/api/v1/data?year=${year}&format=csv`}>
-                    下載 {year} 年 CSV <span aria-hidden="true">↓</span>
+                    下載 {year} 年 CSV <RiDownloadLine aria-hidden="true" />
                   </a>
                 </Button>
                 <Button variant="outline" asChild>
                   <a href="/api/v1/data">
-                    完整 JSON <span aria-hidden="true">↗</span>
+                    完整 JSON <RiArrowRightUpLine aria-hidden="true" />
                   </a>
                 </Button>
               </div>
@@ -702,7 +716,9 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 dataset 支援 demographics、relationships、victims、reports。city
                 僅適用縣市統計。年份與來源請見 <a href="/api/v1/meta">/api/v1/meta</a>。
               </p>
-              <a href="/api/v1/data?year=2025&dataset=victims">範例：2025 年各縣市受暴人數 ↗</a>
+              <a href="/api/v1/data?year=2025&dataset=victims">
+                範例：2025 年各縣市受暴人數 <RiArrowRightUpLine aria-hidden="true" />
+              </a>
             </details>
           </div>
         </section>
@@ -712,7 +728,9 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           看見數字背後
         </a>
         <p>台灣性侵害統計・以理解，取代想像。</p>
-        <a href="#main">回到頂端 ↑</a>
+        <a href="#main">
+          回到頂端 <RiArrowUpLine aria-hidden="true" />
+        </a>
       </footer>
     </>
   );

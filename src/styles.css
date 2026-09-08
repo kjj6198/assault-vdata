@@ -193,8 +193,15 @@
     border-bottom: 1px solid var(--foreground);
     padding-block: 10px;
   }
-  .explore-link span {
-    font-size: 22px;
+  .explore-link svg {
+    width: 22px;
+    height: 22px;
+    transition: transform 200ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .explore-link:hover svg {
+      transform: translateY(3px);
+    }
   }
   .hero-source {
     margin-top: 30px;
@@ -489,7 +496,10 @@
     width: fit-content;
     color: var(--muted-foreground);
   }
-  .data-details[open] summary span {
+  .data-details summary svg {
+    transition: transform 200ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .data-details[open] summary svg {
     transform: rotate(45deg);
   }
   .table-scroll {
@@ -1543,6 +1553,19 @@
 }
 .hero-visual {
   animation: story-enter 480ms cubic-bezier(0.19, 1, 0.22, 1) 80ms both;
+}
+a svg,
+button svg,
+summary svg {
+  flex-shrink: 0;
+}
+.source-links a,
+.api-details a,
+.map-source a,
+.footer > a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 [data-slot="select-content"][data-state="open"] {
   animation: select-enter 180ms cubic-bezier(0.25, 1, 0.5, 1);
