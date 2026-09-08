@@ -39,6 +39,7 @@ export const zh = {
   },
   hero: {
     title: "台灣性侵害統計",
+    intro: "從歷年通報數據，看見受害者樣貌、關係與地區差異。",
     national: (year: number) => `${year} 年・全國統計`,
     victims: "通報紀錄中的受暴人數",
     reports: "同年度通報件數",
@@ -132,21 +133,17 @@ export const zh = {
     countNote: "原始數量保留各縣市通報紀錄的規模。",
     metricAria: "縣市統計指標",
     raceEyebrow: (last: number) => `2019—${last} / 縣市動態比較`,
-    raceTitle: "縣市排序，隨時間變化",
-    raceIntro:
-      "按下播放，看前十名縣市如何變化。也可拖曳時間軸，停在你想看的年份。播放中的數值為年度間插值；暫停或拖曳後顯示該年度原始數據。",
+    raceTitle: "縣市排序",
+    raceIntro: "按下播放，看前十名縣市如何變化",
     mapEyebrow: (year: number) => `${year} / 縣市地圖`,
-    mapTitle: "在地圖上，找到你的縣市。",
-    mapIntro: (year: number) =>
-      `點選縣市，查看 ${year} 年的數量、人口與全國排序。可使用上方年度選單切換年份。`,
+    mapTitle: "性侵害通報數縣市分布",
+    mapIntro: (year: number) => `點選縣市，查看 ${year} 年的數量、人口與全國排序。`,
     tableSummary: (year: number) => `查詢 ${year} 年各縣市完整數據`,
     tableHint: "搜尋 22 個縣市・比較人數、件數與每十萬人口比率",
     populationSource: "人口來源：",
     populationSourceLink: "內政部戶政司・縣市人口統計",
-    populationNote:
-      "，採各年年底戶籍人口。改制前縣市人口合併為現行 22 縣市口徑。這是未經年齡標準化的粗比率；小人口縣市的比率較易隨少數通報波動。",
+    populationNote: "，採各年年底戶籍人口。改制前縣市人口合併為現行 22 縣市口徑。",
     rateColorNote: "顏色使用各年度共用的固定六級比率區間，零值獨立留白。",
-    downloadCsv: (year: number) => `下載 ${year} 年縣市數據 CSV`,
   },
   race: {
     pause: "暫停",
@@ -189,7 +186,6 @@ export const zh = {
       `${year} 年台灣縣市${metric}地圖；可用 Tab、Enter 選擇縣市`,
     county: (city: string, count: string, rate: string, unit: string) =>
       `${city}：${count}；每十萬人口 ${rate} ${unit}`,
-    insetNote: "離島採內嵌圖，位置經移置。點選或移至縣市，可查看數值。",
     selectCity: "選擇縣市",
     yearMetric: (year: number, metric: string) => `${year} 年・${metric}`,
     population: "年底人口",
@@ -201,12 +197,6 @@ export const zh = {
     legendCount: "色階範圍",
     unitLabel: (unit: string) => `單位：${unit}`,
     zero: "0（零紀錄）",
-    rateNote: "色階界線固定為 25、35、45、60、80，各年度共用。零值留白，缺少人口時顯示灰色。",
-    countNote: "各年度與兩種指標使用同一組數量區間。",
-    boundary: "界線：",
-    nlsc: "內政部國土測繪中心",
-    atlas: "Taiwan Atlas（2021.9.20）",
-    downloadGeo: "下載 GeoJSON",
   },
   chart: {
     labelLength: 13,

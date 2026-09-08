@@ -43,6 +43,7 @@ export const ja = {
   },
   hero: {
     title: "台湾の性暴力被害統計",
+    intro: "年次の通報データから、被害者の属性、関係性、地域差を見ていきます。",
     national: (year: number) => `${year}年 全国統計`,
     victims: "通報記録における被害者数",
     reports: "同年の通報件数",
@@ -140,21 +141,18 @@ export const ja = {
     countNote: "実数は各県市の通報記録の規模をそのまま示します。",
     metricAria: "県市の統計指標",
     raceEyebrow: (last: number) => `2019—${last} / 県市の推移比較`,
-    raceTitle: "県市の順位は、時間とともに変わる",
-    raceIntro:
-      "再生を押すと、上位10県市の変化を見られます。タイムラインをドラッグして、見たい年で止めることもできます。再生中の値は年の間を補間したものです。一時停止またはドラッグ後は、その年の元データを表示します。",
+    raceTitle: "県市ランキング",
+    raceIntro: "再生を押すと、上位10県市の変化を見られます。",
     mapEyebrow: (year: number) => `${year} / 県市地図`,
-    mapTitle: "地図で、あなたの県市を探す。",
-    mapIntro: (year: number) =>
-      `県市を選ぶと、${year}年の数値、人口、全国順位を見られます。上の年セレクターで年を切り替えられます。`,
+    mapTitle: "性暴力通報数の県市別分布",
+    mapIntro: (year: number) => `県市を選ぶと、${year}年の数値、人口、全国順位を見られます。`,
     tableSummary: (year: number) => `${year}年の各県市の全データを見る`,
     tableHint: "22県市を検索し、人数、件数、人口10万人当たりの比率を比較",
     populationSource: "人口の出典：",
     populationSourceLink: "内政部戸政司 県市人口統計",
     populationNote:
-      "。各年の年末戸籍人口を使用します。改制前の県市人口は現行の22県市の区分に統合しています。年齢調整をしていない粗比率のため、人口の少ない県市では少数の通報で比率が大きく変動します。",
+      "。各年の年末戸籍人口を使用します。改制前の県市人口は現行の22県市の区分に統合しています。",
     rateColorNote: "色は全年共通の固定された6段階の比率区分を使い、0の値は空白にしています。",
-    downloadCsv: (year: number) => `${year}年の県市データをCSVでダウンロード`,
   },
   race: {
     pause: "一時停止",
@@ -197,8 +195,6 @@ export const ja = {
       `${year}年 台湾の県市別${metric}の地図。TabキーとEnterキーで県市を選択できます`,
     county: (city: string, count: string, rate: string, unit: string) =>
       `${city}：${count}、人口10万人当たり ${rate} ${unit}`,
-    insetNote:
-      "離島は挿入図として位置を移しています。県市を選択またはポイントすると数値を見られます。",
     selectCity: "県市を選択",
     yearMetric: (year: number, metric: string) => `${year}年 ${metric}`,
     population: "年末人口",
@@ -210,13 +206,6 @@ export const ja = {
     legendCount: "色の範囲",
     unitLabel: (unit: string) => `単位：${unit}`,
     zero: "0（記録なし）",
-    rateNote:
-      "区分の境界は25、35、45、60、80で固定し、全年共通です。0は空白、人口データがない場合は灰色で示します。",
-    countNote: "全年と両指標で同じ区分を使用します。",
-    boundary: "境界：",
-    nlsc: "内政部国土測絵中心",
-    atlas: "Taiwan Atlas（2021.9.20）",
-    downloadGeo: "GeoJSONをダウンロード",
   },
   chart: {
     labelLength: 13,

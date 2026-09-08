@@ -7,7 +7,6 @@ import {
   formatRate,
 } from "../lib/regions";
 import { useState } from "react";
-import { RiDownloadLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { DataSelect } from "./DataSelect";
 import { AnimatedValue, AnimatedNumber } from "./StoryMotion";
@@ -68,13 +67,15 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                     d={inset.path}
                     className="fill-transparent stroke-border stroke-[0.8] [stroke-dasharray:4_4]"
                   />
-                  <text
-                    x={inset.bounds[0][0] + 7}
-                    y={inset.bounds[0][1] + 17}
-                    className="fill-muted-foreground text-xs"
-                  >
-                    {name("inset", inset.name)}
-                  </text>
+                  {inset.name !== "烏坵鄉" && (
+                    <text
+                      x={inset.bounds[0][0] + 7}
+                      y={inset.bounds[0][1] + 17}
+                      className="fill-muted-foreground text-xs"
+                    >
+                      {name("inset", inset.name)}
+                    </text>
+                  )}
                 </g>
               ))}
             </g>
@@ -128,19 +129,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 aria-hidden="true"
               />
             )}
-            <g transform="translate(535,85)" aria-hidden="true">
-              <path
-                d="M0 20V-10m-5 8 5-8 5 8"
-                className="fill-none stroke-muted-foreground stroke-[1.5]"
-              />
-              <text y="-21" textAnchor="middle" className="fill-muted-foreground text-xs">
-                N
-              </text>
-            </g>
           </svg>
-          <p className="mt-3 mb-5 text-[0.6875rem] leading-[1.8] text-muted-foreground">
-            {t.map.insetNote}
-          </p>
         </div>
         <Card className="gap-0 rounded-none border-border bg-background p-5.5 shadow-none sm:p-5 md:p-6.5">
           <label htmlFor="map-city" className="flex flex-col gap-2.5 text-xs">
@@ -245,40 +234,8 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 {t.map.zero}
               </p>
             )}
-            <p className="text-[0.625rem] leading-[1.9] text-muted-foreground">
-              {measure === "rate" ? t.map.rateNote : t.map.countNote}
-            </p>
           </div>
         </Card>
-      </div>
-      <div className="mt-5 flex flex-wrap justify-between gap-3 border-t border-border pt-3.75 text-[0.625rem] leading-[1.9] sm:mt-0">
-        <p>
-          {t.map.boundary}
-          <a
-            href="https://data.gov.tw/dataset/7442"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 underline underline-offset-[3px]"
-          >
-            {t.map.nlsc}
-          </a>
-          ／
-          <a
-            href="https://github.com/dkaoster/taiwan-atlas"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 underline underline-offset-[3px]"
-          >
-            {t.map.atlas}
-          </a>
-        </p>
-        <a
-          href="/geo/taiwan-counties.geojson"
-          download
-          className="inline-flex items-center gap-1.5 underline underline-offset-[3px]"
-        >
-          {t.map.downloadGeo} <RiDownloadLine aria-hidden="true" />
-        </a>
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ export function HeroSection({
         <section
           className={cn(
             pageWidth,
-            "grid min-w-0 grid-cols-1 items-center gap-8 pt-2 pb-8 sm:gap-10 sm:pt-4 sm:pb-12 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16",
+            "grid min-w-0 grid-cols-1 items-start gap-8 pt-2 pb-8 sm:gap-10 sm:pt-4 sm:pb-12 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-16",
           )}
         >
           <div className="animate-story-enter motion-reduce:animate-fade-enter">
@@ -73,6 +73,7 @@ export function HeroSection({
                 {years[0]}—{years.at(-1)}
               </span>
             </h1>
+            <p>{t.hero.intro}</p>
           </div>
           <aside
             className="rounded-[7px] border border-t-3 border-(--overview-line) border-t-data-relationships bg-(--overview-panel) p-5 sm:rounded-[4px] sm:p-7 sm:max-lg:pl-6.25"

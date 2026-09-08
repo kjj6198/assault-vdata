@@ -1,6 +1,6 @@
 import { ratePer100k, type RegionMeasure } from "../../lib/regions";
 import { useState } from "react";
-import { RiAddLine, RiDownloadLine } from "react-icons/ri";
+import { RiAddLine } from "react-icons/ri";
 import { TaiwanMap } from "../TaiwanMap";
 import { RegionRace } from "../RegionRace";
 import { RegionTable } from "../RegionTable";
@@ -136,12 +136,6 @@ export function RegionsSection({ data }: { data: DashboardData }) {
         {t.regions.populationNote}
         {regionMeasure === "rate" && t.regions.rateColorNote}
       </p>
-      <a
-        className="mt-5 inline-flex items-center gap-2 py-3 text-xs underline underline-offset-[5px]"
-        href={`/api/v1/regions?dataset=${regionMetric}&year=${year}&format=csv`}
-      >
-        {t.regions.downloadCsv(year)} <RiDownloadLine aria-hidden="true" />
-      </a>
     </section>
   );
 }

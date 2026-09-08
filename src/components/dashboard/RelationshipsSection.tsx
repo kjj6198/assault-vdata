@@ -110,7 +110,7 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
             />
             <Button
               variant="ghost"
-              className="mt-2.5 inline-flex items-center gap-2.5 border-b border-muted-foreground bg-transparent text-xs"
+              className="mt-2.5 inline-flex items-center gap-2.5 bg-transparent text-xs"
               onClick={() => setShowAllRelations(!showAllRelations)}
               aria-expanded={showAllRelations}
             >

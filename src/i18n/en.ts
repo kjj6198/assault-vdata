@@ -39,6 +39,8 @@ export const en = {
   },
   hero: {
     title: "Sexual Assault Statistics in Taiwan",
+    intro:
+      "Explore victim demographics, relationships and regional differences across years of reported data.",
     national: (year: number) => `${year} national statistics`,
     victims: "Victims in reported cases",
     reports: "Reports in the same year",
@@ -137,23 +139,21 @@ export const en = {
     countNote: "Raw counts keep the scale of each region's reported records.",
     metricAria: "Regional metric",
     raceEyebrow: (last: number) => `2019—${last} / Regions over time`,
-    raceTitle: "Regional ranking over time",
-    raceIntro:
-      "Press play to see how the top ten regions change. Drag the timeline to stop at a year. Values during playback are interpolated between years; paused or dragged frames show the source data for that year.",
+    raceTitle: "Regional rankings",
+    raceIntro: "Press play to see how the top ten regions change.",
     mapEyebrow: (year: number) => `${year} / Map`,
-    mapTitle: "Find your county or city on the map.",
+    mapTitle: "Sexual assault reports by region",
     mapIntro: (year: number) =>
-      `Select a region to see its ${year} count, population and national rank. Use the year selector above to change the year.`,
+      `Select a region to see its ${year} count, population and national rank.`,
     tableSummary: (year: number) => `Full ${year} data for all regions`,
     tableHint: "Search 22 regions and compare counts, reports and rates per 100,000",
     populationSource: "Population source: ",
     populationSourceLink:
       "Department of Household Registration, Ministry of the Interior, county and city population",
     populationNote:
-      ", year-end registered population. Populations before the 2010 mergers are combined into the current 22 regions. These are crude rates without age standardization; regions with small populations swing more with a few reports.",
+      ", year-end registered population. Populations before the 2010 mergers are combined into the current 22 regions.",
     rateColorNote:
       " Colors use six fixed rate bins shared by all years, and zero values stay blank.",
-    downloadCsv: (year: number) => `Download ${year} regional data as CSV`,
   },
   race: {
     pause: "Pause",
@@ -196,8 +196,6 @@ export const en = {
       `Map of ${year} ${metric.toLowerCase()} by region in Taiwan. Use Tab and Enter to select a region`,
     county: (city: string, count: string, rate: string, unit: string) =>
       `${city}: ${count}; ${rate} ${unit} per 100,000`,
-    insetNote:
-      "Outlying islands are shown as insets and repositioned. Select or hover a region to see its values.",
     selectCity: "Select a region",
     yearMetric: (year: number, metric: string) => `${year} ${metric.toLowerCase()}`,
     population: "Year-end population",
@@ -209,13 +207,6 @@ export const en = {
     legendCount: "Color scale",
     unitLabel: (unit: string) => `Unit: ${unit}`,
     zero: "0 (no records)",
-    rateNote:
-      "Bin boundaries are fixed at 25, 35, 45, 60 and 80 for all years. Zero values stay blank; gray means population is missing.",
-    countNote: "All years and both metrics share the same count bins.",
-    boundary: "Boundaries: ",
-    nlsc: "National Land Surveying and Mapping Center",
-    atlas: "Taiwan Atlas (2021-09-20)",
-    downloadGeo: "Download GeoJSON",
   },
   chart: {
     labelLength: 30,
