@@ -12,8 +12,7 @@ export function SourcesSection({ data }: { data: DashboardData }) {
           <div>
             <h3 className={heading3}>資料來源</h3>
             <p className="mt-4.5 text-xs leading-loose text-muted-foreground">
-              本專題整理衛生福利部保護服務司的四份公開統計，涵蓋 {years[0]}—{years.at(-1)}{" "}
-              年。保留原始試算表，逐格擷取並檢查加總；每筆下載資料附有來源檔名、工作表與儲存格位置。
+              本專題整理衛生福利部保護服務司的四份公開統計，涵蓋 {years[0]}—{years.at(-1)} 年。
             </p>
             <ol className="mt-5 list-[decimal-leading-zero] pl-6.25">
               {["relationships", "demographics", "victims", "reports"].map((kind) => {
