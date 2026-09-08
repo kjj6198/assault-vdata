@@ -6,6 +6,8 @@ import { nitro } from "nitro/vite";
 
 export default defineConfig(({ mode }) => ({
   resolve: { alias: { "@": new URL("./src", import.meta.url).pathname } },
+  // Workerd inlines every dependency, so CJS-only packages (react) need pre-bundling to ESM.
+  environments: { ssr: { optimizeDeps: { noDiscovery: false } } },
   plugins:
     mode === "test"
       ? []
