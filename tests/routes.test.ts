@@ -29,6 +29,7 @@ describe.each(["/", "/en", "/ja"])("alternate-language links for %s", (pathname)
       { rel: "alternate", hrefLang: "zh-Hant", href: `/${expectedSearch}` },
       { rel: "alternate", hrefLang: "en", href: `/en${expectedSearch}` },
       { rel: "alternate", hrefLang: "ja", href: `/ja${expectedSearch}` },
+      { rel: "alternate", hrefLang: "x-default", href: `/${expectedSearch}` },
     ]);
   });
 });

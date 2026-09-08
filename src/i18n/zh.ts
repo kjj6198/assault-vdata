@@ -5,6 +5,8 @@ export const zh = {
   meta: {
     title: "看見數字背後｜台灣性侵害統計",
     description: "從2008至2025年官方資料，認識台灣性侵害通報、被害人年齡、兩造關係與縣市分布。",
+    siteName: "台灣性侵害統計",
+    imageAlt: "2025年台灣性侵害統計：通報紀錄中的受暴人數9,565人，未滿18歲占49.3%。",
   },
   language: "語言",
   notFound: { title: "找不到這個頁面", home: "回到統計專題" },

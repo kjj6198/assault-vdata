@@ -5,6 +5,9 @@ export const en = {
     title: "Behind the Numbers | Sexual Assault Statistics in Taiwan",
     description:
       "Official data from 2008 to 2025 on reported sexual assault in Taiwan: victim age, victim-offender relationship, and the distribution across counties and cities.",
+    siteName: "Sexual Assault Statistics in Taiwan",
+    imageAlt:
+      "2025 Taiwan sexual assault statistics: 9,565 victims in reported cases, 49.3% of them under age 18.",
   },
   language: "Language",
   notFound: { title: "Page not found", home: "Back to the statistics" },
