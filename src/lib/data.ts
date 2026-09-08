@@ -68,6 +68,7 @@ export const cleanSchema = z.object({
   qualityNotes: z.array(qualitySchema),
 });
 export type DataRecord = z.infer<typeof recordSchema>;
-export const formatNumber = (n: number) => new Intl.NumberFormat("zh-TW").format(n);
+const numberFormatter = new Intl.NumberFormat("zh-TW");
+export const formatNumber = (n: number) => numberFormatter.format(n);
 export const share = (n: number, total: number) => (total === 0 ? 0 : (n / total) * 100);
 export const fixed1 = (n: number) => n.toFixed(1);

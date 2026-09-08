@@ -1,13 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import {
-  AnimatePresence,
-  animate,
-  inView,
-  motion,
-  useAnimate,
-  useMotionValue,
-  useTransform,
-} from "motion/react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
 import { formatNumber } from "../lib/data";
 import { useReducedMotionPreference } from "../lib/use-reduced-motion";
 
@@ -15,31 +7,32 @@ const numberTransition = { duration: 0.6, ease: (progress: number) => 1 - (1 - p
 const formatInteger = (value: number) => formatNumber(Math.round(value));
 
 export function Reveal({ children }: { children: ReactNode }) {
-  const [scope, animate] = useAnimate<HTMLDivElement>();
+  const scope = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotionPreference();
   useEffect(() => {
     const element = scope.current;
     // Keep server-rendered and initially visible content visible; enhance later chapters only.
     if (!element || element.getBoundingClientRect().top < window.innerHeight) return;
-    let controls: ReturnType<typeof animate> | undefined;
-    const stop = inView(
-      element,
-      () => {
-        controls = animate(
-          element,
+    let animation: Animation | undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        animation = element.animate(
           reduced
             ? { opacity: [0.5, 1] }
             : { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0px)"] },
-          { duration: reduced ? 0.12 : 0.36, ease: [0.19, 1, 0.22, 1] },
+          { duration: reduced ? 120 : 360, easing: "cubic-bezier(0.19, 1, 0.22, 1)" },
         );
       },
-      { amount: 0.2 },
+      { threshold: 0.2 },
     );
+    observer.observe(element);
     return () => {
-      stop();
-      controls?.stop();
+      observer.disconnect();
+      animation?.cancel();
     };
-  }, [animate, reduced, scope]);
+  }, [reduced]);
   return <div ref={scope}>{children}</div>;
 }
 
@@ -99,9 +92,9 @@ export function AnimatedNumber({
 /** Spring for one digit rolling into place. */
 const digitSpring = { type: "spring", visualDuration: 0.45, bounce: 0.18 } as const;
 const digitVariants = {
-  enter: (direction: number) => ({ opacity: 0, y: `${direction * 100}%` }),
-  rest: { opacity: 1, y: "0%" },
-  exit: (direction: number) => ({ opacity: 0, y: `${direction * -100}%` }),
+  enter: (direction: number) => ({ opacity: 0, transform: `translateY(${direction * 100}%)` }),
+  rest: { opacity: 1, transform: "translateY(0%)" },
+  exit: (direction: number) => ({ opacity: 0, transform: `translateY(${direction * -100}%)` }),
 };
 
 export function AnimatedDigits({ value }: { value: number }) {

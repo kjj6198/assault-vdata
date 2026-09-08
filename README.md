@@ -20,7 +20,7 @@ npm run build       # Client + SSR + Nitro Node server
 PORT=3001 npm start # Run the production build locally
 ```
 
-Vite+ is the actual development, build, test, lint, and format toolchain (`vite-plus`, with its Vite core alias in npm overrides). Nitro packages the production Node server. The server-only data module validates the checked-in snapshot with Zod. TanStack Start server functions load the selected year; HTTP API routes expose the same records. Chart.js loads on the client after hydration; every chart includes an HTML data table that also works without JavaScript. The year is stored in the URL; unsupported numeric years redirect to the latest available year.
+Vite+ is the actual development, build, test, lint, and format toolchain (`vite-plus`, with its Vite core alias in npm overrides). Nitro packages the production Node server. The server-only data module validates the checked-in snapshot with Zod. TanStack Start server functions load the selected year; HTTP API routes expose the same records. Chart.js loads when a chart approaches the viewport; every chart includes a server-rendered HTML data table that also works without JavaScript. The year is stored in the URL; unsupported numeric years redirect to the latest available year.
 
 ## Sources and coverage
 
@@ -93,7 +93,9 @@ Inspired by the clear hierarchy and visual storytelling of the [Nikkei reference
 
 Button, Select, Tabs, Input, Badge, and Card come from shadcn/ui, with Radix keyboard/focus behavior. `scripts/build_theme.mjs` generates semantic Tailwind tokens and the matching Canvas palette. Run `npm run theme:build` to verify sRGB gamut and WCAG/APCA text contrast; results are recorded in `data/color-validation.json`. The choropleth uses a fixed six-step OKLCH lightness ramp.
 
-Motion for React handles chapter headings entering the viewport once and short annual-number transitions. CSS handles the hero entrance, select popovers, and button press feedback. Movement uses transform/opacity, with opacity-only alternatives under `prefers-reduced-motion`. Charts and map geometry update immediately so intermediate shapes do not imply intermediate values. Server-rendered content remains readable without JavaScript.
+The Web Animations API handles chapter headings entering the viewport once. Motion for React handles short number transitions and the relationship list's layout animation. CSS handles the hero entrance, select popovers, and button press feedback. Ranking playback writes interpolated values directly to DOM elements; React updates the year and controls at year boundaries. Playback pauses outside the viewport and in hidden tabs. Reduced motion steps through whole years and disables spatial transitions. Server-rendered content remains readable without JavaScript.
+
+The [performance audit](docs/performance-audit.md) records bundle sizes, browser traces, and validation. Fonts are hosted locally with their licenses in `public/fonts/`. Display map arcs are simplified with a 0.2px tolerance in the 600px viewBox, retaining shared boundaries and tiny island rings. Downloadable geographic geometry retains its original detail.
 
 Browser verification covers the production server, desktop and 390/320px layouts, year navigation, gender and relationship filters, full data tables, region metric/search/sort controls, empty results, JSON/CSV, and invalid URLs. No deployment has been made; the requested deliverable runs locally.
 

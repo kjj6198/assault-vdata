@@ -39,5 +39,5 @@ export default defineConfig(({ mode }) => ({
   fmt: {
     ignorePatterns: ["data/**", "src/routeTree.gen.ts", "package-lock.json"],
   },
-  test: { include: ["tests/**/*.test.ts"] },
+  test: { include: ["tests/**/*.test.{ts,mjs}"] },
 }));

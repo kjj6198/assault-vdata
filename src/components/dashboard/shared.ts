@@ -1,5 +1,4 @@
 import type { getDashboard } from "../../lib/data.server";
-import type { DataRecord } from "../../lib/data";
 import palette from "../../lib/palette.json";
 import { cn } from "../../lib/utils";
 export type DashboardData = Awaited<ReturnType<typeof getDashboard>>;
@@ -30,8 +29,8 @@ export const pendingFade =
   "transition-opacity duration-150 group-data-pending:opacity-50 group-data-pending:duration-200 group-data-pending:delay-150";
 export const storySection = cn("scroll-mt-35 pt-12 pb-10 sm:pt-16 lg:scroll-mt-24", pendingFade);
 export const unitLabel = "ml-3 font-sans text-[0.8125rem] tracking-normal";
-export const sum = (rows: DataRecord[]) => rows.reduce((n, row) => n + row.value, 0);
-export const rankRelationships = (records: DataRecord[], age: string) => {
+export const sum = (rows: { value: number }[]) => rows.reduce((n, row) => n + row.value, 0);
+export const rankRelationships = (records: DashboardData["records"], age: string) => {
   const counts = new Map<string, number>();
   for (const r of records)
     if (r.dataset === "relationships" && (age === "全部" || r.age === age))

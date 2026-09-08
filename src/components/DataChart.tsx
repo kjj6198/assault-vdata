@@ -4,6 +4,7 @@ import type { AnimationSpec, Chart, Element, Plugin } from "chart.js";
 import { RiAddLine } from "react-icons/ri";
 import { formatNumber } from "../lib/data";
 import { useReducedMotionPreference } from "../lib/use-reduced-motion";
+import { useNearViewport } from "../lib/use-near-viewport";
 
 type Series = { label: string; values: number[]; color: string };
 type Props = {
@@ -64,6 +65,7 @@ export function DataChart({
   selectedLabel,
   onSelectLabel,
 }: Props) {
+  const { ref: container, near } = useNearViewport();
   const canvas = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
   const updateRef = useRef<((data: ChartData, reducedMotion: boolean) => void) | null>(null);
@@ -79,7 +81,9 @@ export function DataChart({
     updateRef.current?.(latest.current, reducedMotion);
   }, [labels, series, unit, selectedLabel, reducedMotion]);
   useEffect(() => {
+    if (!near) return;
     let disposed = false;
+    const annotationFont = `500 0.75rem ${numericFont()}`;
     let displayedValues: Map<string, DisplayValue>[] = [];
     const newElements = new Set<Element>();
     const selection = { value: latest.current.labels.indexOf(latest.current.selectedLabel ?? "") };
@@ -99,7 +103,7 @@ export function DataChart({
         ctx.save();
         if (horizontal) {
           ctx.fillStyle = palette.foreground.css;
-          ctx.font = `500 0.75rem ${numericFont()}`;
+          ctx.font = annotationFont;
           ctx.textBaseline = "middle";
           chart.data.datasets.forEach((dataset, seriesIndex) => {
             chart.getDatasetMeta(seriesIndex).data.forEach((bar, index) => {
@@ -145,8 +149,8 @@ export function DataChart({
         ctx.restore();
       },
     };
-    import("chart.js/auto")
-      .then(({ default: ChartJS, Animations, BarElement, PointElement }) => {
+    import("../lib/chart")
+      .then(({ Chart: ChartJS, Animations, BarElement, PointElement }) => {
         if (disposed || !canvas.current) return;
         let previousLabels = latest.current.labels;
         displayedValues = latest.current.series.map(
@@ -288,7 +292,7 @@ export function DataChart({
       chartRef.current = null;
       updateRef.current = null;
     };
-  }, [type, horizontal]);
+  }, [type, horizontal, near]);
   return (
     <figure>
       <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-caption text-muted-foreground [&_i]:size-2 [&_i]:rounded-full [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2 [&>span:last-child]:ml-auto">
@@ -300,7 +304,12 @@ export function DataChart({
         ))}
         <span>單位：{unit}</span>
       </div>
-      <div style={{ height }} className="relative min-w-0" aria-busy={!ready && !failed}>
+      <div
+        ref={container}
+        style={{ height }}
+        className="relative min-w-0"
+        aria-busy={!ready && !failed}
+      >
         {!ready && (
           <p className="absolute inset-0 grid place-content-center bg-muted p-6 text-caption leading-[1.9] text-muted-foreground">
             {failed
