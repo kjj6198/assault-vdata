@@ -1,11 +1,10 @@
-import { ratePer100k, formatRate, type RegionMeasure } from "../lib/regions";
-import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { ratePer100k, type RegionMeasure } from "../lib/regions";
+import { useMemo, useState } from "react";
 import {
   RiAddLine,
   RiArrowDownLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
-  RiArrowRightDownLine,
   RiArrowRightUpLine,
   RiArrowUpLine,
   RiDownloadLine,
@@ -18,8 +17,7 @@ import { DataChart } from "./DataChart";
 import { TaiwanMap } from "./TaiwanMap";
 import { RegionRace } from "./RegionRace";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Card } from "./ui/card";
+import { HeroFacts } from "./HeroFacts";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { DataSelect } from "./DataSelect";
 import { Reveal, AnimatedValue, AnimatedNumber } from "./StoryMotion";
@@ -59,12 +57,6 @@ const storySection = cn("pt-13 pb-9 scroll-mt-[118px] sm:pt-19 sm:scroll-mt-[90p
 const unitLabel = "ml-3 font-sans text-[13px] tracking-normal";
 const widthTransition =
   "transition-[width] duration-500 ease-out-quart motion-reduce:transition-none";
-const genderTone: Record<string, string> = {
-  女: "bg-hero-muted",
-  男: "bg-data-secondary",
-  其他: "bg-map-3",
-  不詳: "bg-section-marker",
-};
 const sum = (rows: DataRecord[]) => rows.reduce((n, row) => n + row.value, 0);
 const rankRelationships = (records: DataRecord[], age: string) => {
   const counts = new Map<string, number>();
@@ -73,7 +65,6 @@ const rankRelationships = (records: DataRecord[], age: string) => {
       counts.set(r.relationship, (counts.get(r.relationship) ?? 0) + r.value);
   return [...counts].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
 };
-const signed = (value: number) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(1)}%`;
 function SectionHeading({
   number,
   eyebrow: label,
@@ -163,8 +154,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
     [records, relationAge],
   );
   const overallRelations = useMemo(() => rankRelationships(records, "全部"), [records]);
-  const overallRelation = overallRelations[0];
-  const overallRelationTotal = overallRelations.reduce((n, r) => n + r.value, 0);
   const relationChart = useMemo(() => {
     const rows = showAllRelations ? relationships : relationships.slice(0, 8);
     return {
@@ -190,254 +179,121 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
     .sort((a, b) => b.rate - a.rate)[0];
   const female = genderTotals[0];
   const male = genderTotals[1];
-  const facts: {
-    label: string;
-    value: ReactNode;
-    note: ReactNode;
-    icon?: ReactNode;
-  }[] = [
-    {
-      label: "較前一年的變化",
-      value: change === null ? "—" : <AnimatedNumber value={change} format={signed} />,
-      icon:
-        change === null ? null : change >= 0 ? (
-          <RiArrowRightUpLine aria-hidden="true" />
-        ) : (
-          <RiArrowRightDownLine aria-hidden="true" />
-        ),
-      note:
-        previous === undefined ? (
-          "資料起始年度，無前一年可比"
-        ) : (
-          <>
-            受暴人數 <AnimatedNumber value={victimTotal} /> 人，前一年{" "}
-            <AnimatedNumber value={previous.victims} /> 人
-          </>
-        ),
-    },
-    {
-      label: "每十萬人口比率最高",
-      value: topRateCity?.city ?? "—",
-      note: topRateCity ? (
-        <>
-          每十萬人 <AnimatedNumber value={topRateCity.rate} format={formatRate} /> 人・受暴人數
-        </>
-      ) : (
-        "缺少人口資料"
-      ),
-    },
-    {
-      label: "女性占受暴人數",
-      value: (
-        <>
-          <AnimatedNumber value={share(female.value, victimTotal)} format={fixed1} />%
-        </>
-      ),
-      note: (
-        <>
-          <AnimatedNumber value={female.value} /> 人；男性{" "}
-          <AnimatedNumber value={share(male.value, victimTotal)} format={fixed1} />%
-        </>
-      ),
-    },
-    {
-      label: "受暴人中未滿 18 歲",
-      value: (
-        <>
-          <AnimatedNumber value={share(minors, victimTotal)} format={fixed1} />%
-        </>
-      ),
-      note: (
-        <>
-          <AnimatedNumber value={minors} /> 人，含年齡不詳者的分母
-        </>
-      ),
-    },
-    {
-      label: "最多紀錄的兩造關係",
-      value: overallRelation?.label ?? "—",
-      note: overallRelation ? (
-        <>
-          <AnimatedNumber value={overallRelation.value} /> 人，占{" "}
-          <AnimatedNumber
-            value={share(overallRelation.value, overallRelationTotal)}
-            format={fixed1}
-          />
-          %
-        </>
-      ) : (
-        "無資料"
-      ),
-    },
-  ];
   const relationTotal = relationships.reduce((n, r) => n + r.value, 0);
   const leadingRelation = relationships[0];
   return (
     <>
-      <a
-        className="fixed -top-[100px] left-4 z-[100] bg-foreground p-3.5 text-white focus:top-2.5"
-        href="#main"
-      >
-        跳至主要內容
-      </a>
-      <header className="flex min-h-[70px] items-center justify-between gap-3 border-b border-border px-5 py-3 sm:min-h-[84px] sm:gap-6 sm:px-12 sm:py-4">
-        <a
-          href="/"
-          className="inline-flex items-center gap-[9px] text-[15px] font-bold tracking-[0.04em] sm:gap-3 sm:text-lg"
-        >
-          <span className="flex h-6 items-end gap-[3px]" aria-hidden="true">
-            <i className="h-[17px] w-1 bg-primary" />
-            <i className="h-6 w-1 bg-primary" />
-            <i className="h-3 w-1 bg-primary" />
-          </span>
-        </a>
-        <a
-          href="#sources"
-          className="inline-flex min-h-11 items-center gap-[7px] text-[11px] sm:gap-1.5 sm:text-[13px]"
-        >
-          資料與方法 <RiArrowRightUpLine aria-hidden="true" />
-        </a>
-      </header>
       <main id="main" className="group" data-pending={pending || undefined}>
-        <div className="relative isolate overflow-hidden bg-background bg-(image:--hero-gradient) after:pointer-events-none after:absolute after:inset-0 after:-z-10 after:bg-(image:--grain) after:opacity-[0.18] after:mix-blend-multiply after:content-['']">
-          <section
-            className={cn(
-              pageWidth,
-              "grid grid-cols-1 items-center gap-[42px] py-[42px] sm:grid-cols-[1.2fr_1fr] sm:gap-[45px] sm:py-16 lg:gap-20 lg:pt-22 lg:pb-19 xl:gap-[110px]",
-            )}
-          >
-            <div className="animate-story-enter motion-reduce:animate-fade-enter">
-              <h1 className="my-5.5 text-[clamp(39px,9vw,62px)] font-bold leading-[1.5] tracking-[0.045em] text-balance sm:mt-7 sm:mb-6 sm:text-[clamp(42px,5.1vw,68px)]">
-                台灣性侵害統計
-                <br />
-                {years[0]}—{years.at(-1)}
-              </h1>
-              <p className="text-sm leading-[2] text-muted-foreground sm:text-[15px]">
-                從通報紀錄出發，看見性侵害的樣貌。
-                <br className="hidden sm:block" />
-                透過年齡、關係與地域，理解數字背後的處境。
-              </p>
-              <a
-                href="#explore"
-                className="mt-8.5 inline-flex items-center gap-[46px] border-b border-foreground py-2.5 text-sm font-semibold [&_svg]:size-5.5 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-out-quart hover:[&_svg]:translate-y-[3px] motion-reduce:[&_svg]:transition-none"
-              >
-                一起讀懂這些數據 <RiArrowDownLine aria-hidden="true" />
+        <div className="hero-overview">
+          <div className="hero-original-background">
+            <div className={cn(pageWidth, "hero-masthead")}>
+              <a href="#main">
+                看見數字背後<span>TAIWAN / DATA STORIES</span>
               </a>
-              <p className="mt-5.5 text-[11px] text-muted-foreground sm:mt-7.5">
-                資料來源：衛生福利部保護服務司
-              </p>
+              <span>衛生福利部公開統計</span>
             </div>
-            <Card className="w-[min(100%,420px)] max-w-[410px] animate-story-enter justify-self-center gap-0 border-0 bg-hero-background px-7 py-5.5 text-hero-foreground shadow-none [animation-delay:80ms] motion-reduce:animate-fade-enter sm:w-full sm:justify-self-end sm:px-6 sm:pt-[25px] sm:pb-5.5 lg:px-8">
-              <div className="flex justify-between border-b border-hero-border pb-3.5 text-xs tracking-[0.08em] text-hero-muted">
-                <span>被記錄的，是人生。</span>
-                <span className="font-numeric text-[19px]">{year}</span>
-              </div>
-              <div
-                className="mx-auto my-6 grid w-full max-w-[280px] grid-cols-10 gap-[9px]"
-                aria-hidden="true"
-              >
-                {Array.from({ length: 100 }, (_, i) => (
-                  <i
-                    key={i}
-                    style={{ "--i": i } as CSSProperties}
-                    className={cn(
-                      "aspect-square w-full animate-dot-enter rounded-full transition-colors duration-400 [animation-delay:calc(220ms+var(--i)*5ms)] motion-reduce:animate-none",
-                      i < Math.round((minors / victimTotal) * 100)
-                        ? "bg-data-secondary"
-                        : "bg-hero-dot",
-                    )}
-                  />
-                ))}
-              </div>
-              <div className="flex items-center gap-6">
-                <strong className="font-numeric text-[55px] font-medium leading-none tracking-[-0.025em] sm:text-[64px]">
-                  <AnimatedNumber value={share(minors, victimTotal)} format={fixed1} />
-                  <small className="text-[27px]">%</small>
-                </strong>
-                <p className="text-[13px] leading-[1.8]">
-                  當年受暴人中
+            <section className={cn(pageWidth, "hero-intro")}>
+              <div className="animate-story-enter motion-reduce:animate-fade-enter">
+                <h1 className="hero-title">
+                  台灣性侵害統計
                   <br />
-                  <b>未滿 18 歲</b>
+                  <span>
+                    {years[0]}—{years.at(-1)}
+                  </span>
+                </h1>
+                <p className="text-sm leading-loose text-muted-foreground sm:text-[15px]">
+                  從通報紀錄出發，看見性侵害的樣貌。
+                  <br className="hidden sm:block" />
+                  透過年齡、關係與地域，理解數字背後的處境。
                 </p>
-              </div>
-              <p className="mt-4 text-[11px] leading-[1.8] text-hero-muted">
-                每個圓點約代表 1% 的受暴人數，含年齡不詳者。
-              </p>
-              <div className="mt-5.5 border-t border-hero-border pt-5">
-                <p className="text-xs font-medium">當年受暴人的性別比例</p>
-                <div
-                  className="my-4 flex h-2 gap-0.5 overflow-hidden rounded-[2px]"
-                  aria-hidden="true"
+                <a
+                  href="#explore"
+                  className="mt-8.5 inline-flex items-center gap-11.5 border-b border-foreground py-2.5 text-sm font-semibold [&_svg]:size-5.5 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-out-quart hover:[&_svg]:translate-y-0.75 motion-reduce:[&_svg]:transition-none"
                 >
-                  {genderTotals.map((g) => (
-                    <i
-                      key={g.label}
-                      className={cn(genderTone[g.label], widthTransition)}
-                      style={{ width: `${(g.value / victimTotal) * 100}%` }}
-                    />
-                  ))}
-                </div>
-                <dl className="mb-4 grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-x-6">
-                  {genderTotals.map((g, i) => (
-                    <div className="flex justify-between gap-2" key={g.label}>
-                      <dt className="flex items-baseline gap-1.5 pt-[3px] text-xs">
-                        <i
-                          className={cn(
-                            "inline-block size-[7px] rounded-full",
-                            genderTone[g.label],
-                          )}
-                          aria-hidden="true"
-                        />
-                        {g.label}
-                      </dt>
-                      <dd
-                        className={cn(
-                          "m-0 text-right whitespace-nowrap tabular-nums",
-                          i >= 2 ? "text-sm" : "text-[19px]",
-                        )}
-                      >
-                        {g.value > 0 && g.value / victimTotal < 0.001 ? (
-                          "<0.1"
-                        ) : (
-                          <AnimatedNumber value={share(g.value, victimTotal)} format={fixed1} />
-                        )}
-                        <small className="ml-0.5 text-[11px]">%</small>
-                        <span className="mt-[3px] block text-[10px] text-hero-muted">
-                          <AnimatedNumber value={g.value} /> 人
-                        </span>
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="text-[10px] leading-[1.8] text-hero-muted">
-                  以全部受暴人數為分母
-                  {year >= 2019 ? "，含其他與不詳" : "，含不詳"}
-                  ；四捨五入後合計可能不為 100%。
+                  一起讀懂這些數據 <RiArrowDownLine aria-hidden="true" />
+                </a>
+                <p className="mt-5.5 text-[11px] text-muted-foreground sm:mt-7.5">
+                  資料來源：衛生福利部保護服務司
                 </p>
               </div>
-            </Card>
-          </section>
-        </div>
-        <section className={cn(pageWidth, "pt-10 pb-5 sm:pt-14")} aria-labelledby="facts-heading">
-          <div>
-            <p className={eyebrow}>
-              <span className="h-0.5 w-6.5 bg-primary" />
-              At a glance・{year}
-            </p>
-            <h2 id="facts-heading" className={cn(heading2, "mt-3.5 text-2xl sm:text-2xl")}>
-              五個數字，先看重點。
-            </h2>
+              <aside className="hero-summary" aria-label={`${year} 年全國統計`}>
+                <p className="hero-summary-label">
+                  <span className="hero-status-dot" />
+                  {year} 年・全國統計
+                </p>
+                <p className="hero-total-label">通報紀錄中的受暴人數</p>
+                <p className="hero-total">
+                  {num(victimTotal)}
+                  <small>人</small>
+                </p>
+                <div className="hero-summary-footer">
+                  <span>同年度通報件數</span>
+                  <span>
+                    {num(reportTotal)} <small>件</small>
+                  </span>
+                </div>
+                <p className="hero-summary-note">每個數字背後，都有一個真實的人。</p>
+              </aside>
+            </section>
           </div>
-        </section>
-        <div
-          className={cn(
-            pageWidth,
-            "flex items-start gap-4 border-t border-border pt-6 pb-6.5 sm:gap-7 sm:pb-9",
-          )}
-        >
-          <Badge variant="outline" className="shrink-0 pt-[3px] text-xs font-semibold">
-            閱讀之前
-          </Badge>
+          <section
+            className={cn(pageWidth, "hero-facts", pendingFade)}
+            aria-labelledby="facts-heading"
+            aria-busy={pending}
+          >
+            <div className="facts-toolbar">
+              <div>
+                <p className="facts-eyebrow">AT A GLANCE / {year}</p>
+                <h2 id="facts-heading">五個數字，先看重點。</h2>
+              </div>
+              <div className="facts-year-control">
+                <label htmlFor="overview-year">統計年度</label>
+                <Button
+                  variant="ghost"
+                  aria-label="重點數據上一年"
+                  disabled={yearIndex === 0}
+                  onClick={() => onYearChange(years[yearIndex - 1])}
+                >
+                  <RiArrowLeftSLine aria-hidden="true" />
+                </Button>
+                <DataSelect
+                  id="overview-year"
+                  label="重點數據統計年度"
+                  value={String(year)}
+                  onValueChange={(value) => onYearChange(Number(value))}
+                  options={[...years]
+                    .reverse()
+                    .map((y) => ({ value: String(y), label: String(y) }))}
+                />
+                <Button
+                  variant="ghost"
+                  aria-label="重點數據下一年"
+                  disabled={yearIndex === years.length - 1}
+                  onClick={() => onYearChange(years[yearIndex + 1])}
+                >
+                  <RiArrowRightSLine aria-hidden="true" />
+                </Button>
+              </div>
+            </div>
+            <HeroFacts
+              year={year}
+              total={victimTotal}
+              change={change}
+              previous={previous}
+              trend={trend}
+              topCity={topRateCity}
+              female={female.value}
+              male={male.value}
+              minors={minors}
+              relationships={overallRelations}
+            />
+            <p className="facts-source">
+              資料來源：衛生福利部保護服務司・百分比依同年度資料計算，含不詳類別。
+              <a href="#sources">
+                資料與計算方式 <RiArrowRightUpLine aria-hidden="true" />
+              </a>
+            </p>
+          </section>
         </div>
         <div id="explore" className="sticky top-0 z-10 border-y border-border bg-background">
           <div
