@@ -160,7 +160,12 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
     .sort((a, b) => b.rate - a.rate)[0];
   const female = genderTotals[0];
   const male = genderTotals[1];
-  const facts: { label: string; value: ReactNode; note: ReactNode; icon?: ReactNode }[] = [
+  const facts: {
+    label: string;
+    value: ReactNode;
+    note: ReactNode;
+    icon?: ReactNode;
+  }[] = [
     {
       label: "較前一年的變化",
       value: change === null ? "—" : <AnimatedNumber value={change} format={signed} />,
@@ -339,7 +344,8 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                   ))}
                 </dl>
                 <p className="hero-gender-note">
-                  以全部受暴人數為分母{year >= 2019 ? "，含其他與不詳" : "，含不詳"}
+                  以全部受暴人數為分母
+                  {year >= 2019 ? "，含其他與不詳" : "，含不詳"}
                   ；四捨五入後合計可能不為 100%。
                 </p>
               </div>
@@ -496,7 +502,10 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                     label="年齡分布的性別"
                     value={safeGender}
                     onValueChange={setGender}
-                    options={["全部", ...genders].map((g) => ({ value: g, label: g }))}
+                    options={["全部", ...genders].map((g) => ({
+                      value: g,
+                      label: g,
+                    }))}
                   />
                 </span>
               </div>
@@ -517,7 +526,10 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 {genderTotals.map((g) => (
                   <i
                     key={g.label}
-                    style={{ width: `${(g.value / victimTotal) * 100}%`, background: g.color }}
+                    style={{
+                      width: `${(g.value / victimTotal) * 100}%`,
+                      background: g.color,
+                    }}
                   />
                 ))}
               </div>
@@ -665,9 +677,10 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             </TabsContent>
           </Tabs>
           <div className="region-toolbar region-table-toolbar">
-            <h3>縣市排名，逐年變化</h3>
+            <h3>前十名縣市，逐年變化</h3>
             <span>
-              2019—{years.at(-1)}・依{regionMeasure === "rate" ? "每十萬人口比率" : "原始數量"}
+              2019—{years.at(-1)}・依
+              {regionMeasure === "rate" ? "每十萬人口比率" : "原始數量"}
               排序
             </span>
           </div>
@@ -696,7 +709,6 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         <section id="sources" className="sources-section">
           <div className="page-width">
             <p className="eyebrow">Sources & methodology</p>
-            <h2>讓每個數字，都有出處。</h2>
             <div className="sources-layout">
               <div>
                 <h3>資料從哪裡來？</h3>

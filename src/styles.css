@@ -835,6 +835,7 @@
     --row-height: 64px;
     position: relative;
     height: calc(var(--rows) * var(--row-height));
+    overflow: hidden;
     border-top: 1px solid var(--border);
   }
   .race-list .race-row {
@@ -845,11 +846,21 @@
     padding-block: 0;
     grid-template-columns: 26px 96px 1fr 64px 72px;
     transform: translateY(calc(var(--rank) * var(--row-height)));
-    transition: transform 600ms cubic-bezier(0.25, 1, 0.5, 1);
+    transition:
+      transform 600ms cubic-bezier(0.25, 1, 0.5, 1),
+      opacity 400ms ease;
     will-change: transform;
+  }
+  .race-list .race-row[data-out] {
+    opacity: 0;
+    pointer-events: none;
   }
   .race-list .region-track i {
     transition: background-color 400ms ease;
+  }
+  .race-list .region-city small svg {
+    margin-right: 4px;
+    vertical-align: -0.15em;
   }
   .race-rank {
     font-size: 12px;
@@ -1732,6 +1743,7 @@
 .hero-gender-legend dd {
   margin: 0;
   text-align: right;
+  white-space: nowrap;
   font-size: 19px;
   font-variant-numeric: tabular-nums;
 }
@@ -1743,7 +1755,6 @@
   display: block;
   color: var(--hero-muted);
   font-size: 10px;
-  white-space: nowrap;
   margin-top: 3px;
 }
 .hero-gender-legend > div:nth-child(n + 3) dd {

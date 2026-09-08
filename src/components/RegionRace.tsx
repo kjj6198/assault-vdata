@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useAnimationFrame, useReducedMotion } from "motion/react";
-import { RiPauseFill, RiPlayFill, RiRestartLine } from "react-icons/ri";
+import { RiGroupLine, RiPauseFill, RiPlayFill, RiRestartLine } from "react-icons/ri";
 import {
   type RegionMeasure,
   formatRate,
@@ -28,6 +28,8 @@ type Props = {
 };
 /** Milliseconds the race spends moving from one year to the next. */
 const YEAR_MS = 2400;
+/** Counties shown at once; the rest wait just below the list and fade in when they climb. */
+const TOP = 10;
 const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
 
 export function RegionRace({ history, metric, measure, startYear }: Props) {
@@ -150,38 +152,45 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
           ? `長條刻度：0–${scale.rate}／十萬人・${startYear}–${lastYear} 年共用同一刻度，年與年之間的數值為線性內插`
           : `長條刻度依 ${startYear}–${lastYear} 年最大值固定，年與年之間的數值為線性內插`}
       </p>
-      <div className="race-list" style={{ "--rows": rows.length } as CSSProperties}>
-        {rows.map((r) => (
-          <div
-            className="region-row race-row"
-            key={r.city}
-            style={{ "--rank": rankOf.get(r.city) ?? 0 } as CSSProperties}
-          >
-            <span className="race-rank" aria-hidden="true">
-              {(rankOf.get(r.city) ?? 0) + 1}
-            </span>
-            <span className="region-city">
-              {r.city}
-              <small>
-                人口 {r.population === null ? "無資料" : formatNumber(Math.round(r.population))}
-              </small>
-            </span>
-            <span className="region-track" aria-hidden="true">
-              <i
-                style={{
-                  background: measure === "rate" ? rateColor(r.rate) : undefined,
-                  transform: `scaleX(${measure === "rate" ? ratePosition(r.rate ?? 0, scale.rate) : r.value / scale.count})`,
-                }}
-              />
-            </span>
-            <b>{measure === "rate" ? formatRate(r.rate) : formatNumber(Math.round(r.value))}</b>
-            <span>
-              {measure === "rate"
-                ? `${formatNumber(Math.round(r.value))} ${unit}`
-                : formatRate(r.rate)}
-            </span>
-          </div>
-        ))}
+      <div className="race-list" style={{ "--rows": TOP } as CSSProperties}>
+        {rows.map((r) => {
+          const rank = rankOf.get(r.city) ?? 0;
+          return (
+            <div
+              className="region-row race-row"
+              key={r.city}
+              data-out={rank >= TOP || undefined}
+              aria-hidden={rank >= TOP || undefined}
+              style={{ "--rank": Math.min(rank, TOP) } as CSSProperties}
+            >
+              <span className="race-rank" aria-hidden="true">
+                {rank + 1}
+              </span>
+              <span className="region-city">
+                {r.city}
+                <small>
+                  <RiGroupLine aria-hidden="true" />
+                  <span className="sr-only">人口</span>
+                  {r.population === null ? "無資料" : formatNumber(Math.round(r.population))}
+                </small>
+              </span>
+              <span className="region-track" aria-hidden="true">
+                <i
+                  style={{
+                    background: measure === "rate" ? rateColor(r.rate) : undefined,
+                    transform: `scaleX(${measure === "rate" ? ratePosition(r.rate ?? 0, scale.rate) : r.value / scale.count})`,
+                  }}
+                />
+              </span>
+              <b>{measure === "rate" ? formatRate(r.rate) : formatNumber(Math.round(r.value))}</b>
+              <span>
+                {measure === "rate"
+                  ? `${formatNumber(Math.round(r.value))} ${unit}`
+                  : formatRate(r.rate)}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
