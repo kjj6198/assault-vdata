@@ -16,6 +16,7 @@ import { fixed1, formatNumber as num, share } from "../lib/data";
 import { DataChart } from "./DataChart";
 import { TaiwanMap } from "./TaiwanMap";
 import { RegionRace } from "./RegionRace";
+import { RegionTable } from "./RegionTable";
 import { Button } from "./ui/button";
 import { HeroFacts } from "./HeroFacts";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
@@ -35,28 +36,28 @@ const INK = palette["data-people"].hex,
   GOLD = palette["data-secondary"].hex,
   GRAY = palette["data-unknown"].hex;
 const sectionLinks = [
+  { id: "overview", name: "年度重點" },
   { id: "trend", name: "歷年趨勢" },
   { id: "ages", name: "年齡與性別" },
   { id: "relationships", name: "兩造關係" },
   { id: "regions", name: "縣市分布" },
+  { id: "sources", name: "資料來源" },
 ];
 const sectionIds = sectionLinks.map((link) => link.id);
 const pageWidth =
   "mx-auto w-[calc(100%-40px)] sm:w-[calc(100%-64px)] lg:w-[min(1120px,calc(100%-96px))]";
 const eyebrow =
   "flex items-center gap-3 text-[13px] font-semibold tracking-[0.1em] text-muted-foreground [font-variant-caps:small-caps]";
-const heading2 = "text-2xl font-bold leading-[1.5] tracking-[0.025em] text-balance sm:text-[29px]";
+const heading2 = "text-2xl font-bold leading-[1.5] tracking-[0.025em] text-balance sm:text-[32px]";
 const heading3 = "text-base font-semibold leading-[1.6]";
-const footnote = "mt-4 text-[11px] leading-[1.9] text-muted-foreground";
+const footnote = "mt-4 text-xs leading-[1.9] text-muted-foreground";
 const panelHeading =
   "mb-5 flex flex-wrap items-center justify-between gap-3 sm:mb-6 sm:flex-nowrap sm:gap-4";
 const inlineFilter = "flex items-center gap-3 text-xs";
 const pendingFade =
   "transition-opacity duration-150 group-data-pending:opacity-50 group-data-pending:duration-200 group-data-pending:delay-150";
-const storySection = cn("pt-13 pb-9 scroll-mt-[118px] sm:pt-19 sm:scroll-mt-[90px]", pendingFade);
+const storySection = cn("story-section pt-12 pb-10 sm:pt-16", pendingFade);
 const unitLabel = "ml-3 font-sans text-[13px] tracking-normal";
-const widthTransition =
-  "transition-[width] duration-500 ease-out-quart motion-reduce:transition-none";
 const sum = (rows: DataRecord[]) => rows.reduce((n, row) => n + row.value, 0);
 const rankRelationships = (records: DataRecord[], age: string) => {
   const counts = new Map<string, number>();
@@ -90,7 +91,7 @@ function SectionHeading({
             {label}
           </p>
           <h2 className={heading2}>{title}</h2>
-          <p className="mt-3 max-w-[720px] text-xs leading-[1.9] text-muted-foreground sm:text-[13px]">
+          <p className="mt-3 max-w-[720px] text-sm leading-[1.9] text-muted-foreground sm:text-[15px]">
             {children}
           </p>
         </div>
@@ -183,17 +184,23 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
   const leadingRelation = relationships[0];
   return (
     <>
+      <a className="skip-link" href="#overview">
+        跳至年度重點
+      </a>
       <main id="main" className="group" data-pending={pending || undefined}>
         <div className="hero-overview">
           <div className="hero-original-background">
-            <div className={cn(pageWidth, "hero-masthead")}>
+            <header className={cn(pageWidth, "hero-masthead")}>
               <a href="#main">
                 看見數字背後<span>TAIWAN / DATA STORIES</span>
               </a>
-              <span>衛生福利部公開統計</span>
-            </div>
+              <a className="masthead-source" href="#sources">
+                資料來源與下載 <RiArrowRightUpLine aria-hidden="true" />
+              </a>
+            </header>
             <section className={cn(pageWidth, "hero-intro")}>
               <div className="animate-story-enter motion-reduce:animate-fade-enter">
+                <p className="hero-overline">衛生福利部公開資料・{years.length} 年統計</p>
                 <h1 className="hero-title">
                   台灣性侵害統計
                   <br />
@@ -202,19 +209,13 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                   </span>
                 </h1>
                 <p className="text-sm leading-loose text-muted-foreground sm:text-[15px]">
-                  從通報紀錄出發，看見性侵害的樣貌。
+                  有多少人被記錄？他們的年齡、性別與處境是什麼？
                   <br className="hidden sm:block" />
-                  透過年齡、關係與地域，理解數字背後的處境。
+                  從全國趨勢到你的縣市，一起讀懂通報數據。
                 </p>
-                <a
-                  href="#explore"
-                  className="mt-8.5 inline-flex items-center gap-11.5 border-b border-foreground py-2.5 text-sm font-semibold [&_svg]:size-5.5 [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-out-quart hover:[&_svg]:translate-y-0.75 motion-reduce:[&_svg]:transition-none"
-                >
-                  一起讀懂這些數據 <RiArrowDownLine aria-hidden="true" />
+                <a href="#overview" className="hero-cta">
+                  先看年度重點 <RiArrowDownLine aria-hidden="true" />
                 </a>
-                <p className="mt-5.5 text-[11px] text-muted-foreground sm:mt-7.5">
-                  資料來源：衛生福利部保護服務司
-                </p>
               </div>
               <aside className="hero-summary" aria-label={`${year} 年全國統計`}>
                 <p className="hero-summary-label">
@@ -232,48 +233,76 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                     {num(reportTotal)} <small>件</small>
                   </span>
                 </div>
-                <p className="hero-summary-note">每個數字背後，都有一個真實的人。</p>
+                <p className="hero-summary-note">人數與件數為不同統計口徑，不能直接相加。</p>
               </aside>
             </section>
           </div>
+        </div>
+        <div id="explore" className="explore-nav">
+          <div className={cn(pageWidth, "explore-nav-inner")}>
+            <nav aria-label="專題章節" className="chapter-links">
+              {sectionLinks.map((link) => (
+                <a
+                  href={`#${link.id}`}
+                  key={link.id}
+                  aria-current={activeSection === link.id ? "true" : undefined}
+                  className="chapter-link"
+                >
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+            <div className="nav-year-control">
+              <label htmlFor="year" className="nav-year-label">
+                統計年度
+              </label>
+              <Button
+                variant="ghost"
+                className="w-11 bg-transparent text-base sm:w-8.5"
+                aria-label="上一年"
+                disabled={pending || yearIndex === 0}
+                onClick={() => onYearChange(years[yearIndex - 1])}
+              >
+                <RiArrowLeftSLine aria-hidden="true" />
+              </Button>
+              <DataSelect
+                id="year"
+                label="統計年度"
+                className="min-w-[92px] font-semibold tabular-nums"
+                value={String(year)}
+                onValueChange={(value) => onYearChange(Number(value))}
+                options={[...years].reverse().map((y) => ({ value: String(y), label: String(y) }))}
+              />
+              <Button
+                variant="ghost"
+                className="w-11 bg-transparent text-base sm:w-8.5"
+                aria-label="下一年"
+                disabled={pending || yearIndex === years.length - 1}
+                onClick={() => onYearChange(years[yearIndex + 1])}
+              >
+                <RiArrowRightSLine aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="hero-overview">
           <section
+            id="overview"
+            tabIndex={-1}
             className={cn(pageWidth, "hero-facts", pendingFade)}
             aria-labelledby="facts-heading"
             aria-busy={pending}
           >
             <div className="facts-toolbar">
               <div>
-                <p className="facts-eyebrow">AT A GLANCE / {year}</p>
-                <h2 id="facts-heading">五個數字，先看重點。</h2>
+                <output className="facts-eyebrow">
+                  {pending ? "正在載入資料…" : `${year} 年・民國 ${year - 1911} 年`}
+                </output>
+                <h2 id="facts-heading">這一年，值得看見的數字</h2>
               </div>
-              <div className="facts-year-control">
-                <label htmlFor="overview-year">統計年度</label>
-                <Button
-                  variant="ghost"
-                  aria-label="重點數據上一年"
-                  disabled={yearIndex === 0}
-                  onClick={() => onYearChange(years[yearIndex - 1])}
-                >
-                  <RiArrowLeftSLine aria-hidden="true" />
-                </Button>
-                <DataSelect
-                  id="overview-year"
-                  label="重點數據統計年度"
-                  value={String(year)}
-                  onValueChange={(value) => onYearChange(Number(value))}
-                  options={[...years]
-                    .reverse()
-                    .map((y) => ({ value: String(y), label: String(y) }))}
-                />
-                <Button
-                  variant="ghost"
-                  aria-label="重點數據下一年"
-                  disabled={yearIndex === years.length - 1}
-                  onClick={() => onYearChange(years[yearIndex + 1])}
-                >
-                  <RiArrowRightSLine aria-hidden="true" />
-                </Button>
-              </div>
+              <a className="overview-download" href={`/api/v1/data?year=${year}&format=csv`}>
+                下載 {year} 年資料 <RiDownloadLine aria-hidden="true" />
+              </a>
             </div>
             <HeroFacts
               year={year}
@@ -295,138 +324,57 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             </p>
           </section>
         </div>
-        <div id="explore" className="sticky top-0 z-10 border-y border-border bg-background">
-          <div
-            className={cn(
-              pageWidth,
-              "flex min-h-[74px] flex-col-reverse items-center justify-between gap-0 sm:flex-row sm:gap-4.5",
-            )}
-          >
-            <nav
-              aria-label="專題章節"
-              className="flex w-full justify-between gap-2 sm:w-auto sm:justify-start sm:gap-4 lg:gap-7"
-            >
-              {sectionLinks.map((link, i) => (
-                <a
-                  href={`#${link.id}`}
-                  key={link.id}
-                  aria-current={activeSection === link.id ? "true" : undefined}
-                  className="flex min-h-[43px] items-center gap-[7px] text-[11px] whitespace-nowrap text-muted-foreground shadow-[inset_0_-2px_0_transparent] transition-[color,box-shadow] duration-150 hover:text-foreground hover:no-underline aria-[current=true]:text-foreground aria-[current=true]:shadow-[inset_0_-2px_0_var(--primary)] sm:min-h-11 sm:text-[13px]"
-                >
-                  <span className="hidden text-[10px] text-muted-foreground lg:inline">
-                    0{i + 1}
-                  </span>
-                  {link.name}
-                </a>
-              ))}
-            </nav>
-            <div className="flex w-full items-center justify-center gap-[5px] border-b border-border py-[5px] sm:w-auto sm:justify-start sm:border-0 sm:py-0">
-              <label
-                htmlFor="year"
-                className="mr-5 block text-[11px] whitespace-nowrap sm:hidden lg:mr-2.5 lg:block"
-              >
-                統計年度
-              </label>
-              <Button
-                variant="ghost"
-                className="w-11 bg-transparent text-base sm:w-8.5"
-                aria-label="上一年"
-                disabled={yearIndex === 0}
-                onClick={() => onYearChange(years[yearIndex - 1])}
-              >
-                <RiArrowLeftSLine aria-hidden="true" />
-              </Button>
-              <DataSelect
-                id="year"
-                label="統計年度"
-                className="min-w-[92px] font-semibold tabular-nums"
-                value={String(year)}
-                onValueChange={(value) => onYearChange(Number(value))}
-                options={[...years].reverse().map((y) => ({ value: String(y), label: String(y) }))}
-              />
-              <Button
-                variant="ghost"
-                className="w-11 bg-transparent text-base sm:w-8.5"
-                aria-label="下一年"
-                disabled={yearIndex === years.length - 1}
-                onClick={() => onYearChange(years[yearIndex + 1])}
-              >
-                <RiArrowRightSLine aria-hidden="true" />
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className={pageWidth}>
-          <output className="mt-6 mb-6 flex justify-between gap-5 text-[11px] sm:mt-8 sm:text-xs">
-            {pending ? "正在載入資料…" : `正在閱讀 ${year} 年資料`}
-            <span className="text-[10px] text-muted-foreground sm:text-[11px]">
-              民國 {year - 1911} 年・全國統計
-            </span>
-          </output>
-          <div
-            className={cn(
-              "grid grid-cols-1 gap-5.5 border-b border-border pb-7.5 sm:grid-cols-3 sm:gap-9 sm:pb-10 [&>div]:grid [&>div]:grid-cols-2 [&>div]:items-center sm:[&>div]:block sm:[&>div]:border-l sm:[&>div]:border-border sm:[&>div]:pl-7.5 sm:[&>div:first-child]:border-l-0 sm:[&>div:first-child]:pl-0 [&_p]:text-xs sm:[&_p]:text-[13px] [&_strong]:row-span-2 [&_strong]:my-0 [&_strong]:block [&_strong]:text-right [&_strong]:font-numeric [&_strong]:text-[38px] [&_strong]:font-normal [&_strong]:leading-[1.25] [&_strong]:tracking-[-0.015em] [&_strong]:tabular-nums sm:[&_strong]:row-span-1 sm:[&_strong]:my-2.5 sm:[&_strong]:text-left sm:[&_strong]:text-[clamp(35px,4.5vw,54px)] [&_small]:ml-3 [&_small]:font-sans [&_small]:text-[13px] [&_small]:tracking-normal [&>div>span]:col-start-1 [&>div>span]:mt-[7px] [&>div>span]:text-[10px] [&>div>span]:text-muted-foreground sm:[&>div>span]:mt-0 sm:[&>div>span]:text-[11px] [&>div:last-child_strong]:text-primary",
-              pendingFade,
-            )}
-          >
-            <div>
-              <p>受暴人數</p>
-              <strong>
-                <AnimatedNumber value={victimTotal} />
-                <small>人</small>
-              </strong>
-              <span>
-                {change === null ? (
-                  "資料起始年度"
-                ) : (
-                  <>
-                    較前一年{change >= 0 ? "增加" : "減少"}{" "}
-                    <AnimatedNumber value={Math.abs(change)} format={fixed1} />%
-                  </>
-                )}
-              </span>
-            </div>
-            <div>
-              <p>通報件數</p>
-              <strong>
-                <AnimatedNumber value={reportTotal} />
-                <small>件</small>
-              </strong>
-              <span>通報件數與受暴人數為不同統計口徑</span>
-            </div>
-            <div>
-              <p>未滿 18 歲受暴人數</p>
-              <strong>
-                <AnimatedNumber value={minors} />
-                <small>人</small>
-              </strong>
-              <span>
-                占當年受暴人數 <AnimatedNumber value={share(minors, victimTotal)} format={fixed1} />
-                %
-              </span>
-            </div>
-          </div>
+        <div className={cn(pageWidth, "reading-guide")}>
+          <span className="reading-guide-label">閱讀前，先了解</span>
+          <p>
+            這些是<strong>已通報的紀錄</strong>
+            。未通報的經驗不在數據中，數量變化也不等於實際發生率的變化。
+          </p>
+          <a href="#sources">
+            統計口徑 <RiArrowRightUpLine aria-hidden="true" />
+          </a>
         </div>
         <section id="trend" className={cn(pageWidth, storySection)}>
-          <SectionHeading number="01" eyebrow="Across the years" title="沿著時間，看見變化。">
+          <SectionHeading
+            number="01"
+            eyebrow="歷年趨勢 / Annual trend"
+            title="受暴人數，如何逐年變化？"
+          >
             從 {years[0]} 年到 {years.at(-1)} 年，通報系統記錄下的受暴人數如何改變？
           </SectionHeading>
           <div className="rounded-xl bg-muted px-3.5 pt-5.5 pb-4 sm:px-7.5 sm:pt-7 sm:pb-5.5">
             <div className={panelHeading}>
-              <h3 className={heading3}>歷年受暴人數</h3>
-              <span className="text-xs text-muted-foreground">
-                {years[0]}—{years.at(-1)}
-              </span>
+              <div>
+                <h3 className={heading3}>歷年受暴人數</h3>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  點選折線上的年份，或使用上方年度選單。
+                </p>
+              </div>
+              <p className="trend-selected">
+                <span>{year} 年</span>
+                <strong>{num(victimTotal)}</strong>人
+              </p>
             </div>
-            <DataChart title="歷年受暴人數" {...trendChart} type="line" height={320} />
+            <DataChart
+              title="歷年受暴人數"
+              {...trendChart}
+              type="line"
+              height={300}
+              selectedLabel={String(year)}
+              onSelectLabel={(label) => onYearChange(Number(label))}
+            />
             <p className={footnote}>
               人數不等於發生率；本圖不推論未通報案件，也不直接代表犯罪趨勢。
             </p>
           </div>
         </section>
         <section id="ages" className={cn(pageWidth, storySection)}>
-          <SectionHeading number="02" eyebrow="Age & gender" title="受暴，發生在不同的人生階段。">
-            保留每個年齡區間與性別分類，讓容易被忽略的經驗也能被看見。
+          <SectionHeading
+            number="02"
+            eyebrow="年齡與性別 / Demographics"
+            title="哪些年齡與性別被記錄？"
+          >
+            查看各年齡層的人數，或篩選性別。右側性別分布以全部年齡為範圍。
           </SectionHeading>
           <div className="grid grid-cols-[minmax(0,1fr)] gap-8 sm:grid-cols-[minmax(0,1.65fr)_minmax(250px,1fr)] lg:gap-16">
             <div>
@@ -458,11 +406,13 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             <aside className="self-start rounded-xl border border-border bg-card p-6 sm:p-7">
               <p className={eyebrow}>{year} 年・全部年齡</p>
               <h3 className={cn(heading3, "mt-3.5 mb-6 text-[23px]")}>性別分布</h3>
-              <div className="mb-6 flex h-3.5 gap-px" aria-hidden="true">
+              <div
+                className="mb-6 flex h-3.5 gap-px overflow-hidden rounded-full"
+                aria-hidden="true"
+              >
                 {genderTotals.map((g) => (
                   <i
                     key={g.label}
-                    className={widthTransition}
                     style={{
                       width: `${(g.value / victimTotal) * 100}%`,
                       background: g.color,
@@ -501,12 +451,12 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             </aside>
           </div>
         </section>
-        <section id="relationships" className="mt-4.5 bg-surface-alt sm:mt-13">
+        <section id="relationships" className="story-section mt-4.5 bg-surface-alt sm:mt-8">
           <div className={cn(pageWidth, storySection, "pb-[65px]")}>
             <SectionHeading
               number="03"
-              eyebrow="Behind the relationship"
-              title="兩造之間，是什麼關係？"
+              eyebrow="兩造關係 / Relationships"
+              title="被害人與加害人，是什麼關係？"
             >
               從原始分類了解被害人與加害人的關係。選擇不同年齡，觀察分布如何改變。
             </SectionHeading>
@@ -569,6 +519,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                   variant="ghost"
                   className="mt-2.5 inline-flex items-center gap-2.5 border-b border-muted-foreground bg-transparent text-xs"
                   onClick={() => setShowAllRelations(!showAllRelations)}
+                  aria-expanded={showAllRelations}
                 >
                   {showAllRelations ? "收合為前 8 項" : `展開全部 ${relationships.length} 項關係`}{" "}
                   {showAllRelations ? (
@@ -582,7 +533,11 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           </div>
         </section>
         <section id="regions" className={cn(pageWidth, storySection)}>
-          <SectionHeading number="04" eyebrow="Across Taiwan" title="放回地方，看見分布。">
+          <SectionHeading
+            number="04"
+            eyebrow="縣市分布 / Regional comparison"
+            title="你的縣市，記錄了多少？"
+          >
             以同年度人口比較 22
             縣市的通報紀錄。每十萬人口比率可減少人口規模的影響，但不代表未通報事件的實際發生率。
           </SectionHeading>
@@ -596,8 +551,8 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                   if (value === "rate" || value === "count") setRegionMeasure(value);
                 }}
                 options={[
-                  { value: "rate", label: "每十萬人口・線性刻度" },
-                  { value: "count", label: "原始數量・線性刻度" },
+                  { value: "rate", label: "每十萬人口比率" },
+                  { value: "count", label: "原始人數／件數" },
                 ]}
               />
             </span>
@@ -631,28 +586,51 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
               </TabsTrigger>
             </TabsList>
             <TabsContent value={regionMetric}>
-              <TaiwanMap
+              <div className="race-primary">
+                <div className="race-section-heading">
+                  <p className="race-eyebrow">2019—{years.at(-1)} / 縣市動態比較</p>
+                  <h3>縣市排序，隨時間變化</h3>
+                  <p>按下播放，看前十名縣市如何變化。也可拖曳時間軸，停在你想看的年份。</p>
+                </div>
+                <RegionRace
+                  history={data.regionHistory}
+                  metric={regionMetric}
+                  measure={regionMeasure}
+                  startYear={2019}
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
+          <div className="region-map-section">
+            <div className="region-map-heading">
+              <p className="race-eyebrow">{year} / 縣市地圖</p>
+              <h3>在地圖上，找到你的縣市。</h3>
+              <p>點選縣市，查看 {year} 年的數量、人口與全國排序。可使用上方年度選單切換年份。</p>
+            </div>
+            <TaiwanMap
+              year={year}
+              metric={regionMetric}
+              measure={regionMeasure}
+              rows={allRegionRows}
+            />
+          </div>
+          <details className="history-disclosure">
+            <summary>
+              <span>
+                查詢 {year} 年各縣市完整數據
+                <small>搜尋 22 個縣市・比較人數、件數與每十萬人口比率</small>
+              </span>
+              <RiAddLine aria-hidden="true" />
+            </summary>
+            <div className="pt-6">
+              <RegionTable
                 year={year}
                 metric={regionMetric}
                 measure={regionMeasure}
                 rows={allRegionRows}
               />
-            </TabsContent>
-          </Tabs>
-          <div className="flex flex-wrap items-start gap-4.5 pt-2.5 pb-6.5 sm:items-center sm:gap-4 lg:gap-6">
-            <h3 className={cn(heading3, "text-sm max-sm:w-full")}>前十名縣市，逐年變化</h3>
-            <span>
-              2019—{years.at(-1)}・依
-              {regionMeasure === "rate" ? "每十萬人口比率" : "原始數量"}
-              排序
-            </span>
-          </div>
-          <RegionRace
-            history={data.regionHistory}
-            metric={regionMetric}
-            measure={regionMeasure}
-            startYear={2019}
-          />
+            </div>
+          </details>
           <p className="mt-6 text-xs leading-[1.9] text-muted-foreground">
             人口來源：
             <a
@@ -679,7 +657,8 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           className="mt-7.5 scroll-mt-[118px] bg-muted py-12 sm:mt-15 sm:scroll-mt-[90px] sm:py-16"
         >
           <div className={pageWidth}>
-            <p className={eyebrow}>Sources & methodology</p>
+            <p className={eyebrow}>資料來源 / Sources & methodology</p>
+            <h2 className={cn(heading2, "mt-3")}>讀得懂，也查得到來源。</h2>
             <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-16">
               <div>
                 <h3 className={heading3}>資料從哪裡來？</h3>

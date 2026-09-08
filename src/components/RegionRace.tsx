@@ -69,7 +69,10 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
   const scale = useMemo(() => {
     const frames = history
       .filter((r) => r.year >= startYear)
-      .map((r) => ({ value: r[metric], rate: ratePer100k(r[metric], r.population) }));
+      .map((r) => ({
+        value: r[metric],
+        rate: ratePer100k(r[metric], r.population),
+      }));
     return {
       rate: rateAxisMax(frames.map((r) => r.rate)),
       count: Math.max(1, ...frames.map((r) => r.value)),
@@ -107,21 +110,20 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
     setPlaying(!playing);
   };
   return (
-    <div>
+    <div className="region-race">
       <div className="flex flex-col items-stretch gap-4 pt-1 pb-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-x-8 sm:gap-y-5">
         <div
           className="flex flex-col gap-1.5 text-xs text-muted-foreground"
           aria-live={running ? "off" : "polite"}
         >
-          <span>年度</span>
+          <span>播放年度</span>
           <strong className="font-numeric text-[clamp(44px,5vw,64px)] leading-none font-semibold tracking-[-0.02em] text-foreground tabular-nums">
             <AnimatedValue value={String(year0)} />
           </strong>
         </div>
-        <div className="flex flex-1 items-center justify-between gap-5 sm:min-w-[280px] sm:justify-end">
+        <div className="flex flex-1 items-center justify-between gap-5 sm:min-w-70 sm:justify-end">
           <Button
-            variant="outline"
-            className="min-w-[100px]"
+            className="min-w-25 race-play-button"
             onClick={togglePlay}
             aria-label={label}
             aria-pressed={running}
@@ -142,7 +144,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               type="range"
               min={startYear}
               max={lastYear}
-              step={0.01}
+              step={1}
               value={time}
               aria-valuetext={`${year0} 年`}
               onChange={(event) => {
@@ -165,6 +167,15 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
           ? `長條刻度：0–${scale.rate}／十萬人・${startYear}–${lastYear} 年共用同一刻度，年與年之間的數值為線性內插`
           : `長條刻度依 ${startYear}–${lastYear} 年最大值固定，年與年之間的數值為線性內插`}
       </p>
+      <div className="race-column-headings" aria-hidden="true">
+        <span>#</span>
+        <span>縣市／年底人口</span>
+        <span>{measure === "rate" ? "每十萬人口比率" : "原始數量"}</span>
+        <span>{measure === "rate" ? `${unit}／十萬人` : unit}</span>
+        <span>
+          {measure === "rate" ? `原始${metric === "victims" ? "人數" : "件數"}` : "每十萬人口"}
+        </span>
+      </div>
       <div
         className="relative h-[calc(var(--rows)*var(--row-height))] overflow-hidden border-t border-border [--row-height:64px]"
         style={{ "--rows": TOP } as CSSProperties}
@@ -173,7 +184,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
           const rank = rankOf.get(r.city) ?? 0;
           return (
             <div
-              className="absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] grid-cols-[20px_78px_1fr_50px_56px] items-center gap-2 border-b border-border text-[13px] tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none sm:grid-cols-[26px_96px_1fr_64px_72px] sm:gap-4"
+              className="race-row absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] items-center border-b border-border font-numeric text-[13px] tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none"
               key={r.city}
               data-out={rank >= TOP || undefined}
               aria-hidden={rank >= TOP || undefined}
@@ -182,15 +193,15 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               <span className="text-xs text-muted-foreground tabular-nums" aria-hidden="true">
                 {rank + 1}
               </span>
-              <span>
+              <span className="text-lg">
                 {r.city}
-                <small className="mt-1.25 block text-[10px] whitespace-nowrap text-muted-foreground [&_svg]:mr-1 [&_svg]:inline [&_svg]:[vertical-align:-0.15em]">
+                <small className="mt-1.25 block text-[10px] whitespace-nowrap text-muted-foreground [&_svg]:mr-1 [&_svg]:inline [&_svg]:align-[-0.15em]">
                   <RiGroupLine aria-hidden="true" />
                   <span className="sr-only">人口</span>
                   {r.population === null ? "無資料" : formatNumber(Math.round(r.population))}
                 </small>
               </span>
-              <span className="block h-2 bg-secondary" aria-hidden="true">
+              <span className="race-bar-track" aria-hidden="true">
                 <i
                   className="block h-full w-full origin-left bg-map-4 transition-[transform,background-color] duration-500 ease-out-quart motion-reduce:transition-none"
                   style={{
@@ -201,6 +212,11 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               </span>
               <b className="text-right font-medium">
                 {measure === "rate" ? formatRate(r.rate) : formatNumber(Math.round(r.value))}
+                <small className="race-mobile-secondary">
+                  {measure === "rate"
+                    ? `${formatNumber(Math.round(r.value))} ${unit}`
+                    : `${formatRate(r.rate)}／十萬人`}
+                </small>
               </b>
               <span className="text-right text-[11px] text-muted-foreground">
                 {measure === "rate"
