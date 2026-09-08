@@ -1,16 +1,13 @@
 import { MotionConfig } from "motion/react";
 import { HeadContent, Scripts, Outlet, createRootRoute } from "@tanstack/react-router";
 import stylesheet from "../styles.css?url";
+import { useI18n } from "../i18n";
+import { htmlLang } from "../i18n/locales";
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "看見數字背後｜台灣性侵害統計" },
-      {
-        name: "description",
-        content: "從2008至2025年官方資料，認識台灣性侵害通報、被害人年齡、兩造關係與縣市分布。",
-      },
     ],
     links: [
       {
@@ -30,8 +27,14 @@ export const Route = createRootRoute({
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],
   }),
-  component: () => (
-    <html lang="zh-Hant">
+  component: Document,
+  notFoundComponent: NotFound,
+  errorComponent: LoadError,
+});
+function Document() {
+  const { locale } = useI18n();
+  return (
+    <html lang={htmlLang[locale]}>
       <head>
         <HeadContent />
       </head>
@@ -42,20 +45,26 @@ export const Route = createRootRoute({
         <Scripts />
       </body>
     </html>
-  ),
-  notFoundComponent: () => (
+  );
+}
+function NotFound() {
+  const { t } = useI18n();
+  return (
     <main className="mx-auto my-[15vh] max-w-150 p-7.5">
-      <h1 className="text-4xl font-bold">找不到這個頁面</h1>
-      <a href="/">回到統計專題</a>
+      <h1 className="text-4xl font-bold">{t.notFound.title}</h1>
+      <a href="/">{t.notFound.home}</a>
     </main>
-  ),
-  errorComponent: ({ reset }) => (
+  );
+}
+function LoadError({ reset }: { reset: () => void }) {
+  const { t } = useI18n();
+  return (
     <main className="mx-auto my-[15vh] max-w-150 p-7.5">
-      <h1 className="text-4xl font-bold">資料暫時無法載入</h1>
-      <p>請稍後再試。</p>
+      <h1 className="text-4xl font-bold">{t.error.title}</h1>
+      <p>{t.error.body}</p>
       <button className="mt-3.75 min-h-11 cursor-pointer bg-secondary p-2.5" onClick={reset}>
-        重新載入
+        {t.error.retry}
       </button>
     </main>
-  ),
-});
+  );
+}

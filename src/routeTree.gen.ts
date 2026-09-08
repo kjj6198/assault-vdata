@@ -9,16 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as Char123LocaleChar125IndexRouteImport } from './routes/{-$locale}/index'
 import { Route as ApiV1DataRouteImport } from './routes/api.v1.data'
 import { Route as ApiV1MetaRouteImport } from './routes/api.v1.meta'
 import { Route as ApiV1RegionsRouteImport } from './routes/api.v1.regions'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const Char123LocaleChar125IndexRoute =
+  Char123LocaleChar125IndexRouteImport.update({
+    id: '/{-$locale}/',
+    path: '/{-$locale}/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiV1DataRoute = ApiV1DataRouteImport.update({
   id: '/api/v1/data',
   path: '/api/v1/data',
@@ -36,34 +37,40 @@ const ApiV1RegionsRoute = ApiV1RegionsRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/v1/data': typeof ApiV1DataRoute
   '/api/v1/meta': typeof ApiV1MetaRoute
   '/api/v1/regions': typeof ApiV1RegionsRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/{-$locale}': typeof Char123LocaleChar125IndexRoute
   '/api/v1/data': typeof ApiV1DataRoute
   '/api/v1/meta': typeof ApiV1MetaRoute
   '/api/v1/regions': typeof ApiV1RegionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/{-$locale}/': typeof Char123LocaleChar125IndexRoute
   '/api/v1/data': typeof ApiV1DataRoute
   '/api/v1/meta': typeof ApiV1MetaRoute
   '/api/v1/regions': typeof ApiV1RegionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/v1/data' | '/api/v1/meta' | '/api/v1/regions'
+  fullPaths:
+    '/{-$locale}/' | '/api/v1/data' | '/api/v1/meta' | '/api/v1/regions'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/v1/data' | '/api/v1/meta' | '/api/v1/regions'
-  id: '__root__' | '/' | '/api/v1/data' | '/api/v1/meta' | '/api/v1/regions'
+  to: '/{-$locale}' | '/api/v1/data' | '/api/v1/meta' | '/api/v1/regions'
+  id:
+    | '__root__'
+    | '/{-$locale}/'
+    | '/api/v1/data'
+    | '/api/v1/meta'
+    | '/api/v1/regions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  Char123LocaleChar125IndexRoute: typeof Char123LocaleChar125IndexRoute
   ApiV1DataRoute: typeof ApiV1DataRoute
   ApiV1MetaRoute: typeof ApiV1MetaRoute
   ApiV1RegionsRoute: typeof ApiV1RegionsRoute
@@ -71,11 +78,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/{-$locale}/': {
+      id: '/{-$locale}/'
+      path: '/{-$locale}'
+      fullPath: '/{-$locale}/'
+      preLoaderRoute: typeof Char123LocaleChar125IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/v1/data': {
@@ -103,7 +110,7 @@ declare module '@tanstack/react-router' {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  Char123LocaleChar125IndexRoute: Char123LocaleChar125IndexRoute,
   ApiV1DataRoute: ApiV1DataRoute,
   ApiV1MetaRoute: ApiV1MetaRoute,
   ApiV1RegionsRoute: ApiV1RegionsRoute,

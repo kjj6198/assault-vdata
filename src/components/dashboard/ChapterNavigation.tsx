@@ -3,7 +3,8 @@ import { Button } from "../ui/button";
 import { DataSelect } from "../DataSelect";
 import { useActiveSection } from "../../lib/use-active-section";
 import { cn } from "../../lib/utils";
-import { sectionLinks, sectionIds, pageWidth, type DashboardData } from "./shared";
+import { useI18n } from "../../i18n";
+import { sectionIds, pageWidth, type DashboardData } from "./shared";
 
 export function ChapterNavigation({
   data,
@@ -14,6 +15,7 @@ export function ChapterNavigation({
   onYearChange: (year: number) => void;
   pending: boolean;
 }) {
+  const { t } = useI18n();
   const { year, years } = data;
   const activeSection = useActiveSection(sectionIds);
   const yearIndex = years.indexOf(year);
@@ -29,17 +31,17 @@ export function ChapterNavigation({
         )}
       >
         <nav
-          aria-label="專題章節"
+          aria-label={t.nav.aria}
           className="flex min-w-0 items-stretch gap-4 max-lg:w-full max-sm:scrollbar-thin max-sm:[scrollbar-color:var(--border)_transparent] max-sm:justify-start max-sm:overflow-x-auto sm:max-lg:justify-between lg:gap-6.5"
         >
-          {sectionLinks.map((link) => (
+          {sectionIds.map((id) => (
             <a
-              href={`#${link.id}`}
-              key={link.id}
-              aria-current={activeSection === link.id ? "true" : undefined}
+              href={`#${id}`}
+              key={id}
+              aria-current={activeSection === id ? "true" : undefined}
               className="inline-flex min-h-10 items-center border-b-3 border-transparent pt-0.75 text-caption whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:text-foreground hover:no-underline aria-current:border-primary aria-current:font-bold aria-current:text-primary sm:min-h-13 lg:min-h-17.5"
             >
-              {link.name}
+              {t.nav[id]}
             </a>
           ))}
         </nav>
@@ -48,12 +50,12 @@ export function ChapterNavigation({
             htmlFor="year"
             className="mr-auto text-caption whitespace-nowrap text-muted-foreground sm:mr-2"
           >
-            統計年度
+            {t.nav.yearLabel}
           </label>
           <Button
             variant="ghost"
             className="w-9 bg-transparent text-sm max-sm:min-h-9 max-sm:px-2 sm:w-8.5 sm:text-base"
-            aria-label="上一年"
+            aria-label={t.nav.previousYear}
             disabled={pending || yearIndex === 0}
             onClick={() => onYearChange(years[yearIndex - 1])}
           >
@@ -61,7 +63,7 @@ export function ChapterNavigation({
           </Button>
           <DataSelect
             id="year"
-            label="統計年度"
+            label={t.nav.yearLabel}
             className="min-w-23 border-border bg-card font-semibold tabular-nums max-sm:min-h-9 max-sm:min-w-20 max-sm:px-2 max-sm:py-1 max-sm:text-sm"
             value={String(year)}
             onValueChange={(value) => onYearChange(Number(value))}
@@ -70,7 +72,7 @@ export function ChapterNavigation({
           <Button
             variant="ghost"
             className="w-9 bg-transparent text-sm max-sm:min-h-9 max-sm:px-2 sm:w-8.5 sm:text-base"
-            aria-label="下一年"
+            aria-label={t.nav.nextYear}
             disabled={pending || yearIndex === years.length - 1}
             onClick={() => onYearChange(years[yearIndex + 1])}
           >

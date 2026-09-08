@@ -117,6 +117,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-synthesis: weight small-caps;
+
+    &:lang(ja) {
+      --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    }
     --hero-gradient:
       radial-gradient(
         70% 90% at 4% 8%,

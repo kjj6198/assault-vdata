@@ -4,7 +4,9 @@ import { DataChart } from "../DataChart";
 import { DataSelect } from "../DataSelect";
 import { AnimatedNumber } from "../StoryMotion";
 import { cn } from "../../lib/utils";
+import { useI18n } from "../../i18n";
 import {
+  ALL,
   INK,
   CORAL,
   GOLD,
@@ -22,31 +24,34 @@ import {
 import { SectionHeading } from "./SectionHeading";
 
 export function DemographicsSection({ data }: { data: DashboardData }) {
+  const { t, name } = useI18n();
   const { year, records, ages } = data;
-  const [gender, setGender] = useState("全部");
+  const [gender, setGender] = useState(ALL);
   const demo = records.filter((r) => r.dataset === "demographics");
   const victimTotal = sum(records.filter((r) => r.dataset === "victims"));
 
   const genders = ["女", "男", ...(year >= 2019 ? ["其他"] : []), "不詳"];
-  const genderTotals = genders.map((label) => ({
-    label,
-    value: sum(demo.filter((r) => r.gender === label)),
-    color: label === "女" ? INK : label === "男" ? GOLD : label === "其他" ? CORAL : GRAY,
+  const genderTotals = genders.map((key) => ({
+    key,
+    label: name("gender", key),
+    value: sum(demo.filter((r) => r.gender === key)),
+    color: key === "女" ? INK : key === "男" ? GOLD : key === "其他" ? CORAL : GRAY,
   }));
-  const safeGender = genders.includes(gender) ? gender : "全部";
+  const safeGender = genders.includes(gender) ? gender : ALL;
+  const genderLabel = safeGender === ALL ? t.all : name("gender", safeGender);
   const ageChart = useMemo(
     () => ({
-      labels: ages.map((age) => age.replace("–未滿", "–<")),
+      labels: ages.map((age) => name("age", age).replace("–未滿", "–<")),
       series: [
         {
-          label: safeGender === "全部" ? "全部性別" : safeGender,
+          label: safeGender === ALL ? t.demographics.allGenders : name("gender", safeGender),
           values: ages.map((age) =>
             sum(
               records.filter(
                 (r) =>
                   r.dataset === "demographics" &&
                   r.age === age &&
-                  (safeGender === "全部" || r.gender === safeGender),
+                  (safeGender === ALL || r.gender === safeGender),
               ),
             ),
           ),
@@ -54,49 +59,48 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
         },
       ],
     }),
-    [ages, records, safeGender],
+    [ages, records, safeGender, t, name],
   );
   return (
     <section id="ages" className={cn(pageWidth, storySection)}>
-      <SectionHeading
-        number="02"
-        eyebrow="年齡與性別 / Demographics"
-        title="哪些年齡與性別被記錄？"
-      >
-        查看各年齡層的人數，或篩選性別。右側性別分布以全部年齡為範圍。
+      <SectionHeading number="02" eyebrow={t.demographics.eyebrow} title={t.demographics.title}>
+        {t.demographics.intro}
       </SectionHeading>
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 sm:grid-cols-[minmax(0,1.65fr)_minmax(250px,1fr)] lg:gap-16">
         <div>
           <div className={panelHeading}>
-            <h3 className={heading3}>{year} 年・年齡分布</h3>
+            <h3 className={heading3}>{t.demographics.ageHeading(year)}</h3>
             <span className={inlineFilter}>
-              性別
+              {t.demographics.genderFilter}
               <DataSelect
-                label="年齡分布的性別"
+                label={t.demographics.genderFilterAria}
                 value={safeGender}
                 onValueChange={setGender}
-                options={["全部", ...genders].map((g) => ({
-                  value: g,
-                  label: g,
-                }))}
+                options={[
+                  { value: ALL, label: t.all },
+                  ...genders.map((g) => ({ value: g, label: name("gender", g) })),
+                ]}
               />
             </span>
           </div>
           <DataChart
-            title={`${year} 年年齡分布（${safeGender}）`}
+            title={t.demographics.chartTitle(year, genderLabel)}
+            unit={t.unit.people}
             {...ageChart}
             horizontal
             height={360}
           />
-          <p className={footnote}>「12–&lt;18歲」表示滿 12 歲、未滿 18 歲。年齡不詳獨立列出。</p>
+          <p className={footnote}>{t.demographics.ageFootnote}</p>
         </div>
         <aside className="self-start rounded-xl border border-border bg-card p-6 sm:p-7">
-          <p className={eyebrow}>{year} 年・全部年齡</p>
-          <h3 className={cn(heading3, "mt-3.5 mb-6 text-[1.4375rem]")}>性別分布</h3>
+          <p className={eyebrow}>{t.demographics.allAges(year)}</p>
+          <h3 className={cn(heading3, "mt-3.5 mb-6 text-[1.4375rem]")}>
+            {t.demographics.genderDistribution}
+          </h3>
           <div className="relative mb-6 h-3.5 overflow-hidden rounded-full" aria-hidden="true">
             {genderTotals.map((g, index) => (
               <i
-                key={g.label}
+                key={g.key}
                 className="absolute inset-0 size-full origin-left transition-transform duration-600 ease-out-quart motion-reduce:transition-none"
                 style={{
                   transform: `translateX(${share(
@@ -111,14 +115,15 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
           {genderTotals.map((g) => (
             <div
               className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-3.75 font-numeric text-caption tabular-nums"
-              key={g.label}
+              key={g.key}
             >
               <span className="flex items-center gap-2">
                 <i className="inline-block size-2 rounded-full" style={{ background: g.color }} />
                 {g.label}
               </span>
               <b className="text-right font-medium">
-                <AnimatedNumber value={g.value} /> <small className="text-[0.625rem]">人</small>
+                <AnimatedNumber value={g.value} />{" "}
+                <small className="text-[0.625rem]">{t.unit.people}</small>
               </b>
               <span className="text-right text-xs text-muted-foreground">
                 {g.value > 0 && g.value / victimTotal < 0.001 ? (
@@ -131,7 +136,7 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
             </div>
           ))}
           <p className="mt-6 text-[0.6875rem] leading-[1.9] text-muted-foreground">
-            性別「其他」自 2019 年起新增。此前未設此欄位，不以零人代替。
+            {t.demographics.otherNote}
           </p>
         </aside>
       </div>

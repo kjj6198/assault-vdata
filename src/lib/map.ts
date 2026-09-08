@@ -21,7 +21,7 @@ export const mapScale = [
   { min: 300, label: "300–599", color: palette["map-3"].css },
   { min: 600, label: "600–999", color: palette["map-4"].css },
   { min: 1000, label: "1,000–1,499", color: palette["map-5"].css },
-  { min: 1500, label: "1,500 以上", color: palette["map-6"].css },
+  { min: 1500, label: "1,500", open: true, color: palette["map-6"].css },
 ];
 export function countyColor(value: number | undefined) {
   if (value === undefined) return palette["map-missing"].css;

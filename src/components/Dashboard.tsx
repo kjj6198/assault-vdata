@@ -1,5 +1,6 @@
 import { RiArrowUpLine } from "react-icons/ri";
 import { cn } from "../lib/utils";
+import { useI18n } from "../i18n";
 import { pageWidth, type DashboardData } from "./dashboard/shared";
 import { HeroSection } from "./dashboard/HeroSection";
 import { ChapterNavigation } from "./dashboard/ChapterNavigation";
@@ -8,6 +9,7 @@ import { DemographicsSection } from "./dashboard/DemographicsSection";
 import { RelationshipsSection } from "./dashboard/RelationshipsSection";
 import { RegionsSection } from "./dashboard/RegionsSection";
 import { SourcesSection } from "./dashboard/SourcesSection";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 type Props = {
   data: DashboardData;
@@ -15,15 +17,16 @@ type Props = {
   pending: boolean;
 };
 export function Dashboard({ data, onYearChange, pending }: Props) {
+  const { t, locale } = useI18n();
   return (
     <>
       <a
         className="fixed top-3 left-3 z-60 translate-y-[-160%] bg-primary px-5 py-3 text-primary-foreground focus:translate-y-0"
         href="#overview"
       >
-        跳至年度重點
+        {t.skipLink}
       </a>
-      <main id="main" className="group" data-pending={pending || undefined}>
+      <main id="main" className="group" data-pending={pending || undefined} data-locale={locale}>
         <HeroSection data={data} onYearChange={onYearChange} pending={pending} />
         <ChapterNavigation data={data} onYearChange={onYearChange} pending={pending} />
         <TrendSection data={data} onYearChange={onYearChange} />
@@ -39,15 +42,16 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         )}
       >
         <div className="space-y-1 leading-relaxed text-muted-foreground max-sm:order-3 max-sm:w-full">
-          <p>台灣性侵害統計</p>
-          <p>資料整理、設計：@kalan / codex / claude code</p>
-          <p>程式：@kalan / codex / claude code</p>
+          <p>{t.footer.site}</p>
+          <p>{t.footer.design}</p>
+          <p>{t.footer.code}</p>
         </div>
+        <LanguageSwitcher className="ml-auto max-sm:order-1" />
         <a
           href="#main"
-          className="ml-auto inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem]"
+          className="inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem] max-sm:order-2"
         >
-          回到頂端 <RiArrowUpLine aria-hidden="true" />
+          {t.footer.top} <RiArrowUpLine aria-hidden="true" />
         </a>
       </footer>
     </>
