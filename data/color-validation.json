@@ -1,0 +1,99 @@
+{
+  "gamut": "sRGB",
+  "contrast": [
+    {
+      "foreground": "foreground",
+      "background": "background",
+      "wcagRatio": 15.36,
+      "apcaLc": 100.1
+    },
+    {
+      "foreground": "muted-foreground",
+      "background": "background",
+      "wcagRatio": 7.61,
+      "apcaLc": 84.7
+    },
+    {
+      "foreground": "muted-foreground",
+      "background": "muted",
+      "wcagRatio": 6.98,
+      "apcaLc": 78.8
+    },
+    {
+      "foreground": "foreground",
+      "background": "card",
+      "wcagRatio": 15.72,
+      "apcaLc": 101.7
+    },
+    {
+      "foreground": "primary-foreground",
+      "background": "primary",
+      "wcagRatio": 8.11,
+      "apcaLc": 91.3
+    },
+    {
+      "foreground": "destructive-foreground",
+      "background": "destructive",
+      "wcagRatio": 7.25,
+      "apcaLc": 87.6
+    },
+    {
+      "foreground": "hero-foreground",
+      "background": "hero-background",
+      "wcagRatio": 14.2,
+      "apcaLc": 101.1
+    },
+    {
+      "foreground": "hero-muted",
+      "background": "hero-background",
+      "wcagRatio": 9.09,
+      "apcaLc": 71.3
+    },
+    {
+      "foreground": "primary",
+      "background": "muted",
+      "wcagRatio": 7.3,
+      "apcaLc": 79.8
+    },
+    {
+      "foreground": "secondary-foreground",
+      "background": "secondary",
+      "wcagRatio": 10.58,
+      "apcaLc": 86.5
+    },
+    {
+      "foreground": "accent-foreground",
+      "background": "accent",
+      "wcagRatio": 10.24,
+      "apcaLc": 84.4
+    },
+    {
+      "foreground": "muted-foreground",
+      "background": "surface-alt",
+      "wcagRatio": 7.2,
+      "apcaLc": 80.9
+    }
+  ],
+  "graphics": [
+    {
+      "foreground": "hero-dot",
+      "background": "hero-background",
+      "wcagRatio": 3.06
+    },
+    {
+      "foreground": "data-secondary",
+      "background": "hero-background",
+      "wcagRatio": 4.78
+    },
+    {
+      "foreground": "section-marker",
+      "background": "background",
+      "wcagRatio": 3.94
+    },
+    {
+      "foreground": "input",
+      "background": "background",
+      "wcagRatio": 3.29
+    }
+  ]
+}

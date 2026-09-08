@@ -1,0 +1,122 @@
+{
+  "background": {
+    "css": "oklch(0.986 0.005 255)"
+  },
+  "foreground": {
+    "css": "oklch(0.25 0.028 255)"
+  },
+  "card": {
+    "css": "oklch(0.994 0.001 255)"
+  },
+  "card-foreground": {
+    "css": "oklch(0.25 0.028 255)"
+  },
+  "popover": {
+    "css": "oklch(0.994 0.001 255)"
+  },
+  "popover-foreground": {
+    "css": "oklch(0.25 0.028 255)"
+  },
+  "primary": {
+    "css": "oklch(0.425 0.085 255)"
+  },
+  "primary-foreground": {
+    "css": "oklch(0.992 0.003 255)"
+  },
+  "secondary": {
+    "css": "oklch(0.938 0.018 255)"
+  },
+  "secondary-foreground": {
+    "css": "oklch(0.32 0.045 255)"
+  },
+  "muted": {
+    "css": "oklch(0.956 0.013 255)"
+  },
+  "muted-foreground": {
+    "css": "oklch(0.435 0.024 255)"
+  },
+  "accent": {
+    "css": "oklch(0.927 0.026 255)"
+  },
+  "accent-foreground": {
+    "css": "oklch(0.32 0.045 255)"
+  },
+  "destructive": {
+    "css": "oklch(0.47 0.16 25)"
+  },
+  "destructive-foreground": {
+    "css": "oklch(0.992 0.003 255)"
+  },
+  "border": {
+    "css": "oklch(0.853 0.022 255)"
+  },
+  "input": {
+    "css": "oklch(0.635 0.035 255)"
+  },
+  "ring": {
+    "css": "oklch(0.425 0.085 255)"
+  },
+  "surface-alt": {
+    "css": "oklch(0.967 0.008 255)"
+  },
+  "hero-background": {
+    "css": "oklch(0.275 0.038 255)"
+  },
+  "hero-foreground": {
+    "css": "oklch(0.985 0.004 255)"
+  },
+  "hero-muted": {
+    "css": "oklch(0.84 0.025 255)"
+  },
+  "hero-dot": {
+    "css": "oklch(0.55 0.041 255)"
+  },
+  "hero-border": {
+    "css": "oklch(0.495 0.034 255)"
+  },
+  "data-people": {
+    "css": "oklch(0.425 0.085 255)"
+  },
+  "data-relationships": {
+    "css": "oklch(0.495 0.09 72)"
+  },
+  "data-secondary": {
+    "css": "oklch(0.665 0.12 78)"
+  },
+  "data-unknown": {
+    "css": "oklch(0.53 0.02 255)"
+  },
+  "section-marker": {
+    "css": "oklch(0.59 0.04 255)"
+  },
+  "map-highlight": {
+    "css": "oklch(0.56 0.11 70)"
+  },
+  "map-missing": {
+    "css": "oklch(0.855 0 0)"
+  },
+  "notice-background": {
+    "css": "oklch(0.963 0.026 85)"
+  },
+  "selection": {
+    "css": "oklch(0.878 0.048 255)"
+  },
+  "map-1": {
+    "css": "oklch(0.9 0.029 255)"
+  },
+  "map-2": {
+    "css": "oklch(0.79 0.054 255)"
+  },
+  "map-3": {
+    "css": "oklch(0.68 0.079 255)"
+  },
+  "map-4": {
+    "css": "oklch(0.57 0.095 255)"
+  },
+  "map-5": {
+    "css": "oklch(0.46 0.099 255)"
+  },
+  "map-6": {
+    "css": "oklch(0.35 0.079 255)"
+  }
+}

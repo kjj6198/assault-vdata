@@ -1,0 +1,90 @@
+[
+  {
+    "dataset": "relationships",
+    "file": "relationships-2025.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2025年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-100271-b3109a16-c6ed-4d5d-9ee2-7b15dc3bfcd9.html",
+    "sha256": "bd41636d45178760e043a573623a0b60993ecce478a3842435c27cc3070ae475"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2024.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2024年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-95255-fd78bed5-f1fe-4b20-9b3e-a9ebb42eaa3c.html",
+    "sha256": "cb19183bb2a43c91a5bf4df7fae4dcf86b7cc6f9b02088ef7a1408dc13a3575d"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2023.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2023年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-89126-e9d0ca7c-bc38-4f42-a770-abec5d5aba59.html",
+    "sha256": "915bef7ce13311ace3e42e09a68844b0e19e584cdf0d4d3b734681ffda7f23d6"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2022.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2022年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-83489-52a4a077-ea7a-44bb-a154-012618a8838c.html",
+    "sha256": "952aee4200deb21217db0aae7e82583432e21ae60def577ea484cbb6abf785f1"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2021.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2021年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-77092-1adf00ce-0202-4d08-b92d-0d3af83a7c1f.html",
+    "sha256": "eef93dd27ac7ae01a39e3a6964fa990005d08e63e2fdce46941238cc2b9e2983"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2019-2020.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2019年至2020年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-69980-84ccff2b-9c6c-491a-b990-20f77240c819.html",
+    "sha256": "69841b32fc0f424b619042b439e50467b90ca992a9a7f7a7eb6ffe3745bd7c7d"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2019.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2019年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-68574-36255549-8aff-45af-a17d-ebe8f4ace273.html",
+    "sha256": "cfe3f5fe53533fb0d04c3f46751fb1e92a39a6a4352c3c3a218e84b345220720"
+  },
+  {
+    "dataset": "relationships",
+    "file": "relationships-2008-2018.ods",
+    "title": "性侵害案件被害人年齡與兩造關係交叉統計(統計期間為2008年至2018年).ods",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html",
+    "url": "https://www.mohw.gov.tw/dl-68576-e3d716f2-611d-49b7-8d8f-14ac01e733fc.html",
+    "sha256": "f74197c28c626fb7fc9daa97eb3b749b3c1c1b0d318d3ff3e084b0adb59c0991"
+  },
+  {
+    "dataset": "demographics",
+    "file": "demographics-2008-2025.xlsx",
+    "title": "性侵害案件被害人年齡與性別交叉統計(統計期間為2008至2025年).xlsx",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59309-105.html",
+    "url": "https://www.mohw.gov.tw/dl-100270-2589cb48-3d34-4042-9c8d-b38e5d96d56e.html",
+    "sha256": "1af3300a64a4a266ba2a2177f4b1164c7939b6fff890823e8e381a739b17628f"
+  },
+  {
+    "dataset": "victims",
+    "file": "victims-2008-2025.xlsx",
+    "title": "性侵害案件各縣市受暴人數及比率(統計期間為2008至2025年).xlsx",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59311-105.html",
+    "url": "https://www.mohw.gov.tw/dl-100266-dcd2d9e2-8df7-4a3a-80d7-61353d20f57c.html",
+    "sha256": "7cf494b6ef778ff92b39d27940fdb24d9679573b8af920f2c674f6f1312a7017"
+  },
+  {
+    "dataset": "reports",
+    "file": "reports-2008-2025.xlsx",
+    "title": "性侵害案件各縣市通報件數及比率(統計期間為2008至2025年).xlsx",
+    "page": "https://dep.mohw.gov.tw/dops/cp-1303-59312-105.html",
+    "url": "https://www.mohw.gov.tw/dl-100264-8b56dd2a-7830-4bf1-a13b-9ca3d59a8fed.html",
+    "sha256": "844c942345c5c7acb3fef08e39116060832bde9af9eae4299491f0148804f150"
+  }
+]

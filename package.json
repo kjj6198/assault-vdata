@@ -1,29 +1,68 @@
 {
+  "name": "taiwan-assault-data",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
-    "test": "jest"
+    "dev": "vp dev --host 0.0.0.0 --port 3000",
+    "build": "vp build",
+    "start": "node .output/server/index.mjs",
+    "check": "vp check",
+    "lint": "vp lint",
+    "lint:tw": "node scripts/lint-tailwind.mjs",
+    "lint:tw:fix": "node scripts/lint-tailwind.mjs --fix",
+    "fmt": "vp fmt",
+    "test": "vp test run",
+    "data:build": ".venv/bin/python scripts/build_data.py",
+    "data:fetch": ".venv/bin/python scripts/fetch_data.py",
+    "data:verify": "python scripts/verify_data.py",
+    "geo:build": "node scripts/build_map.mjs",
+    "theme:build": "node scripts/build_theme.mjs",
+    "population:fetch": "python scripts/build_population.py --fetch",
+    "population:build": "python scripts/build_population.py"
   },
   "dependencies": {
-    "d3-scale": "^3.2.3",
-    "d3-shape": "^2.0.0",
-    "lodash": "^4.17.20",
-    "svelte": "^3.29.0"
+    "@tanstack/react-router": "1.170.33",
+    "@tanstack/react-start": "1.168.50",
+    "chart.js": "^4.5.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "motion": "^13.2.0",
+    "radix-ui": "^1.6.7",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-icons": "^5.7.0",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.12.1",
-    "@snowpack/app-scripts-svelte": "^1.9.2",
-    "@snowpack/plugin-babel": "^2.1.4",
-    "@snowpack/plugin-dotenv": "^2.0.4",
-    "@snowpack/plugin-run-script": "^2.2.0",
-    "@snowpack/plugin-svelte": "^3.2.0",
-    "@snowpack/plugin-webpack": "^2.1.0",
-    "@testing-library/jest-dom": "^5.5.0",
-    "@testing-library/svelte": "^3.0.0",
-    "jest": "^26.2.2",
-    "prettier": "^2.1.2",
-    "prettier-plugin-svelte": "^1.4.1",
-    "snowpack": "^2.16.0",
-    "typescript": "^4.0.5"
+    "@tailwindcss/vite": "^4.2.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "apca-w3": "^0.1.9",
+    "culori": "^4.0.2",
+    "d3-geo": "^3.1.1",
+    "nitro": "3.0.260903-beta",
+    "oxc-transform-react": "^0.145.0",
+    "tailwindcss": "^4.2.0",
+    "topojson-client": "^3.1.0",
+    "typescript": "^5.9.3",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.3.0",
+    "vite-plus": "0.3.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.3.0",
+    "vitest": "4.1.11"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "npm:@voidzero-dev/vite-plus-core@0.3.0",
+      "vitest": "4.1.11"
+    }
   }
 }

@@ -1,0 +1,207 @@
+@import "tailwindcss";
+@import "./theme.css";
+
+@theme {
+  --font-sans: "LINE Seed TW", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --text-caption: 0.8125rem;
+  --text-label: 0.875rem;
+  --text-section: 2rem;
+  --text-section--line-height: 1.4;
+  --font-numeric: "Space Grotesk", "Noto Sans TC", sans-serif;
+  --breakpoint-sm: 45rem;
+  --breakpoint-md: 56.25rem;
+  --breakpoint-lg: 65.625rem;
+  --breakpoint-xl: 93.75rem;
+  --breakpoint-2xl: initial;
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-out-lift: cubic-bezier(0.23, 1, 0.32, 1);
+  --animate-story-enter: story-enter 480ms var(--ease-out-expo) both;
+  --animate-dot-enter: dot-enter 360ms var(--ease-out-quart) both;
+  --animate-county-lift: county-lift 220ms var(--ease-out-lift) both;
+  --animate-select-enter: select-enter 180ms var(--ease-out-quart);
+  --animate-select-exit: select-exit 120ms ease-in;
+  --animate-fade-enter: fade-enter 120ms ease-out both;
+  --animate-fade-exit: fade-exit 100ms ease-in;
+
+  @keyframes story-enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes dot-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes county-lift {
+    from {
+      translate: 0 0;
+      filter: drop-shadow(0 0 0 transparent);
+    }
+  }
+
+  @keyframes select-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes select-exit {
+    to {
+      opacity: 0;
+      transform: translateY(-2px) scale(0.98);
+    }
+  }
+
+  @keyframes fade-enter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-exit {
+    to {
+      opacity: 0;
+    }
+  }
+}
+
+@font-face {
+  font-family: "LINE Seed TW";
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/LINESeedTW-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "LINE Seed TW";
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/LINESeedTW-Bold.woff2") format("woff2");
+}
+
+@layer base {
+  :root {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-synthesis: weight small-caps;
+    --hero-gradient:
+      radial-gradient(
+        70% 90% at 4% 8%,
+        oklch(from var(--data-secondary) 0.88 0.08 h / 0.7),
+        transparent 65%
+      ),
+      radial-gradient(
+        55% 75% at 64% 30%,
+        oklch(from var(--data-relationships) 0.76 0.13 h / 0.5),
+        transparent 68%
+      ),
+      radial-gradient(
+        60% 80% at 84% 66%,
+        oklch(from var(--data-relationships) 0.7 0.12 40 / 0.45),
+        transparent 70%
+      ),
+      radial-gradient(
+        80% 95% at 102% 104%,
+        oklch(from var(--primary) 0.36 0.09 h / 0.9),
+        transparent 70%
+      );
+    --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  }
+
+  a,
+  button,
+  select,
+  input,
+  summary {
+    -webkit-tap-highlight-color: transparent;
+    scroll-margin-block: 130px;
+  }
+
+  button,
+  summary {
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 4px;
+  }
+
+  a svg,
+  button svg,
+  summary svg {
+    flex-shrink: 0;
+  }
+
+  ::selection {
+    background: var(--selection);
+    color: var(--foreground);
+  }
+}
+
+@layer components {
+  .hero-overview {
+    --overview-paper: var(--background);
+    --overview-panel: var(--card);
+    --overview-line: var(--border);
+    --overview-ink: var(--foreground);
+    --overview-muted: var(--muted-foreground);
+    --overview-accent: var(--data-relationships);
+    --overview-track: var(--secondary);
+  }
+
+  .fact-surface {
+    --overview-panel: oklch(0.278 0.038 256.648);
+    --overview-ink: oklch(0.97 0.007 268.548);
+    --overview-muted: oklch(0.825 0.026 255.578);
+    --overview-line: oklch(0.485 0.035 257.788);
+    --overview-accent: oklch(0.664 0.123 78.348);
+    --overview-track: oklch(0.549 0.044 254.441);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
