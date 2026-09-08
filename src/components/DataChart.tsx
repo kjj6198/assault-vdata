@@ -16,6 +16,8 @@ type Props = {
   height?: number;
 };
 type ChartData = Pick<Props, "labels" | "series" | "unit">;
+const numericFont = () =>
+  getComputedStyle(document.documentElement).getPropertyValue("--font-numeric").trim();
 const toLabels = (labels: string[], horizontal: boolean) =>
   labels.map((label) => (horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label));
 const toDatasets = (series: Series[], type: "line" | "bar") =>
@@ -83,14 +85,17 @@ export function DataChart({
                 ticks: {
                   color: palette["muted-foreground"].hex,
                   maxRotation: 0,
-                  font: { size: 11 },
+                  font: { size: 11, family: numericFont() },
                 },
               },
               y: {
                 beginAtZero: true,
                 grid: { display: !horizontal, color: palette.border.hex },
                 border: { display: false },
-                ticks: { color: palette["muted-foreground"].hex, font: { size: 12 } },
+                ticks: {
+                  color: palette["muted-foreground"].hex,
+                  font: { size: 12, family: numericFont() },
+                },
               },
             },
           },

@@ -30,6 +30,7 @@ import { Card } from "./ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { DataSelect } from "./DataSelect";
 import { Reveal, AnimatedValue, AnimatedNumber } from "./StoryMotion";
+import { useActiveSection } from "../lib/use-active-section";
 import palette from "../lib/palette.json";
 
 type Props = {
@@ -47,6 +48,7 @@ const sectionLinks = [
   { id: "relationships", name: "兩造關係" },
   { id: "regions", name: "縣市分布" },
 ];
+const sectionIds = sectionLinks.map((link) => link.id);
 const sum = (rows: DataRecord[]) => rows.reduce((n, row) => n + row.value, 0);
 const RateNumber = ({ rate }: { rate: number | null }) =>
   rate === null ? "—" : <AnimatedNumber key="rate" value={rate} format={formatRate} />;
@@ -89,6 +91,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("descending");
   const [showAllRelations, setShowAllRelations] = useState(false);
+  const activeSection = useActiveSection(sectionIds);
   const demo = records.filter((r) => r.dataset === "demographics");
   const victimTotal = sum(records.filter((r) => r.dataset === "victims"));
   const reportTotal = sum(records.filter((r) => r.dataset === "reports"));
@@ -284,7 +287,11 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           <div className="page-width explorer-inner">
             <nav aria-label="專題章節">
               {sectionLinks.map((link, i) => (
-                <a href={`#${link.id}`} key={link.id}>
+                <a
+                  href={`#${link.id}`}
+                  key={link.id}
+                  aria-current={activeSection === link.id ? "true" : undefined}
+                >
                   <span>0{i + 1}</span>
                   {link.name}
                 </a>

@@ -5,7 +5,7 @@
   --color-paper: var(--background);
   --color-ink: var(--foreground);
   --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-numeric: "Space Grotesk", "Noto Sans TC", sans-serif;
 }
 @layer components {
   :root {
@@ -13,7 +13,7 @@
     background: var(--background);
     font-family: var(--font-sans);
     font-size: 16px;
-    font-synthesis: weight;
+    font-synthesis: weight small-caps;
     -webkit-font-smoothing: antialiased;
   }
   * {
@@ -143,7 +143,7 @@
     min-height: 44px;
     display: inline-flex;
     align-items: center;
-    gap: 18px;
+    gap: 6px;
   }
   .hero {
     display: grid;
@@ -153,9 +153,9 @@
     align-items: center;
   }
   .eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    font-variant-caps: small-caps;
     font-weight: 600;
     display: flex;
     gap: 12px;
@@ -168,7 +168,6 @@
     background: var(--primary);
   }
   h1 {
-    font-family: var(--font-serif);
     font-size: clamp(42px, 5.1vw, 68px);
     font-weight: 700;
     line-height: 1.5;
@@ -228,7 +227,7 @@
     padding-bottom: 14px;
   }
   .visual-topline span:last-child {
-    font-family: Georgia, serif;
+    font-family: var(--font-numeric);
     font-size: 19px;
   }
   .dot-grid {
@@ -254,11 +253,11 @@
     align-items: center;
   }
   .visual-caption strong {
-    font-family: Georgia, serif;
+    font-family: var(--font-numeric);
     font-size: 64px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1;
-    letter-spacing: -0.055em;
+    letter-spacing: -0.025em;
   }
   .visual-caption small {
     font-size: 27px;
@@ -316,6 +315,19 @@
     font-size: 13px;
     min-height: 44px;
     white-space: nowrap;
+    color: var(--muted-foreground);
+    box-shadow: inset 0 -2px 0 transparent;
+    transition:
+      color 150ms ease,
+      box-shadow 150ms ease;
+  }
+  .explorer-inner nav a:hover {
+    color: var(--foreground);
+    text-decoration: none;
+  }
+  .explorer-inner nav a[aria-current="true"] {
+    color: var(--foreground);
+    box-shadow: inset 0 -2px 0 var(--primary);
   }
   .explorer-inner nav span {
     color: var(--muted-foreground);
@@ -373,10 +385,10 @@
   }
   .stat-grid strong {
     display: block;
-    font-family: Georgia, serif;
+    font-family: var(--font-numeric);
     font-weight: 400;
     font-size: clamp(35px, 4.5vw, 54px);
-    letter-spacing: -0.04em;
+    letter-spacing: -0.015em;
     line-height: 1.25;
     margin-block: 10px;
     font-variant-numeric: tabular-nums;
@@ -406,11 +418,11 @@
     margin-bottom: 38px;
   }
   .section-number {
-    font-family: Georgia, serif;
+    font-family: var(--font-numeric);
     font-size: 66px;
     color: var(--section-marker);
     line-height: 1;
-    letter-spacing: -0.07em;
+    letter-spacing: -0.03em;
     width: 64px;
     flex-shrink: 0;
   }
@@ -418,7 +430,6 @@
     margin: 2px 0 13px;
   }
   h2 {
-    font-family: var(--font-serif);
     font-size: 29px;
     font-weight: 700;
     line-height: 1.5;
@@ -434,6 +445,7 @@
   .chart-panel {
     background: var(--muted);
     padding: 28px 30px 22px;
+    border-radius: var(--radius-xl);
   }
   .panel-heading {
     display: flex;
@@ -548,11 +560,12 @@
     align-self: start;
     padding: 28px;
     border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--card);
   }
   .gender-panel h3 {
     margin-block: 14px 24px;
     font-size: 23px;
-    font-family: var(--font-serif);
   }
   .gender-stack {
     height: 14px;
@@ -632,13 +645,12 @@
   }
   .relationship-insight h3 {
     font-size: 26px;
-    font-family: var(--font-serif);
     margin-block: 12px;
     overflow-wrap: anywhere;
   }
   .relationship-insight strong {
     font-size: 46px;
-    font-family: Georgia, serif;
+    font-family: var(--font-numeric);
     font-weight: 400;
     color: var(--data-relationships);
     font-variant-numeric: tabular-nums;
@@ -649,7 +661,7 @@
   .text-button {
     display: inline-flex;
     align-items: center;
-    gap: 24px;
+    gap: 10px;
     border-bottom: 1px solid var(--muted-foreground);
     font-size: 12px;
     background: transparent;
@@ -745,7 +757,7 @@
   .download-link {
     display: inline-flex;
     align-items: center;
-    gap: 30px;
+    gap: 8px;
     margin-top: 20px;
     padding-block: 12px;
     font-size: 12px;
@@ -815,6 +827,7 @@
     padding: 10px 20px;
     margin-top: 28px;
     font-size: 12px;
+    border-radius: var(--radius-md);
   }
   .quality-note ul {
     list-style: disc;
@@ -1185,6 +1198,7 @@
     background: var(--surface-alt);
     padding: 28px 32px 20px;
     margin-bottom: 34px;
+    border-radius: var(--radius-xl);
   }
   .map-title {
     display: flex;
@@ -1290,10 +1304,12 @@
   }
   .map-detail h4 {
     margin: 10px 0;
-    font: 700 30px/1.5 var(--font-serif);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.5;
   }
   .map-detail-value strong {
-    font-family: Georgia, serif;
+    font-family: var(--font-numeric);
     font-size: 48px;
     font-weight: 400;
     font-variant-numeric: tabular-nums;
@@ -1441,7 +1457,8 @@
 [data-slot="select-item"] {
   min-height: 40px;
 }
-[data-slot="select-trigger"] {
+[data-slot="select-trigger"],
+[data-slot="input"] {
   background: var(--card);
 }
 .year-control [data-slot="select-trigger"] {
