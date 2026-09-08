@@ -6,15 +6,14 @@ import { nitro } from "nitro/vite";
 
 export default defineConfig(({ mode }) => ({
   resolve: { alias: { "@": new URL("./src", import.meta.url).pathname } },
-  // Workerd inlines every dependency, so CJS-only packages (react) need pre-bundling to ESM.
-  environments: { ssr: { optimizeDeps: { noDiscovery: false } } },
   plugins:
     mode === "test"
       ? []
       : [
           tailwindcss(),
           tanstackStart(),
-          nitro({ preset: "cloudflare_module" }),
+          // Plain Node in dev; no Cloudflare bindings are used yet, so workerd emulation buys nothing.
+          nitro({ preset: "cloudflare_module", devServer: { runner: "node-worker" } }),
           react({ compiler: true }),
         ],
   lint: {
