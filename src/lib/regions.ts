@@ -23,7 +23,7 @@ export const rateLegend = [
   { min: 35, label: "35–<45", color: palette["map-3"].css },
   { min: 45, label: "45–<60", color: palette["map-4"].css },
   { min: 60, label: "60–<80", color: palette["map-5"].css },
-  { min: 80, label: "80 以上", color: palette["map-6"].css },
+  { min: 80, label: "80", open: true, color: palette["map-6"].css },
 ];
 export function rateColor(rate: number | null) {
   if (rate === null) return palette["map-missing"].css;

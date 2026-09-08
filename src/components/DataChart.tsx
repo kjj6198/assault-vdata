@@ -4,6 +4,7 @@ import type { AnimationSpec, Chart, Element, Plugin } from "chart.js";
 import { RiAddLine } from "react-icons/ri";
 import { formatNumber } from "../lib/data";
 import { useReducedMotionPreference } from "../lib/use-reduced-motion";
+import { useI18n } from "../i18n";
 
 type Series = { label: string; values: number[]; color: string };
 type Props = {
@@ -12,12 +13,15 @@ type Props = {
   series: Series[];
   type?: "line" | "bar";
   horizontal?: boolean;
-  unit?: string;
+  unit: string;
   height?: number;
   selectedLabel?: string;
   onSelectLabel?: (label: string) => void;
 };
-type ChartData = Pick<Props, "labels" | "series" | "unit" | "selectedLabel" | "onSelectLabel">;
+type ChartData = Pick<Props, "labels" | "series" | "unit" | "selectedLabel" | "onSelectLabel"> & {
+  labelLength: number;
+  tooltip: (label: string, value: string, unit: string) => string;
+};
 const dataTransition = { duration: 600, easing: "easeOutQuart" } satisfies AnimationSpec<"bar">;
 type DisplayValue = { value: number; target: number };
 const numericFont = () =>
@@ -27,8 +31,8 @@ const chartFont = () => ({
   size: Number.parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.75,
   family: numericFont(),
 });
-const toLabels = (labels: string[], horizontal: boolean) =>
-  labels.map((label) => (horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label));
+const toLabels = (labels: string[], horizontal: boolean, max: number) =>
+  labels.map((label) => (horizontal && label.length > max ? `${label.slice(0, max - 1)}…` : label));
 const toDatasets = ({ series }: ChartData, type: "line" | "bar") =>
   series.map((s) => ({
     label: s.label,
@@ -59,25 +63,35 @@ export function DataChart({
   series,
   type = "bar",
   horizontal = false,
-  unit = "人",
+  unit,
   height = 310,
   selectedLabel,
   onSelectLabel,
 }: Props) {
+  const { t } = useI18n();
+  const { labelLength, tooltip } = t.chart;
   const canvas = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
   const updateRef = useRef<((data: ChartData, reducedMotion: boolean) => void) | null>(null);
-  const latest = useRef<ChartData>({ labels, series, unit, selectedLabel, onSelectLabel });
+  const latest = useRef<ChartData>({
+    labels,
+    series,
+    unit,
+    selectedLabel,
+    onSelectLabel,
+    labelLength,
+    tooltip,
+  });
   const reducedMotion = useReducedMotionPreference();
   const tableId = useId();
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    latest.current = { labels, series, unit, selectedLabel, onSelectLabel };
-  }, [labels, series, unit, selectedLabel, onSelectLabel]);
+    latest.current = { labels, series, unit, selectedLabel, onSelectLabel, labelLength, tooltip };
+  }, [labels, series, unit, selectedLabel, onSelectLabel, labelLength, tooltip]);
   useEffect(() => {
     updateRef.current?.(latest.current, reducedMotion);
-  }, [labels, series, unit, selectedLabel, reducedMotion]);
+  }, [labels, series, unit, selectedLabel, reducedMotion, labelLength]);
   useEffect(() => {
     let disposed = false;
     let displayedValues: Map<string, DisplayValue>[] = [];
@@ -108,7 +122,11 @@ export function DataChart({
               if (seriesIndex === 0) {
                 ctx.fillStyle = palette["muted-foreground"].css;
                 ctx.textAlign = "right";
-                ctx.fillText(toLabels([label], true)[0], chartArea.left - 12, bar.y);
+                ctx.fillText(
+                  toLabels([label], true, latest.current.labelLength)[0],
+                  chartArea.left - 12,
+                  bar.y,
+                );
               }
               if (value !== undefined) {
                 ctx.fillStyle = palette.foreground.css;
@@ -166,7 +184,7 @@ export function DataChart({
         const chart = new ChartJS(canvas.current, {
           type,
           data: {
-            labels: toLabels(latest.current.labels, horizontal),
+            labels: toLabels(latest.current.labels, horizontal, latest.current.labelLength),
             datasets: toDatasets(latest.current, type),
           },
           plugins: [annotations],
@@ -198,7 +216,11 @@ export function DataChart({
                 callbacks: {
                   title: (items) => latest.current.labels[items[0]?.dataIndex ?? 0] ?? "",
                   label: (context) =>
-                    `${context.dataset.label}：${formatNumber(Number(horizontal ? context.parsed.x : context.parsed.y))} ${latest.current.unit}`,
+                    latest.current.tooltip(
+                      context.dataset.label ?? "",
+                      formatNumber(Number(horizontal ? context.parsed.x : context.parsed.y)),
+                      latest.current.unit,
+                    ),
                 },
               },
             },
@@ -266,7 +288,7 @@ export function DataChart({
           });
           chart.data.datasets.length = nextDatasets.length;
           displayedValues.length = nextDatasets.length;
-          chart.data.labels = toLabels(data.labels, horizontal);
+          chart.data.labels = toLabels(data.labels, horizontal, data.labelLength);
           previousLabels = data.labels;
           const selectedIndex = data.labels.indexOf(data.selectedLabel ?? "");
           if (reduce || selection.value < 0 || selectedIndex < 0) selection.value = selectedIndex;
@@ -298,28 +320,26 @@ export function DataChart({
             {s.label}
           </span>
         ))}
-        <span className="ml-auto inline-flex items-center gap-2">單位：{unit}</span>
+        <span className="ml-auto inline-flex items-center gap-2">{t.chart.unit(unit)}</span>
       </div>
       <div style={{ height }} className="relative min-w-0" aria-busy={!ready && !failed}>
         {!ready && (
           <p className="absolute inset-0 grid place-content-center bg-muted p-6 text-caption leading-[1.9] text-muted-foreground">
-            {failed
-              ? "圖表無法載入，完整數據仍可在下方表格查閱。"
-              : "圖表載入中，數據也可在下方表格查閱。"}
+            {failed ? t.chart.failed : t.chart.loading}
           </p>
         )}
         <canvas
           ref={canvas}
           role="img"
-          aria-label={`${title}。完整數據請見下方表格。`}
+          aria-label={t.chart.canvasAria(title)}
           aria-describedby={tableId}
         />
       </div>
       <details className="group mt-4.5 border-t border-border" open={failed || undefined}>
         <summary className="flex min-h-12 list-none items-center justify-between gap-3 text-caption text-primary [&::-webkit-details-marker]:hidden">
-          查看完整數據表{" "}
+          {t.chart.viewTable}{" "}
           <span className="flex items-center gap-3 text-caption text-muted-foreground">
-            {labels.length} 項
+            {t.chart.items(labels.length)}
             <RiAddLine aria-hidden="true" className="size-4.5 group-open:rotate-45" />
           </span>
         </summary>
@@ -327,21 +347,19 @@ export function DataChart({
           className="max-w-full overflow-x-auto overscroll-x-contain"
           tabIndex={0}
           role="region"
-          aria-label={`${title}數據表`}
+          aria-label={t.chart.tableAria(title)}
         >
           <table
             id={tableId}
             className="w-full border-collapse text-caption leading-[1.7] **:data-emphasis:font-bold **:data-emphasis:text-primary [&_button]:inline-flex [&_button]:min-h-11 [&_button]:items-center [&_button]:gap-3 [&_button]:text-primary [&_button]:underline [&_button]:underline-offset-4 [&_button_span]:text-caption [&_button_span]:no-underline [&_caption]:text-left [&_small]:font-normal [&_small]:whitespace-nowrap [&_tbody_tr:hover]:bg-muted [&_td]:border-b [&_td]:border-border [&_td]:tabular-nums [&_td:not([colspan])]:px-3.5 [&_td:not([colspan])]:py-3.25 [&_td:not([colspan])]:text-right [&_td:not([colspan])]:font-numeric [&_td:not([colspan])]:text-label [&_td:not([colspan])]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-3.5 [&_th]:py-3.25 [&_th]:text-right [&_th]:font-normal [&_th:first-child]:text-left [&_thead]:bg-muted [&_thead]:text-caption [&_thead]:text-muted-foreground [&_tr[data-selected]]:bg-muted"
           >
-            <caption className="sr-only">
-              {title}，單位：{unit}
-            </caption>
+            <caption className="sr-only">{t.chart.caption(title, unit)}</caption>
             <thead>
               <tr>
-                <th scope="col">{type === "line" ? "年度" : "分類"}</th>
+                <th scope="col">{type === "line" ? t.chart.year : t.chart.category}</th>
                 {series.map((s) => (
                   <th scope="col" key={s.label}>
-                    {s.label}／{unit}
+                    {t.chart.series(s.label, unit)}
                   </th>
                 ))}
               </tr>
@@ -354,11 +372,11 @@ export function DataChart({
                       <button
                         type="button"
                         onClick={() => onSelectLabel(label)}
-                        aria-label={`查看 ${label} 年資料`}
+                        aria-label={t.chart.viewYear(label)}
                         aria-pressed={label === selectedLabel}
                       >
                         {label}
-                        {label === selectedLabel && <span>目前年度</span>}
+                        {label === selectedLabel && <span>{t.chart.currentYear}</span>}
                       </button>
                     ) : (
                       label
@@ -366,7 +384,7 @@ export function DataChart({
                   </th>
                   {series.map((s) => (
                     <td key={s.label}>
-                      {s.values[index] === undefined ? "無資料" : formatNumber(s.values[index])}
+                      {s.values[index] === undefined ? t.noData : formatNumber(s.values[index])}
                     </td>
                   ))}
                 </tr>

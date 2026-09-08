@@ -13,6 +13,7 @@ import { formatNumber } from "../lib/data";
 import { useReducedMotionPreference } from "../lib/use-reduced-motion";
 import { AnimatedDigits } from "./StoryMotion";
 import { Button } from "./ui/button";
+import { useI18n } from "../i18n";
 
 export type RegionHistoryRow = {
   year: number;
@@ -34,6 +35,7 @@ const TOP = 10;
 const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
 
 export function RegionRace({ history, metric, measure, startYear }: Props) {
+  const { t, name } = useI18n();
   const reduced = useReducedMotionPreference();
   const years = useMemo(
     () =>
@@ -101,8 +103,8 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
     measure === "rate" ? (b.rate ?? -1) - (a.rate ?? -1) : b.value - a.value,
   );
   const rankOf = new Map(ranked.map((r, i) => [r.city, i]));
-  const unit = metric === "victims" ? "人" : "件";
-  const label = running ? "暫停" : atEnd ? "重播" : "播放";
+  const unit = t.unit[metric === "victims" ? "people" : "reports"];
+  const label = running ? t.race.pause : atEnd ? t.race.replay : t.race.play;
   const togglePlay = () => {
     if (atEnd) {
       setTime(startYear);
@@ -140,7 +142,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
             {label}
           </Button>
           <label className="flex w-[min(360px,100%)] flex-col gap-0.5">
-            <span className="sr-only">拖曳選擇年度</span>
+            <span className="sr-only">{t.race.slider}</span>
             <input
               className="min-h-11 w-full border-0 bg-transparent p-0 accent-primary"
               type="range"
@@ -148,7 +150,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
               max={lastYear}
               step={1}
               value={year0}
-              aria-valuetext={`${year0} 年`}
+              aria-valuetext={t.year(year0)}
               onChange={(event) => {
                 setPlaying(false);
                 setTime(Number(event.target.value));
@@ -166,17 +168,19 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
       </div>
 
       <div
-        className="grid grid-cols-[16px_78px_minmax(0,1fr)_60px] items-center gap-1.75 pt-4.5 pb-3 text-caption text-muted-foreground sm:grid-cols-[26px_112px_minmax(0,1fr)_80px_80px] sm:gap-4"
+        className="grid grid-cols-[16px_78px_minmax(0,1fr)_60px] items-center gap-1.75 pt-4.5 pb-3 text-caption text-muted-foreground group-data-[locale=en]:grid-cols-[16px_104px_minmax(0,1fr)_60px] sm:grid-cols-[26px_112px_minmax(0,1fr)_80px_80px] sm:gap-4 sm:group-data-[locale=en]:grid-cols-[26px_168px_minmax(0,1fr)_80px_80px]"
         aria-hidden="true"
       >
         <span>#</span>
-        <span>縣市／年底人口</span>
+        <span>{t.race.cityPopulation}</span>
         <span className="max-sm:text-[0]">
-          {measure === "rate" ? "每十萬人口比率" : "原始數量"}
+          {measure === "rate" ? t.measure.rate : t.race.rawCount}
         </span>
-        <span className="text-right">{measure === "rate" ? `${unit}／十萬人` : unit}</span>
+        <span className="text-right">{measure === "rate" ? t.perHundredK(unit) : unit}</span>
         <span className="text-right max-sm:hidden">
-          {measure === "rate" ? `原始${metric === "victims" ? "人數" : "件數"}` : "每十萬人口"}
+          {measure === "rate"
+            ? t.race[metric === "victims" ? "rawVictims" : "rawReports"]
+            : t.race.perHundredK}
         </span>
       </div>
       <div
@@ -187,7 +191,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
           const rank = rankOf.get(r.city) ?? 0;
           return (
             <div
-              className="absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] grid-cols-[16px_78px_minmax(0,1fr)_60px] items-center gap-1.75 border-b border-border font-numeric text-caption tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none sm:grid-cols-[26px_112px_minmax(0,1fr)_80px_80px] sm:gap-4"
+              className="absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] grid-cols-[16px_78px_minmax(0,1fr)_60px] items-center gap-1.75 border-b border-border font-numeric text-caption tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] group-data-[locale=en]:grid-cols-[16px_104px_minmax(0,1fr)_60px] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none sm:grid-cols-[26px_112px_minmax(0,1fr)_80px_80px] sm:gap-4 sm:group-data-[locale=en]:grid-cols-[26px_168px_minmax(0,1fr)_80px_80px]"
               key={r.city}
               data-out={rank >= TOP || undefined}
               aria-hidden={rank >= TOP || undefined}
@@ -197,11 +201,11 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
                 {rank + 1}
               </span>
               <span className="text-lg">
-                {r.city}
+                {name("city", r.city)}
                 <small className="mt-1.25 block text-[0.625rem] whitespace-nowrap text-muted-foreground [&_svg]:mr-1 [&_svg]:inline [&_svg]:align-[-0.15em]">
                   <RiGroupLine aria-hidden="true" />
-                  <span className="sr-only">人口</span>
-                  {r.population === null ? "無資料" : formatNumber(Math.round(r.population))}
+                  <span className="sr-only">{t.race.population}</span>
+                  {r.population === null ? t.noData : formatNumber(Math.round(r.population))}
                 </small>
               </span>
               <span className="block h-3.5 rounded-full bg-secondary sm:h-4.5" aria-hidden="true">
@@ -218,7 +222,7 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
                 <small className="mt-1 block text-caption font-normal whitespace-nowrap text-muted-foreground sm:hidden">
                   {measure === "rate"
                     ? `${formatNumber(Math.round(r.value))} ${unit}`
-                    : `${formatRate(r.rate)}／十萬人`}
+                    : t.perHundredK(formatRate(r.rate))}
                 </small>
               </b>
               <span className="text-right text-[0.6875rem] text-muted-foreground max-sm:hidden">

@@ -1,5 +1,6 @@
 import { RiArrowUpLine, RiGithubLine, RiThreadsLine, RiTwitterXLine } from "react-icons/ri";
 import { cn } from "../lib/utils";
+import { useI18n } from "../i18n";
 import { pageWidth, type DashboardData } from "./dashboard/shared";
 import { HeroSection } from "./dashboard/HeroSection";
 import { ChapterNavigation } from "./dashboard/ChapterNavigation";
@@ -8,6 +9,7 @@ import { DemographicsSection } from "./dashboard/DemographicsSection";
 import { RelationshipsSection } from "./dashboard/RelationshipsSection";
 import { RegionsSection } from "./dashboard/RegionsSection";
 import { SourcesSection } from "./dashboard/SourcesSection";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const socialLinks = [
   { label: "GitHub", href: "https://github.com/kjj6198/assault-vdata", Icon: RiGithubLine },
@@ -21,15 +23,16 @@ type Props = {
   pending: boolean;
 };
 export function Dashboard({ data, onYearChange, pending }: Props) {
+  const { t, locale } = useI18n();
   return (
     <>
       <a
         className="fixed top-3 left-3 z-60 translate-y-[-160%] bg-primary px-5 py-3 text-primary-foreground focus:translate-y-0"
         href="#overview"
       >
-        跳至年度重點
+        {t.skipLink}
       </a>
-      <main id="main" className="group" data-pending={pending || undefined}>
+      <main id="main" className="group" data-pending={pending || undefined} data-locale={locale}>
         <HeroSection data={data} onYearChange={onYearChange} pending={pending} />
         <ChapterNavigation data={data} onYearChange={onYearChange} pending={pending} />
         <TrendSection data={data} onYearChange={onYearChange} />
@@ -45,11 +48,14 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         )}
       >
         <div className="space-y-1 leading-relaxed text-muted-foreground max-sm:order-3 max-sm:w-full">
-          <p className="font-bold">台灣性侵害統計</p>
-          <p>資料整理、設計：Kalan / Codex / Claude Code</p>
-          <p>程式：Kalan / Codex / Claude Code</p>
+          <p className="font-bold">{t.footer.site}</p>
+          <p>{t.footer.design}</p>
+          <p>{t.footer.code}</p>
         </div>
-        <nav aria-label="社群連結" className="ml-auto flex items-center gap-1">
+        <nav
+          aria-label={t.footer.social}
+          className="ml-auto flex items-center gap-1 max-sm:order-1"
+        >
           {socialLinks.map(({ label, href, Icon }) => (
             <a
               key={href}
@@ -63,8 +69,12 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             </a>
           ))}
         </nav>
-        <a href="#main" className="inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem]">
-          回到頂端 <RiArrowUpLine aria-hidden="true" />
+        <LanguageSwitcher className="max-sm:order-2" />
+        <a
+          href="#main"
+          className="inline-flex min-h-11 items-center gap-1.5 text-[0.6875rem] max-sm:order-2"
+        >
+          {t.footer.top} <RiArrowUpLine aria-hidden="true" />
         </a>
       </footer>
     </>

@@ -7,6 +7,7 @@ import { taiwanMap } from "../lib/map";
 import { useReducedMotionPreference } from "../lib/use-reduced-motion";
 import { AnimatedNumber, AnimatedValue } from "./StoryMotion";
 import { cn } from "../lib/utils";
+import { useI18n } from "../i18n";
 
 const formatChange = (value: number) => `${value < 0 ? "−" : "+"}${fixed1(Math.abs(value))}`;
 
@@ -17,7 +18,7 @@ type Props = {
   previous: { year: number; victims: number } | undefined;
   trend: { year: number; victims: number }[];
   topCity: { city: string; rate: number } | undefined;
-  genders: { label: string; value: number }[];
+  genders: { key: string; label: string; value: number }[];
   minors: number;
   relationships: { label: string; value: number }[];
 };
@@ -47,6 +48,7 @@ function FactCard({
   children: ReactNode;
   className?: string;
 }) {
+  const { t } = useI18n();
   return (
     <FactSurface className={className}>
       <div className="flex items-center gap-1.5 border-b border-(--overview-line) pb-3 max-[36.25rem]:col-span-full lg:gap-2.25">
@@ -56,7 +58,7 @@ function FactCard({
         <h3 className="text-label font-bold tracking-wide">{label}</h3>
         <a
           href={href}
-          aria-label={`探索${label}`}
+          aria-label={t.facts.explore(label)}
           className="-my-2.25 -mr-2.5 ml-auto grid min-h-11 min-w-11 place-items-center rounded-lg text-(--overview-muted) hover:bg-(--overview-hover) hover:text-(--overview-ink)"
         >
           <RiArrowRightUpLine className="size-4.25" aria-hidden="true" />
@@ -78,6 +80,7 @@ export function HeroFacts({
   minors,
   relationships,
 }: Props) {
+  const { t, name } = useI18n();
   const reduced = useReducedMotionPreference();
   const minorShare = share(minors, total);
   const maxVictims = Math.max(1, ...trend.map((row) => row.victims));
@@ -85,7 +88,7 @@ export function HeroFacts({
   const leading = relationships[0];
   return (
     <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 md:grid-cols-2 lg:gap-6">
-      <FactCard number="01" label="未滿 18 歲受暴人比例" href="#ages">
+      <FactCard number="01" label={t.facts.minors.label} href="#ages">
         <div className="grid flex-1 grid-cols-[minmax(0,1fr)_42%] items-center gap-4 py-6">
           <div>
             <p className="mt-3.75 mb-1.5 font-numeric text-[clamp(2.5rem,10vw,5.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums">
@@ -94,12 +97,12 @@ export function HeroFacts({
             </p>
             {minorShare >= 50 && (
               <p className="mb-1 text-caption font-bold tracking-wide text-(--overview-accent)">
-                過半
+                {t.facts.minors.majority}
               </p>
             )}
             <p className="text-label leading-[1.8]">
-              當年受暴人中
-              <strong className="block text-4xl leading-tight">未成年</strong>
+              {t.facts.minors.caption}
+              <strong className="block text-4xl leading-tight">{t.facts.minors.strong}</strong>
             </p>
           </div>
           <div
@@ -116,18 +119,20 @@ export function HeroFacts({
           </div>
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
-          * 每個圓點約代表 1% 的受暴人數
+          * {t.facts.minors.note}
         </p>
       </FactCard>
-      <FactCard number="02" label="受暴人的性別比例" href="#ages">
+      <FactCard number="02" label={t.facts.gender.label} href="#ages">
         <div className="flex-1 py-6">
-          <p className="text-caption leading-[1.8] text-(--overview-muted)">全部年齡</p>
+          <p className="text-caption leading-[1.8] text-(--overview-muted)">
+            {t.facts.gender.allAges}
+          </p>
           <div className="my-5 flex h-2.25 gap-0.5 overflow-hidden rounded-xs" aria-hidden="true">
             {genders.map((row) => (
               <i
-                key={row.label}
+                key={row.key}
                 className="min-w-px data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
-                data-gender={row.label}
+                data-gender={row.key}
                 style={{ width: `${share(row.value, total)}%` }}
               />
             ))}
@@ -135,13 +140,13 @@ export function HeroFacts({
           <dl className="grid grid-cols-2 gap-x-5 gap-y-6 [&_dd]:text-right [&_dd]:font-numeric [&_dd]:text-2xl [&_dd]:leading-[1.4] [&_dd]:tabular-nums [&_dd_small]:ml-0.5 [&_dd_small]:text-caption [&_dt]:pt-1 [&_dt]:text-label [&_dt]:whitespace-nowrap [&_dt_i]:mr-1.75 [&_dt_i]:inline-block [&_dt_i]:size-1.75 [&_dt_i]:rounded-full">
             {genders.map((row) => (
               <div
-                key={row.label}
+                key={row.key}
                 className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-2 gap-y-1"
               >
                 <dt>
                   <i
                     className="data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
-                    data-gender={row.label}
+                    data-gender={row.key}
                   />
                   {row.label}
                 </dt>
@@ -153,7 +158,7 @@ export function HeroFacts({
                     <small>%</small>
                   </span>
                   <span className="mt-1 block text-caption text-(--overview-muted)">
-                    {formatNumber(row.value)} 人
+                    {formatNumber(row.value)} {t.unit.people}
                   </span>
                 </dd>
               </div>
@@ -161,17 +166,17 @@ export function HeroFacts({
           </dl>
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
-          * 以全部受暴人數為分母，含其他與不詳
+          * {t.facts.gender.note}
         </p>
       </FactCard>
       <FactCard
         number="03"
-        label="與前一年相比"
+        label={t.facts.change.label}
         href="#trend"
         className="max-[36.25rem]:grid max-[36.25rem]:grid-cols-[1fr_1fr] max-[36.25rem]:gap-x-4"
       >
         <p className="mt-4 mb-1.25 text-caption leading-[1.8] text-(--overview-muted) max-[36.25rem]:col-start-1">
-          受暴人數的年度變化
+          {t.facts.change.lede}
         </p>
         <p className="font-numeric text-[clamp(2.5rem,10vw,5.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums max-[36.25rem]:col-start-1 max-[36.25rem]:mb-4.5 max-[36.25rem]:text-[2.875rem]">
           {change === null ? "—" : <AnimatedNumber value={change} format={formatChange} />}
@@ -182,7 +187,9 @@ export function HeroFacts({
         <div
           className="mt-5 mb-0 flex h-16.5 items-end gap-1.25 border-b border-(--overview-line) max-[36.25rem]:col-start-2 max-[36.25rem]:row-[2/4] max-[36.25rem]:h-15.5 max-[36.25rem]:gap-0.75 max-[36.25rem]:self-center"
           role="img"
-          aria-label={`歷年受暴人數，${trend.map((row) => `${row.year} 年 ${formatNumber(row.victims)} 人`).join("；")}`}
+          aria-label={t.facts.change.chartAria(
+            trend.map((row) => ({ year: row.year, victims: formatNumber(row.victims) })),
+          )}
         >
           {trend.map((row) => (
             <div key={row.year} className="flex h-full flex-1 items-end">
@@ -202,28 +209,34 @@ export function HeroFacts({
           <span>{trend.at(-1)?.year}</span>
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted) max-[36.25rem]:col-span-full">
+          *{" "}
           {previous ? (
             <>
-              * {previous.year} 年 <AnimatedNumber value={previous.victims} /> 人 → {year} 年{" "}
-              <AnimatedNumber value={total} /> 人
+              {t.facts.change.at(previous.year)} <AnimatedNumber value={previous.victims} />{" "}
+              {t.unit.people} → {t.facts.change.at(year)} <AnimatedNumber value={total} />{" "}
+              {t.unit.people}
             </>
           ) : (
-            "* 資料起始年度，無前一年可比較"
+            t.facts.change.noPrevious
           )}
         </p>
       </FactCard>
 
-      <FactCard number="04" label="每十萬人口比率最高" href="#regions">
+      <FactCard number="04" label={t.facts.topRate.label} href="#regions">
         <div className="grid flex-1 grid-cols-[minmax(0,1fr)_32%] items-center gap-3 py-6">
           <div>
             <p className="mt-0.75 mb-3.75 text-[1.75rem] leading-[1.6] font-bold tracking-[0.015em] max-[36.25rem]:mt-0.5 max-[36.25rem]:mb-2">
-              <AnimatedValue value={topCity?.city ?? "無資料"} />
+              <AnimatedValue value={topCity ? name("city", topCity.city) : t.noData} />
             </p>
             <p className="font-numeric text-[clamp(2.25rem,10vw,5.625rem)] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
               {topCity ? <AnimatedNumber value={topCity.rate} format={formatRate} /> : "—"}
-              <small className="ml-1.75 font-sans text-caption tracking-[-0.015em]">人</small>
+              <small className="ml-1.75 font-sans text-caption tracking-[-0.015em]">
+                {t.unit.people}
+              </small>
             </p>
-            <p className="text-caption leading-[1.8] text-(--overview-muted)">每 10 萬人口</p>
+            <p className="text-caption leading-[1.8] text-(--overview-muted)">
+              {t.facts.topRate.per}
+            </p>
           </div>
           <svg
             className="h-38.75 w-full overflow-visible max-[36.25rem]:h-34"
@@ -241,28 +254,32 @@ export function HeroFacts({
           </svg>
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
-          * 依縣市人口換算，並非案件總數排名
+          * {t.facts.topRate.note}
         </p>
       </FactCard>
 
       <FactCard
         number="05"
-        label="被害人與加害人的關係"
+        label={t.facts.relation.label}
         href="#relationships"
         className="col-span-full"
       >
         <div className="grid flex-1 grid-cols-1 gap-6 py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:gap-8">
           <div className="min-w-0 sm:border-r sm:border-(--overview-line) sm:pr-6">
-            <p className="text-caption leading-[1.8] text-(--overview-muted)">最多紀錄的兩造關係</p>
+            <p className="text-caption leading-[1.8] text-(--overview-muted)">
+              {t.facts.relation.lede}
+            </p>
             <p className="mt-1 mb-2 text-[1.75rem] leading-[1.6] font-bold tracking-[0.015em] wrap-anywhere max-[36.25rem]:text-[1.5rem]">
-              <AnimatedValue value={leading?.label ?? "無資料"} />
+              <AnimatedValue value={leading ? name("relationship", leading.label) : t.noData} />
             </p>
             <p className="mb-1.5 font-numeric text-[3.375rem] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
               {leading ? <AnimatedNumber value={leading.value} /> : "—"}
-              <small className="ml-2 font-sans text-caption tracking-[-0.015em]">人</small>
+              <small className="ml-2 font-sans text-caption tracking-[-0.015em]">
+                {t.unit.people}
+              </small>
             </p>
             <p className="text-caption leading-[1.8] text-(--overview-muted)">
-              占關係紀錄{" "}
+              {t.facts.relation.share}{" "}
               {leading ? (
                 <AnimatedNumber value={share(leading.value, relationshipTotal)} format={fixed1} />
               ) : (
@@ -286,7 +303,7 @@ export function HeroFacts({
                 <div className="mb-2 flex items-baseline justify-between gap-4 text-caption">
                   <span className="wrap-anywhere">
                     <b>{String(index + 1).padStart(2, "0")}</b>
-                    {row.label}
+                    {name("relationship", row.label)}
                   </span>
                   <strong>
                     <AnimatedNumber value={share(row.value, relationshipTotal)} format={fixed1} />
@@ -309,7 +326,7 @@ export function HeroFacts({
           </ol>
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
-          * 以當年度兩造關係紀錄總數為分母
+          * {t.facts.relation.note}
         </p>
       </FactCard>
     </div>
