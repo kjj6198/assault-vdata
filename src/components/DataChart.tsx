@@ -17,9 +17,13 @@ type Props = {
 };
 type ChartData = Pick<Props, "labels" | "series" | "unit">;
 const numericFont = () =>
-  getComputedStyle(document.documentElement).getPropertyValue("--font-numeric").trim();
+  getComputedStyle(document.documentElement)
+    .getPropertyValue("--font-numeric")
+    .trim();
 const toLabels = (labels: string[], horizontal: boolean) =>
-  labels.map((label) => (horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label));
+  labels.map((label) =>
+    horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label,
+  );
 const toDatasets = (series: Series[], type: "line" | "bar") =>
   series.map((s) => ({
     label: s.label,
@@ -71,7 +75,8 @@ export function DataChart({
                 backgroundColor: palette.foreground.hex,
                 padding: 12,
                 callbacks: {
-                  title: (items) => latest.current.labels[items[0]?.dataIndex ?? 0] ?? "",
+                  title: (items) =>
+                    latest.current.labels[items[0]?.dataIndex ?? 0] ?? "",
                   label: (context) =>
                     `${context.dataset.label}：${formatNumber(Number(horizontal ? context.parsed.x : context.parsed.y))} ${latest.current.unit}`,
                 },
@@ -116,59 +121,36 @@ export function DataChart({
     if (!chart) return;
     chart.data.labels = toLabels(labels, horizontal);
     chart.data.datasets = toDatasets(series, type);
-    chart.options.animation = reduced ? false : { duration: 450, easing: "easeOutQuart" };
+    chart.options.animation = reduced
+      ? false
+      : { duration: 450, easing: "easeOutQuart" };
     chart.update();
   }, [labels, series, unit, type, horizontal, reduced]);
   return (
-    <figure className="data-figure">
-      <div className="chart-legend">
+    <figure>
+      <div className="mb-5 flex items-center gap-4.5 text-[11px] text-muted-foreground">
         {series.map((s) => (
-          <span key={s.label}>
-            <i style={{ background: s.color }} />
+          <span key={s.label} className="inline-flex items-center gap-2">
+            <i
+              className="inline-block size-2 rounded-full"
+              style={{ background: s.color }}
+            />
             {s.label}
           </span>
         ))}
         <span className="ml-auto">單位：{unit}</span>
       </div>
-      <div style={{ height }} className="chart-canvas">
+      <div style={{ height }} className="relative min-w-0">
         {failed ? (
           <p>圖表無法載入，請展開下方數據表。</p>
         ) : (
-          <canvas ref={canvas} role="img" aria-label={`${title}。對應數據請見下方表格。`} />
+          <canvas
+            ref={canvas}
+            role="img"
+            aria-label={`${title}。對應數據請見下方表格。`}
+          />
         )}
       </div>
-      <details className="data-details">
-        <summary>
-          查看圖表數據 <RiAddLine aria-hidden="true" />
-        </summary>
-        <div className="table-scroll" tabIndex={0} role="region" aria-label={`${title}數據表`}>
-          <table>
-            <caption>
-              {title}（{unit}）
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">項目</th>
-                {series.map((s) => (
-                  <th scope="col" key={s.label}>
-                    {s.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {labels.map((label, i) => (
-                <tr key={label}>
-                  <th scope="row">{label}</th>
-                  {series.map((s) => (
-                    <td key={s.label}>{formatNumber(s.values[i] ?? 0)}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </details>
     </figure>
   );
 }

@@ -107,16 +107,25 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
     setPlaying(!playing);
   };
   return (
-    <div className="race">
-      <div className="race-toolbar">
-        <div className="race-year" aria-live={running ? "off" : "polite"}>
+    <div>
+      <div className="flex flex-col items-stretch gap-4 pt-1 pb-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-x-8 sm:gap-y-5">
+        <div
+          className="flex flex-col gap-1.5 text-xs text-muted-foreground"
+          aria-live={running ? "off" : "polite"}
+        >
           <span>年度</span>
-          <strong>
+          <strong className="font-numeric text-[clamp(44px,5vw,64px)] leading-none font-semibold tracking-[-0.02em] text-foreground tabular-nums">
             <AnimatedValue value={String(year0)} />
           </strong>
         </div>
-        <div className="race-controls">
-          <Button variant="outline" onClick={togglePlay} aria-label={label} aria-pressed={running}>
+        <div className="flex flex-1 items-center justify-between gap-5 sm:min-w-[280px] sm:justify-end">
+          <Button
+            variant="outline"
+            className="min-w-[100px]"
+            onClick={togglePlay}
+            aria-label={label}
+            aria-pressed={running}
+          >
             {running ? (
               <RiPauseFill aria-hidden="true" />
             ) : atEnd ? (
@@ -126,9 +135,10 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
             )}
             {label}
           </Button>
-          <label className="race-slider">
+          <label className="flex w-[min(360px,100%)] flex-col gap-0.5">
             <span className="sr-only">拖曳選擇年度</span>
             <input
+              className="min-h-11 w-full border-0 bg-transparent p-0 accent-primary"
               type="range"
               min={startYear}
               max={lastYear}
@@ -140,50 +150,59 @@ export function RegionRace({ history, metric, measure, startYear }: Props) {
                 setTime(Number(event.target.value));
               }}
             />
-            <span className="race-slider-ends" aria-hidden="true">
+            <span
+              className="flex justify-between text-[11px] text-muted-foreground tabular-nums"
+              aria-hidden="true"
+            >
               <span>{startYear}</span>
               <span>{lastYear}</span>
             </span>
           </label>
         </div>
       </div>
-      <p className="region-axis-note">
+      <p className="pt-3 pb-1 text-[11px] leading-[1.8] text-muted-foreground">
         {measure === "rate"
           ? `長條刻度：0–${scale.rate}／十萬人・${startYear}–${lastYear} 年共用同一刻度，年與年之間的數值為線性內插`
           : `長條刻度依 ${startYear}–${lastYear} 年最大值固定，年與年之間的數值為線性內插`}
       </p>
-      <div className="race-list" style={{ "--rows": TOP } as CSSProperties}>
+      <div
+        className="relative h-[calc(var(--rows)*var(--row-height))] overflow-hidden border-t border-border [--row-height:64px]"
+        style={{ "--rows": TOP } as CSSProperties}
+      >
         {rows.map((r) => {
           const rank = rankOf.get(r.city) ?? 0;
           return (
             <div
-              className="region-row race-row"
+              className="absolute inset-x-0 top-0 grid h-(--row-height) translate-y-[calc(var(--rank)*var(--row-height))] grid-cols-[20px_78px_1fr_50px_56px] items-center gap-2 border-b border-border text-[13px] tabular-nums will-change-transform [transition:translate_600ms_var(--ease-out-quart),opacity_400ms_ease] data-out:pointer-events-none data-out:opacity-0 motion-reduce:transition-none sm:grid-cols-[26px_96px_1fr_64px_72px] sm:gap-4"
               key={r.city}
               data-out={rank >= TOP || undefined}
               aria-hidden={rank >= TOP || undefined}
               style={{ "--rank": Math.min(rank, TOP) } as CSSProperties}
             >
-              <span className="race-rank" aria-hidden="true">
+              <span className="text-xs text-muted-foreground tabular-nums" aria-hidden="true">
                 {rank + 1}
               </span>
-              <span className="region-city">
+              <span>
                 {r.city}
-                <small>
+                <small className="mt-1.25 block text-[10px] whitespace-nowrap text-muted-foreground [&_svg]:mr-1 [&_svg]:inline [&_svg]:[vertical-align:-0.15em]">
                   <RiGroupLine aria-hidden="true" />
                   <span className="sr-only">人口</span>
                   {r.population === null ? "無資料" : formatNumber(Math.round(r.population))}
                 </small>
               </span>
-              <span className="region-track" aria-hidden="true">
+              <span className="block h-2 bg-secondary" aria-hidden="true">
                 <i
+                  className="block h-full w-full origin-left bg-map-4 transition-[transform,background-color] duration-500 ease-out-quart motion-reduce:transition-none"
                   style={{
                     background: measure === "rate" ? rateColor(r.rate) : undefined,
                     transform: `scaleX(${measure === "rate" ? ratePosition(r.rate ?? 0, scale.rate) : r.value / scale.count})`,
                   }}
                 />
               </span>
-              <b>{measure === "rate" ? formatRate(r.rate) : formatNumber(Math.round(r.value))}</b>
-              <span>
+              <b className="text-right font-medium">
+                {measure === "rate" ? formatRate(r.rate) : formatNumber(Math.round(r.value))}
+              </b>
+              <span className="text-right text-[11px] text-muted-foreground">
                 {measure === "rate"
                   ? `${formatNumber(Math.round(r.value))} ${unit}`
                   : formatRate(r.rate)}

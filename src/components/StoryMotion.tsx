@@ -39,23 +39,19 @@ export function Reveal({ children }: { children: ReactNode }) {
       controls?.stop();
     };
   }, [animate, reduced, scope]);
-  return (
-    <div ref={scope} className="chapter-reveal">
-      {children}
-    </div>
-  );
+  return <div ref={scope}>{children}</div>;
 }
 
 export function AnimatedValue({ value }: { value: string }) {
   const reduced = useReducedMotion();
   return (
-    <span className="animated-value">
+    <span className="relative inline-block">
       <span className="sr-only">{value}</span>
       <span aria-hidden="true">
         <AnimatePresence initial={false} mode="popLayout">
           <motion.span
             key={value}
-            className="value-frame"
+            className="relative inline-block"
             initial={reduced ? { opacity: 0 } : { opacity: 0, transform: "translateY(6px)" }}
             animate={{ opacity: 1, transform: "translateY(0px)" }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, transform: "translateY(-4px)" }}
@@ -84,7 +80,7 @@ export function AnimatedNumber({
   }, [reduced, spring, value]);
   const text = useTransform(spring, format);
   return (
-    <span className="animated-number">
+    <span className="tabular-nums">
       <span className="sr-only">{format(value)}</span>
       <motion.span aria-hidden="true">{text}</motion.span>
     </span>

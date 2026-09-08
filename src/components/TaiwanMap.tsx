@@ -8,6 +8,7 @@ import {
 } from "../lib/regions";
 import { useState } from "react";
 import { RiDownloadLine } from "react-icons/ri";
+import { cn } from "@/lib/utils";
 import { DataSelect } from "./DataSelect";
 import { AnimatedValue, AnimatedNumber } from "./StoryMotion";
 import { Card } from "./ui/card";
@@ -20,6 +21,7 @@ type Props = {
   rows: RegionRow[];
   measure: RegionMeasure;
 };
+const keySwatch = "inline-block h-3 w-3 border border-border sm:w-4";
 export function TaiwanMap({ year, metric, rows, measure }: Props) {
   const [selected, setSelected] = useState("新北市");
   const [hovered, setHovered] = useState<string | null>(null);
@@ -43,27 +45,36 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
   const unit = metric === "victims" ? "人" : "件";
   const label = metric === "victims" ? "受暴人數" : "通報件數";
   return (
-    <div className="county-map-panel">
-      <div className="map-title">
-        <h3>
+    <div className="mb-8.5 rounded-xl bg-surface-alt px-4 py-5.5 sm:px-5 sm:pt-7 sm:pb-5 md:px-8">
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+        <h3 className="text-base font-semibold leading-[1.6]">
           {year} 年・台灣{label}
           {measure === "rate" ? "每十萬人口比率" : "分布"}
         </h3>
-        <span>顏色越深，{measure === "rate" ? "比率越高・固定六級" : "數量越多"}</span>
+        <span className="text-xs text-muted-foreground">
+          顏色越深，{measure === "rate" ? "比率越高・固定六級" : "數量越多"}
+        </span>
       </div>
-      <div className="county-map-layout">
-        <div className="map-drawing">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-2 sm:grid-cols-[minmax(0,1.4fr)_minmax(220px,1fr)] sm:gap-6 md:grid-cols-[minmax(0,1.65fr)_minmax(230px,0.8fr)] md:gap-12">
+        <div className="min-w-0">
           <svg
             viewBox={`0 0 ${taiwanMap.width} ${taiwanMap.height}`}
-            className="taiwan-map"
+            className="block h-auto max-h-[650px] w-full overflow-visible"
             role="group"
             aria-label={`${year} 年台灣縣市${label}地圖；可用 Tab、Enter 選擇縣市`}
           >
-            <g className="island-insets" aria-hidden="true">
+            <g aria-hidden="true">
               {taiwanMap.insets.map((inset) => (
                 <g key={inset.name}>
-                  <path d={inset.path} />
-                  <text x={inset.bounds[0][0] + 7} y={inset.bounds[0][1] + 17}>
+                  <path
+                    d={inset.path}
+                    className="fill-transparent stroke-border stroke-[0.8] [stroke-dasharray:4_4]"
+                  />
+                  <text
+                    x={inset.bounds[0][0] + 7}
+                    y={inset.bounds[0][1] + 17}
+                    className="fill-muted-foreground text-xs"
+                  >
                     {inset.name === "烏坵鄉" ? "烏坵" : inset.name}
                   </text>
                 </g>
@@ -80,7 +91,10 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                     d={county.path}
                     data-county={county.name}
                     fill={fillFor(county.name)}
-                    className={active === county.name ? "county-shape is-active" : "county-shape"}
+                    className={cn(
+                      "cursor-pointer stroke-background stroke-1 outline-none [transition:fill_400ms_ease,opacity_200ms_ease] [vector-effect:non-scaling-stroke]",
+                      active === county.name && "opacity-40",
+                    )}
                     tabIndex={0}
                     role="button"
                     aria-label={description}
@@ -107,21 +121,26 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 key={activeCounty.code}
                 d={activeCounty.path}
                 fill={fillFor(activeCounty.name)}
-                className="county-lift"
+                className="pointer-events-none -translate-x-1 -translate-y-1.5 animate-county-lift stroke-map-highlight stroke-[2.5] drop-shadow-[0_6px_8px_oklch(0.2_0.03_255/0.3)] [vector-effect:non-scaling-stroke] motion-reduce:translate-none motion-reduce:animate-none motion-reduce:drop-shadow-none"
                 aria-hidden="true"
               />
             )}
-            <g className="map-compass" transform="translate(535,85)" aria-hidden="true">
-              <path d="M0 20V-10m-5 8 5-8 5 8" />
-              <text y="-21" textAnchor="middle">
+            <g transform="translate(535,85)" aria-hidden="true">
+              <path
+                d="M0 20V-10m-5 8 5-8 5 8"
+                className="fill-none stroke-muted-foreground stroke-[1.5]"
+              />
+              <text y="-21" textAnchor="middle" className="fill-muted-foreground text-xs">
                 N
               </text>
             </g>
           </svg>
-          <p className="map-inset-note">離島採內嵌圖，位置經移置。點選或移至縣市，可查看數值。</p>
+          <p className="mt-3 mb-5 text-[11px] leading-[1.8] text-muted-foreground">
+            離島採內嵌圖，位置經移置。點選或移至縣市，可查看數值。
+          </p>
         </div>
-        <Card className="map-detail">
-          <label htmlFor="map-city">
+        <Card className="gap-0 rounded-none border-border bg-background p-5.5 shadow-none sm:p-5 md:p-6.5">
+          <label htmlFor="map-city" className="flex flex-col gap-2.5 text-xs">
             選擇縣市
             <DataSelect
               id="map-city"
@@ -135,16 +154,17 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 value: county.name,
                 label: county.name,
               }))}
+              className="w-full"
             />
           </label>
-          <div className="map-detail-value" aria-live="polite" aria-atomic="true">
-            <p>
+          <div className="pt-5 sm:pt-6.5" aria-live="polite" aria-atomic="true">
+            <p className="text-[11px] text-muted-foreground">
               {year} 年・{label}
             </p>
-            <h4>
+            <h4 className="my-2.5 text-[30px] font-bold leading-normal">
               <AnimatedValue value={active} />
             </h4>
-            <strong>
+            <strong className="font-numeric text-5xl font-normal tabular-nums">
               {measure === "rate" ? (
                 activeRow?.rate == null ? (
                   <AnimatedValue value="—" />
@@ -156,9 +176,11 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
               ) : (
                 <AnimatedNumber key="count" value={value} />
               )}
-              <small>{measure === "rate" ? `${unit}／十萬人` : unit}</small>
+              <small className="ml-1.5 font-sans text-[11px] sm:ml-2.5 sm:text-[13px]">
+                {measure === "rate" ? `${unit}／十萬人` : unit}
+              </small>
             </strong>
-            <p className="map-population">
+            <p className="mt-3 text-[11px] text-muted-foreground">
               年底人口{" "}
               {activeRow?.population == null ? (
                 "無資料"
@@ -167,10 +189,10 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
               )}{" "}
               人
             </p>
-            <div className="map-detail-stats">
-              <span>
+            <div className="mt-3.5 mb-4.5 flex gap-7 sm:mb-6">
+              <span className="text-[11px] text-muted-foreground">
                 {measure === "rate" ? "原始數量" : "占全國"}
-                <b>
+                <b className="mt-1.5 block text-base font-medium text-primary tabular-nums">
                   {value === undefined ? (
                     "—"
                   ) : measure === "rate" ? (
@@ -184,9 +206,9 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                   )}
                 </b>
               </span>
-              <span>
+              <span className="text-[11px] text-muted-foreground">
                 {measure === "rate" ? "縣市比率排序" : "縣市數量排序"}
-                <b>
+                <b className="mt-1.5 block text-base font-medium text-primary tabular-nums">
                   {rank === null ? (
                     "—"
                   ) : (
@@ -198,26 +220,29 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
               </span>
             </div>
           </div>
-          <div className="map-key">
-            <p>
+          <div className="border-t border-border pt-5">
+            <p className="flex justify-between text-[11px]">
               {measure === "rate" ? "每十萬人口分級" : "色階範圍"}{" "}
               <span>{measure === "rate" ? `${unit}／十萬人` : `單位：${unit}`}</span>
             </p>
-            <ul>
+            <ul className="my-3.5 grid grid-cols-3 gap-x-3 gap-y-2.5 max-[370px]:grid-cols-2 sm:grid-cols-2">
               {legend.map((step) => (
-                <li key={step.min}>
-                  <i style={{ background: step.color }} />
+                <li
+                  key={step.min}
+                  className="flex items-center gap-[5px] text-[10px] whitespace-nowrap sm:gap-2"
+                >
+                  <i className={keySwatch} style={{ background: step.color }} />
                   <span>{step.label}</span>
                 </li>
               ))}
             </ul>
             {measure === "rate" && (
-              <p className="map-zero-key">
-                <i style={{ background: zeroRateColor }} />
+              <p className="mb-3 flex items-center gap-2 text-[10px]">
+                <i className={keySwatch} style={{ background: zeroRateColor }} />
                 0（零紀錄）
               </p>
             )}
-            <p className="map-key-note">
+            <p className="text-[10px] leading-[1.9] text-muted-foreground">
               {measure === "rate"
                 ? "色階界線固定為 25、35、45、60、80，各年度共用。零值留白，缺少人口時顯示灰色。"
                 : "各年度與兩種指標使用同一組數量區間。"}
@@ -225,18 +250,32 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
           </div>
         </Card>
       </div>
-      <div className="map-source">
+      <div className="mt-5 flex flex-wrap justify-between gap-3 border-t border-border pt-[15px] text-[10px] leading-[1.9] sm:mt-0">
         <p>
           界線：
-          <a href="https://data.gov.tw/dataset/7442" target="_blank" rel="noreferrer">
+          <a
+            href="https://data.gov.tw/dataset/7442"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 underline underline-offset-[3px]"
+          >
             內政部國土測繪中心
           </a>
           ／
-          <a href="https://github.com/dkaoster/taiwan-atlas" target="_blank" rel="noreferrer">
+          <a
+            href="https://github.com/dkaoster/taiwan-atlas"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 underline underline-offset-[3px]"
+          >
             Taiwan Atlas（2021.9.20）
           </a>
         </p>
-        <a href="/geo/taiwan-counties.geojson" download>
+        <a
+          href="/geo/taiwan-counties.geojson"
+          download
+          className="inline-flex items-center gap-1.5 underline underline-offset-[3px]"
+        >
           下載 GeoJSON <RiDownloadLine aria-hidden="true" />
         </a>
       </div>
