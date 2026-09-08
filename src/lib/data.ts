@@ -71,4 +71,3 @@ export type DataRecord = z.infer<typeof recordSchema>;
 export const formatNumber = (n: number) => new Intl.NumberFormat("zh-TW").format(n);
 export const share = (n: number, total: number) => (total === 0 ? 0 : (n / total) * 100);
 export const fixed1 = (n: number) => n.toFixed(1);
-export const percent = (n: number, total: number) => fixed1(share(n, total));

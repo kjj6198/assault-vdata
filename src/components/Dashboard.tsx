@@ -13,6 +13,7 @@ import {
   RiArrowDownLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
+  RiArrowRightDownLine,
   RiArrowRightUpLine,
   RiArrowUpLine,
   RiDownloadLine,
@@ -20,7 +21,7 @@ import {
 } from "react-icons/ri";
 import type { getDashboard } from "../lib/data.server";
 import type { DataRecord } from "../lib/data";
-import { fixed1, formatNumber as num, percent, share } from "../lib/data";
+import { fixed1, formatNumber as num, share } from "../lib/data";
 import { DataChart } from "./DataChart";
 import { TaiwanMap } from "./TaiwanMap";
 import { Button } from "./ui/button";
@@ -50,6 +51,14 @@ const sectionLinks = [
 ];
 const sectionIds = sectionLinks.map((link) => link.id);
 const sum = (rows: DataRecord[]) => rows.reduce((n, row) => n + row.value, 0);
+const rankRelationships = (records: DataRecord[], age: string) => {
+  const counts = new Map<string, number>();
+  for (const r of records)
+    if (r.dataset === "relationships" && (age === "全部" || r.age === age))
+      counts.set(r.relationship, (counts.get(r.relationship) ?? 0) + r.value);
+  return [...counts].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+};
+const signed = (value: number) => `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(1)}%`;
 const RateNumber = ({ rate }: { rate: number | null }) =>
   rate === null ? "—" : <AnimatedNumber key="rate" value={rate} format={formatRate} />;
 const listTransition = {
@@ -135,15 +144,13 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
     }),
     [ages, records, safeGender],
   );
-  const relationships = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const r of records)
-      if (r.dataset === "relationships" && (relationAge === "全部" || r.age === relationAge))
-        counts.set(r.relationship, (counts.get(r.relationship) ?? 0) + r.value);
-    return [...counts]
-      .map(([label, value]) => ({ label, value }))
-      .sort((a, b) => b.value - a.value);
-  }, [records, relationAge]);
+  const relationships = useMemo(
+    () => rankRelationships(records, relationAge),
+    [records, relationAge],
+  );
+  const overallRelations = useMemo(() => rankRelationships(records, "全部"), [records]);
+  const overallRelation = overallRelations[0];
+  const overallRelationTotal = overallRelations.reduce((n, r) => n + r.value, 0);
   const relationChart = useMemo(() => {
     const rows = showAllRelations ? relationships : relationships.slice(0, 8);
     return {
@@ -170,6 +177,91 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
       return sort === "ascending" ? av - bv : bv - av;
     });
   const regionRateMax = rateAxisMax(allRegionRows.map((r) => r.rate));
+  const topRateCity = records
+    .filter((r) => r.dataset === "victims")
+    .map((r) => ({
+      city: r.city,
+      rate: ratePer100k(r.value, populationByCity.get(r.city) ?? null),
+    }))
+    .filter((r): r is { city: string; rate: number } => r.rate !== null)
+    .sort((a, b) => b.rate - a.rate)[0];
+  const female = genderTotals[0];
+  const male = genderTotals[1];
+  const facts: { label: string; value: ReactNode; note: ReactNode; icon?: ReactNode }[] = [
+    {
+      label: "較前一年的變化",
+      value: change === null ? "—" : <AnimatedNumber value={change} format={signed} />,
+      icon:
+        change === null ? null : change >= 0 ? (
+          <RiArrowRightUpLine aria-hidden="true" />
+        ) : (
+          <RiArrowRightDownLine aria-hidden="true" />
+        ),
+      note:
+        previous === undefined ? (
+          "資料起始年度，無前一年可比"
+        ) : (
+          <>
+            受暴人數 <AnimatedNumber value={victimTotal} /> 人，前一年{" "}
+            <AnimatedNumber value={previous.victims} /> 人
+          </>
+        ),
+    },
+    {
+      label: "每十萬人口比率最高",
+      value: topRateCity?.city ?? "—",
+      note: topRateCity ? (
+        <>
+          每十萬人 <AnimatedNumber value={topRateCity.rate} format={formatRate} /> 人・受暴人數
+        </>
+      ) : (
+        "缺少人口資料"
+      ),
+    },
+    {
+      label: "女性占受暴人數",
+      value: (
+        <>
+          <AnimatedNumber value={share(female.value, victimTotal)} format={fixed1} />%
+        </>
+      ),
+      note: (
+        <>
+          <AnimatedNumber value={female.value} /> 人；男性{" "}
+          <AnimatedNumber value={share(male.value, victimTotal)} format={fixed1} />%
+        </>
+      ),
+    },
+    {
+      label: "受暴人中未滿 18 歲",
+      value: (
+        <>
+          <AnimatedNumber value={share(minors, victimTotal)} format={fixed1} />%
+        </>
+      ),
+      note: (
+        <>
+          <AnimatedNumber value={minors} /> 人，含年齡不詳者的分母
+        </>
+      ),
+    },
+    {
+      label: "最多紀錄的兩造關係",
+      value: overallRelation?.label ?? "—",
+      note: overallRelation ? (
+        <>
+          <AnimatedNumber value={overallRelation.value} /> 人，占{" "}
+          <AnimatedNumber
+            value={share(overallRelation.value, overallRelationTotal)}
+            format={fixed1}
+          />
+          %
+        </>
+      ) : (
+        "無資料"
+      ),
+    },
+  ];
   const regionMax = Math.max(...allRegionRows.map((r) => r.value));
   const relationTotal = relationships.reduce((n, r) => n + r.value, 0);
   const leadingRelation = relationships[0];
@@ -192,88 +284,120 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         </a>
       </header>
       <main id="main" data-pending={pending || undefined}>
-        <section className="hero page-width">
-          <div className="hero-copy">
-            <p className="eyebrow">
-              <span className="small-rule" />
-              台灣性侵害統計・{years[0]}—{years.at(-1)}
-            </p>
-            <h1>
-              每個數字，
-              <br />
-              都是<span>一個人。</span>
-            </h1>
-            <p className="hero-description">
-              從通報紀錄出發，看見性侵害的樣貌。
-              <br className="hidden sm:block" />
-              透過年齡、關係與地域，理解數字背後的處境。
-            </p>
-            <a href="#explore" className="explore-link">
-                一起讀懂這些數據 <RiArrowDownLine aria-hidden="true" />
-            </a>
-            <p className="hero-source">資料來源：衛生福利部保護服務司</p>
-          </div>
-          <Card className="hero-visual">
-            <div className="visual-topline">
-              <span>被記錄的，是人生。</span>
-              <span>{year}</span>
-            </div>
-            <div className="dot-grid" aria-hidden="true">
-              {Array.from({ length: 100 }, (_, i) => (
-                <i
-                  key={i}
-                  className={
-                    i < Math.round((minors / victimTotal) * 100) ? "dot-young" : "dot-adult"
-                  }
-                />
-              ))}
-            </div>
-            <div className="visual-caption">
-              <strong>
-                {percent(minors, victimTotal)}
-                <small>%</small>
-              </strong>
-              <p>
-                當年受暴人中
-                <br />
-                <b>未滿 18 歲</b>
+        <div className="hero-band">
+          <section className="hero page-width">
+            <div className="hero-copy">
+              <p className="eyebrow">
+                <span className="small-rule" />
+                台灣性侵害統計・{years[0]}—{years.at(-1)}
               </p>
+              <h1>
+                每個數字，
+                <br />
+                都是<span>一個人。</span>
+              </h1>
+              <p className="hero-description">
+                從通報紀錄出發，看見性侵害的樣貌。
+                <br className="hidden sm:block" />
+                透過年齡、關係與地域，理解數字背後的處境。
+              </p>
+              <a href="#explore" className="explore-link">
+                一起讀懂這些數據 <RiArrowDownLine aria-hidden="true" />
+              </a>
+              <p className="hero-source">資料來源：衛生福利部保護服務司</p>
             </div>
-            <p className="dot-note">每個圓點約代表 1% 的受暴人數，含年齡不詳者。</p>
-            <div className="hero-gender">
-              <p className="hero-gender-heading">當年受暴人的性別比例</p>
-              <div className="hero-gender-bar" aria-hidden="true">
-                {genderTotals.map((g) => (
+            <Card className="hero-visual">
+              <div className="visual-topline">
+                <span>被記錄的，是人生。</span>
+                <span>{year}</span>
+              </div>
+              <div className="dot-grid" aria-hidden="true">
+                {Array.from({ length: 100 }, (_, i) => (
                   <i
-                    key={g.label}
-                    data-gender={g.label}
-                    style={{ width: `${(g.value / victimTotal) * 100}%` }}
+                    key={i}
+                    style={{ "--i": i } as CSSProperties}
+                    className={
+                      i < Math.round((minors / victimTotal) * 100) ? "dot-young" : "dot-adult"
+                    }
                   />
                 ))}
               </div>
-              <dl className="hero-gender-legend">
-                {genderTotals.map((g) => (
-                  <div key={g.label}>
-                    <dt>
-                      <i data-gender={g.label} aria-hidden="true" />
-                      {g.label}
-                    </dt>
-                    <dd>
-                      {g.value > 0 && g.value / victimTotal < 0.001
-                        ? "<0.1"
-                        : percent(g.value, victimTotal)}
-                      <small>%</small>
-                      <span>{num(g.value)} 人</span>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="hero-gender-note">
-                以全部受暴人數為分母{year >= 2019 ? "，含其他與不詳" : "，含不詳"}
-                ；四捨五入後合計可能不為 100%。
-              </p>
-            </div>
-          </Card>
+              <div className="visual-caption">
+                <strong>
+                  <AnimatedNumber value={share(minors, victimTotal)} format={fixed1} />
+                  <small>%</small>
+                </strong>
+                <p>
+                  當年受暴人中
+                  <br />
+                  <b>未滿 18 歲</b>
+                </p>
+              </div>
+              <p className="dot-note">每個圓點約代表 1% 的受暴人數，含年齡不詳者。</p>
+              <div className="hero-gender">
+                <p className="hero-gender-heading">當年受暴人的性別比例</p>
+                <div className="hero-gender-bar" aria-hidden="true">
+                  {genderTotals.map((g) => (
+                    <i
+                      key={g.label}
+                      data-gender={g.label}
+                      style={{ width: `${(g.value / victimTotal) * 100}%` }}
+                    />
+                  ))}
+                </div>
+                <dl className="hero-gender-legend">
+                  {genderTotals.map((g) => (
+                    <div key={g.label}>
+                      <dt>
+                        <i data-gender={g.label} aria-hidden="true" />
+                        {g.label}
+                      </dt>
+                      <dd>
+                        {g.value > 0 && g.value / victimTotal < 0.001 ? (
+                          "<0.1"
+                        ) : (
+                          <AnimatedNumber value={share(g.value, victimTotal)} format={fixed1} />
+                        )}
+                        <small>%</small>
+                        <span>
+                          <AnimatedNumber value={g.value} /> 人
+                        </span>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="hero-gender-note">
+                  以全部受暴人數為分母{year >= 2019 ? "，含其他與不詳" : "，含不詳"}
+                  ；四捨五入後合計可能不為 100%。
+                </p>
+              </div>
+            </Card>
+          </section>
+        </div>
+        <section className="facts page-width" aria-labelledby="facts-heading">
+          <div className="facts-heading">
+            <p className="eyebrow">
+              <span className="small-rule" />
+              At a glance・{year}
+            </p>
+            <h2 id="facts-heading">五個數字，先看重點。</h2>
+          </div>
+          <ul className="fact-grid">
+            {facts.map((fact, i) => (
+              <li className="fact-card" key={fact.label} style={{ "--i": i } as CSSProperties}>
+                <p className="fact-label">{fact.label}</p>
+                <strong className="fact-value">
+                  {typeof fact.value === "string" ? (
+                    <AnimatedValue value={fact.value} />
+                  ) : (
+                    fact.value
+                  )}
+                  {fact.icon}
+                </strong>
+                <p className="fact-note">{fact.note}</p>
+              </li>
+            ))}
+          </ul>
         </section>
         <div className="reading-note page-width">
           <Badge variant="outline" className="note-label">
@@ -432,12 +556,14 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                     {g.label}
                   </span>
                   <b>
-                    {num(g.value)} <small>人</small>
+                    <AnimatedNumber value={g.value} /> <small>人</small>
                   </b>
                   <span>
-                    {g.value > 0 && g.value / victimTotal < 0.001
-                      ? "<0.1"
-                      : percent(g.value, victimTotal)}
+                    {g.value > 0 && g.value / victimTotal < 0.001 ? (
+                      "<0.1"
+                    ) : (
+                      <AnimatedNumber value={share(g.value, victimTotal)} format={fixed1} />
+                    )}
                     %
                   </span>
                 </div>
