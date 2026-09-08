@@ -14,6 +14,8 @@
   --breakpoint-xl: 93.75rem;
   --breakpoint-2xl: initial;
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --shadow-chapter-nav: 0 3px 8px oklch(from var(--foreground) l c h / 0.035);
+  --drop-shadow-county-lift: 0 6px 8px oklch(from var(--foreground) 0.2 0.03 h / 0.3);
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-out-lift: cubic-bezier(0.23, 1, 0.32, 1);
   --animate-story-enter: story-enter 480ms var(--ease-out-expo) both;
@@ -197,6 +199,12 @@
     --overview-line: oklch(0.485 0.035 257.788);
     --overview-accent: oklch(0.664 0.123 78.348);
     --overview-track: oklch(0.549 0.044 254.441);
+    --overview-hover: oklch(0.368 0.045 257.424);
+    --overview-bar: oklch(0.77 0.025 245);
+    --overview-bar-strong: oklch(0.64 0.025 245);
+    --overview-female: oklch(0.842 0.025 257.652);
+    --overview-other: oklch(0.691 0.071 252.17);
+    --overview-unknown: oklch(0.604 0.042 255.685);
   }
 }
 

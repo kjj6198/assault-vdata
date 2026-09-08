@@ -41,7 +41,7 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
       id="relationships"
       className="mt-4.5 scroll-mt-35 bg-surface-alt sm:mt-8 lg:scroll-mt-24"
     >
-      <div className={cn(pageWidth, storySection, "pb-[65px]")}>
+      <div className={cn(pageWidth, storySection, "pb-16.25")}>
         <SectionHeading
           number="03"
           eyebrow="兩造關係 / Relationships"
@@ -49,7 +49,7 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
         >
           從原始分類了解被害人與加害人的關係。選擇不同年齡，觀察分布如何改變。
         </SectionHeading>
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-8 sm:grid-cols-[minmax(240px,0.8fr)_minmax(0,1.7fr)] sm:gap-10 lg:gap-[74px]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-8 sm:grid-cols-[minmax(240px,0.8fr)_minmax(0,1.7fr)] sm:gap-10 lg:gap-18.5">
           <aside className="max-sm:border-b max-sm:border-border max-sm:pb-5">
             <label className="flex flex-col gap-3 text-xs" htmlFor="relation-age">
               被害人年齡
@@ -70,7 +70,7 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
                 <p className="text-xs leading-[1.9] text-muted-foreground">
                   此年齡範圍中，最多紀錄的關係為
                 </p>
-                <h3 className={cn(heading3, "my-3 text-[1.625rem] [overflow-wrap:anywhere]")}>
+                <h3 className={cn(heading3, "my-3 text-[1.625rem] wrap-anywhere")}>
                   <AnimatedValue value={leadingRelation.label} />
                 </h3>
                 <strong className="font-numeric text-[2.5rem] font-normal text-data-relationships tabular-nums sm:text-[2.875rem]">

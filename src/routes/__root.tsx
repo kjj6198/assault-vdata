@@ -44,13 +44,13 @@ export const Route = createRootRoute({
     </html>
   ),
   notFoundComponent: () => (
-    <main className="mx-auto my-[15vh] max-w-[600px] p-7.5">
+    <main className="mx-auto my-[15vh] max-w-150 p-7.5">
       <h1 className="text-4xl font-bold">找不到這個頁面</h1>
       <a href="/">回到統計專題</a>
     </main>
   ),
   errorComponent: ({ reset }) => (
-    <main className="mx-auto my-[15vh] max-w-[600px] p-7.5">
+    <main className="mx-auto my-[15vh] max-w-150 p-7.5">
       <h1 className="text-4xl font-bold">資料暫時無法載入</h1>
       <p>請稍後再試。</p>
       <button className="mt-3.75 min-h-11 cursor-pointer bg-secondary p-2.5" onClick={reset}>

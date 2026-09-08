@@ -118,7 +118,7 @@ export function AnimatedDigits({ value }: { value: number }) {
         .split("")
         .map((digit, index) => (
           <span
-            className="relative inline-block h-[1em] w-[1ch] overflow-hidden"
+            className="relative inline-block h-4 w-[1ch] overflow-hidden"
             key={index}
             aria-hidden="true"
           >

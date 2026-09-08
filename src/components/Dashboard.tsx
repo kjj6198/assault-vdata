@@ -18,7 +18,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
   return (
     <>
       <a
-        className="fixed top-3 left-3 z-60 -translate-y-[160%] bg-primary px-5 py-3 text-primary-foreground focus:translate-y-0"
+        className="fixed top-3 left-3 z-60 translate-y-[-160%] bg-primary px-5 py-3 text-primary-foreground focus:translate-y-0"
         href="#overview"
       >
         跳至年度重點
@@ -35,7 +35,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
       <footer
         className={cn(
           pageWidth,
-          "flex min-h-[110px] flex-wrap items-center gap-3 py-7 text-[0.6875rem] sm:flex-nowrap sm:gap-7.5 sm:py-0",
+          "flex min-h-27.5 flex-wrap items-center gap-3 py-7 text-[0.6875rem] sm:flex-nowrap sm:gap-7.5 sm:py-0",
         )}
       >
         <div className="space-y-1 leading-relaxed text-muted-foreground max-sm:order-3 max-sm:w-full">

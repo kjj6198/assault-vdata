@@ -93,13 +93,11 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
         <aside className="self-start rounded-xl border border-border bg-card p-6 sm:p-7">
           <p className={eyebrow}>{year} 年・全部年齡</p>
           <h3 className={cn(heading3, "mt-3.5 mb-6 text-[1.4375rem]")}>性別分布</h3>
-          <div
-            className="relative mb-6 h-3.5 overflow-hidden rounded-full [&>i]:absolute [&>i]:inset-0 [&>i]:size-full [&>i]:origin-left [&>i]:transition-transform [&>i]:duration-600 [&>i]:ease-out-quart motion-reduce:[&>i]:transition-none"
-            aria-hidden="true"
-          >
+          <div className="relative mb-6 h-3.5 overflow-hidden rounded-full" aria-hidden="true">
             {genderTotals.map((g, index) => (
               <i
                 key={g.label}
+                className="absolute inset-0 size-full origin-left transition-transform duration-600 ease-out-quart motion-reduce:transition-none"
                 style={{
                   transform: `translateX(${share(
                     genderTotals.slice(0, index).reduce((total, row) => total + row.value, 0),
@@ -112,7 +110,7 @@ export function DemographicsSection({ data }: { data: DashboardData }) {
           </div>
           {genderTotals.map((g) => (
             <div
-              className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-[15px] font-numeric text-[0.8125rem] tabular-nums"
+              className="grid grid-cols-[1fr_1.2fr_1fr] items-center gap-2.5 border-b border-border py-3.75 font-numeric text-caption tabular-nums"
               key={g.label}
             >
               <span className="flex items-center gap-2">

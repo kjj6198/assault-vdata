@@ -58,10 +58,10 @@ export function HeroSection({
           )}
         >
           <div className="animate-story-enter motion-reduce:animate-fade-enter">
-            <h1 className="mb-0 text-[clamp(2rem,4.4vw,4rem)] leading-[1.35] font-bold tracking-[0.01em] text-balance [&>span]:font-numeric [&>span]:text-[0.65em] [&>span]:font-normal [&>span]:tracking-[-0.04em] [&>span]:tabular-nums">
+            <h1 className="mb-0 text-[clamp(2rem,4.4vw,4rem)] leading-[1.35] font-bold tracking-[0.01em] text-balance">
               台灣性侵害統計
               <br />
-              <span>
+              <span className="font-numeric text-[0.65em] font-normal tracking-[-0.04em] tabular-nums">
                 {years[0]}—{years.at(-1)}
               </span>
             </h1>
@@ -75,13 +75,13 @@ export function HeroSection({
               {year} 年・全國統計
             </p>
             <p className="mt-3.5 text-caption sm:mt-6.25">通報紀錄中的受暴人數</p>
-            <p className="font-numeric text-[4.125rem] leading-[1.25] tracking-[-0.06em] tabular-nums sm:text-[clamp(4rem,6.7vw,5.875rem)] [&>small]:ml-3.5 [&>small]:font-sans [&>small]:text-label [&>small]:tracking-normal">
+            <p className="font-numeric text-[4.125rem] leading-tight tracking-[-0.06em] tabular-nums sm:text-[clamp(4rem,6.7vw,5.875rem)]">
               <AnimatedNumber value={victimTotal} />
-              <small>人</small>
+              <small className="ml-3.5 font-sans text-label tracking-normal">人</small>
             </p>
-            <div className="mt-2.5 flex items-baseline justify-between gap-4 border-t border-(--overview-line) pt-3 text-caption sm:mt-3.25 sm:pt-4.25 [&_small]:font-sans [&_small]:text-caption [&>span:last-child]:font-numeric [&>span:last-child]:text-[1.4375rem]">
+            <div className="mt-2.5 flex items-baseline justify-between gap-4 border-t border-(--overview-line) pt-3 text-caption sm:mt-3.25 sm:pt-4.25 [&_small]:font-sans [&_small]:text-caption">
               <span>同年度通報件數</span>
-              <span>
+              <span className="font-numeric text-[1.4375rem]">
                 <AnimatedNumber value={reportTotal} /> <small>件</small>
               </span>
             </div>
