@@ -10,7 +10,8 @@ export const yearSchema = z
   .int()
   .refine((year) => database.years.includes(year), "Year outside available coverage");
 const regionHistory = database.records
-  .filter((r) => r.dataset === "victims" && "city" in r)
+  .filter((r) => r.dataset === "victims")
+  .filter((r) => r.year >= 2019)
   .map((r) => ({
     year: r.year,
     city: r.city,
@@ -127,7 +128,19 @@ export function getDashboard(year: number) {
     populationSource: populationDatabase.source,
     years: database.years,
     ages: database.ages,
-    records: database.records.filter((r) => r.year === year),
+    // Spreadsheet provenance stays in the download API; the dashboard uses observations.
+    records: database.records
+      .filter((r) => r.year === year)
+      .map((record) => {
+        const {
+          source: _source,
+          sheet: _sheet,
+          row: _row,
+          column: _column,
+          ...observation
+        } = record;
+        return observation;
+      }),
     trend: database.years.map((y) => ({
       year: y,
       victims: database.totals.find((t) => t.year === y && t.dataset === "victims")?.value ?? 0,

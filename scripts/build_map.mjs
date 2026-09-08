@@ -1,7 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { feature } from "topojson-client";
+import { feature, transform } from "topojson-client";
 import { geoIdentity, geoPath } from "d3-geo";
+import { simplifyArc } from "./simplify-map.mjs";
 
 const geographic = JSON.parse(
   readFileSync(new URL("../data/geo/counties.topo.json", import.meta.url), "utf8"),
@@ -22,11 +23,20 @@ const projection = geoIdentity().fitExtent(
   ],
   counties,
 );
+// Simplify shared arcs once, keeping adjacent county borders identical. The error is
+// bounded to 0.2px in the 600px viewBox. Geographic downloads retain the source geometry.
+const decode = transform(projected.transform);
+const displayTopology = {
+  ...projected,
+  transform: undefined,
+  arcs: projected.arcs.map((arc) => simplifyArc(arc.map(decode), 0.2 / projection.scale())),
+};
+const displayCounties = feature(displayTopology, displayTopology.objects.counties);
 const path = geoPath(projection).digits(2);
 const data = {
   width: 600,
   height: 650,
-  counties: counties.features.map((county) => ({
+  counties: displayCounties.features.map((county) => ({
     name: normalize(county.properties.COUNTYNAME),
     code: county.properties.COUNTYCODE,
     path: path(county),

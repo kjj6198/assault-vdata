@@ -75,6 +75,26 @@ describe("the published MOHW data", () => {
 });
 
 describe("the real API handler", () => {
+  it("keeps dashboard observations compact without changing counts or API provenance", () => {
+    const dashboard = getDashboard(2025);
+    const originals = database.records.filter((record) => record.year === 2025);
+    expect(dashboard.records).toHaveLength(originals.length);
+    expect(dashboard.records).toContainEqual({
+      dataset: "victims",
+      year: 2025,
+      city: "新北市",
+      value: 1745,
+    });
+    expect(JSON.stringify(dashboard.records).length).toBeLessThan(
+      JSON.stringify(originals).length * 0.6,
+    );
+    expect(dashboard.records.reduce((total, record) => total + record.value, 0)).toBe(
+      originals.reduce((total, record) => total + record.value, 0),
+    );
+    expect(dashboard.regionHistory).toHaveLength(7 * 22);
+    expect(dashboard.regionHistory.every((record) => record.year >= 2019)).toBe(true);
+    expect(originals.every((record) => record.source && record.sheet && record.row > 0)).toBe(true);
+  });
   it("filters records by year, dataset, and city", async () => {
     const response = dataResponse(
       new Request("http://localhost/api/v1/data?year=2025&dataset=victims&city=新北市"),
