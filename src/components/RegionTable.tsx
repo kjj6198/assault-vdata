@@ -33,7 +33,7 @@ export function RegionTable({ year, metric, measure, rows }: Props) {
 
   return (
     <div className="mt-3">
-      <div className="flex flex-col items-start justify-between gap-5 pt-3 pb-6 lg:flex-row lg:gap-8 [&_h3]:text-xl [&_h3]:leading-[1.5] [&_h3]:font-bold [&_h3]:text-balance [&_p]:mt-2 [&_p]:max-w-[65ch] [&_p]:text-label [&_p]:leading-[1.8] [&_p]:text-pretty [&_p]:text-muted-foreground">
+      <div className="flex flex-col items-start justify-between gap-5 pt-3 pb-6 lg:flex-row lg:gap-8 [&_h3]:text-xl [&_h3]:leading-normal [&_h3]:font-bold [&_h3]:text-balance [&_p]:mt-2 [&_p]:max-w-[65ch] [&_p]:text-label [&_p]:leading-[1.8] [&_p]:text-pretty [&_p]:text-muted-foreground">
         <div>
           <h3>{year} 年・縣市數據比較</h3>
           <p>查看原始數量與人口換算結果，或搜尋你的縣市。</p>
@@ -76,7 +76,7 @@ export function RegionTable({ year, metric, measure, rows }: Props) {
       >
         <table
           id={tableId}
-          className="w-full min-w-135 border-collapse text-caption leading-[1.7] [&_[data-emphasis]]:font-bold [&_[data-emphasis]]:text-primary [&_button]:inline-flex [&_button]:min-h-11 [&_button]:items-center [&_button]:gap-3 [&_button]:text-primary [&_button]:underline [&_button]:underline-offset-4 [&_button_span]:text-caption [&_button_span]:no-underline [&_caption]:text-left [&_small]:font-normal [&_small]:whitespace-nowrap [&_tbody_th]:text-label [&_tbody_th]:font-bold [&_tbody_tr:hover]:bg-muted [&_td]:border-b [&_td]:border-border [&_td]:tabular-nums [&_td:not([colspan])]:px-3.5 [&_td:not([colspan])]:py-3.25 [&_td:not([colspan])]:text-right [&_td:not([colspan])]:font-numeric [&_td:not([colspan])]:text-label [&_td:not([colspan])]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-3.5 [&_th]:py-3.25 [&_th]:text-right [&_th]:font-normal [&_th:first-child]:text-left [&_thead]:bg-muted [&_thead]:text-caption [&_thead]:text-muted-foreground [&_tr[data-selected]]:bg-muted"
+          className="w-full min-w-135 border-collapse text-caption leading-[1.7] **:data-emphasis:font-bold **:data-emphasis:text-primary [&_button]:inline-flex [&_button]:min-h-11 [&_button]:items-center [&_button]:gap-3 [&_button]:text-primary [&_button]:underline [&_button]:underline-offset-4 [&_button_span]:text-caption [&_button_span]:no-underline [&_caption]:text-left [&_small]:font-normal [&_small]:whitespace-nowrap [&_tbody_th]:text-label [&_tbody_th]:font-bold [&_tbody_tr:hover]:bg-muted [&_td]:border-b [&_td]:border-border [&_td]:tabular-nums [&_td:not([colspan])]:px-3.5 [&_td:not([colspan])]:py-3.25 [&_td:not([colspan])]:text-right [&_td:not([colspan])]:font-numeric [&_td:not([colspan])]:text-label [&_td:not([colspan])]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-3.5 [&_th]:py-3.25 [&_th]:text-right [&_th]:font-normal [&_th:first-child]:text-left [&_thead]:bg-muted [&_thead]:text-caption [&_thead]:text-muted-foreground [&_tr[data-selected]]:bg-muted"
         >
           <caption className="sr-only">
             {year} 年各縣市{label}、每十萬人口比率與年底人口

@@ -56,7 +56,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
         <div className="min-w-0">
           <svg
             viewBox={`0 0 ${taiwanMap.width} ${taiwanMap.height}`}
-            className="block h-auto max-h-[650px] w-full overflow-visible"
+            className="block h-auto max-h-162.5 w-full overflow-visible"
             role="group"
             aria-label={`${year} 年台灣縣市${label}地圖；可用 Tab、Enter 選擇縣市`}
           >
@@ -118,7 +118,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 key={activeCounty.code}
                 d={activeCounty.path}
                 fill={fillFor(activeCounty.name)}
-                className="pointer-events-none -translate-x-1 -translate-y-1.5 animate-county-lift stroke-map-highlight stroke-[2.5] drop-shadow-[0_6px_8px_oklch(0.2_0.03_255/0.3)] [transition:fill_600ms_var(--ease-out-quart),opacity_200ms_var(--ease-out-quart)] [vector-effect:non-scaling-stroke] motion-reduce:translate-none motion-reduce:animate-none motion-reduce:drop-shadow-none motion-reduce:duration-120"
+                className="pointer-events-none -translate-x-1 -translate-y-1.5 animate-county-lift stroke-map-highlight stroke-[2.5] drop-shadow-county-lift [transition:fill_600ms_var(--ease-out-quart),opacity_200ms_var(--ease-out-quart)] [vector-effect:non-scaling-stroke] motion-reduce:translate-none motion-reduce:animate-none motion-reduce:drop-shadow-none motion-reduce:duration-120"
                 aria-hidden="true"
               />
             )}
@@ -173,7 +173,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
               ) : (
                 <AnimatedNumber key="count" value={value} />
               )}
-              <small className="ml-1.5 font-sans text-[0.6875rem] sm:ml-2.5 sm:text-[0.8125rem]">
+              <small className="ml-1.5 font-sans text-[0.6875rem] sm:ml-2.5 sm:text-caption">
                 {measure === "rate" ? `${unit}／十萬人` : unit}
               </small>
             </strong>
@@ -226,7 +226,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
               {legend.map((step) => (
                 <li
                   key={step.min}
-                  className="flex items-center gap-[5px] text-[0.625rem] whitespace-nowrap sm:gap-2"
+                  className="flex items-center gap-1.25 text-[0.625rem] whitespace-nowrap sm:gap-2"
                 >
                   <i className={keySwatch} style={{ background: step.color }} />
                   <span>{step.label}</span>
@@ -247,7 +247,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
           </div>
         </Card>
       </div>
-      <div className="mt-5 flex flex-wrap justify-between gap-3 border-t border-border pt-[15px] text-[0.625rem] leading-[1.9] sm:mt-0">
+      <div className="mt-5 flex flex-wrap justify-between gap-3 border-t border-border pt-3.75 text-[0.625rem] leading-[1.9] sm:mt-0">
         <p>
           界線：
           <a

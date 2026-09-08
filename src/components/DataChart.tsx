@@ -291,14 +291,14 @@ export function DataChart({
   }, [type, horizontal]);
   return (
     <figure>
-      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-caption text-muted-foreground [&_i]:size-2 [&_i]:rounded-full [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2 [&>span:last-child]:ml-auto">
+      <div className="mb-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-caption text-muted-foreground [&_i]:size-2 [&_i]:rounded-full">
         {series.map((s) => (
-          <span key={s.label}>
+          <span key={s.label} className="inline-flex items-center gap-2">
             <i style={{ background: s.color }} />
             {s.label}
           </span>
         ))}
-        <span>單位：{unit}</span>
+        <span className="ml-auto inline-flex items-center gap-2">單位：{unit}</span>
       </div>
       <div style={{ height }} className="relative min-w-0" aria-busy={!ready && !failed}>
         {!ready && (
@@ -315,14 +315,12 @@ export function DataChart({
           aria-describedby={tableId}
         />
       </div>
-      <details
-        className="mt-4.5 border-t border-border [&_summary_svg]:size-4.5 [&_summary::-webkit-details-marker]:hidden [&>summary]:flex [&>summary]:min-h-12 [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-3 [&>summary]:text-caption [&>summary]:text-primary [&>summary>span]:flex [&>summary>span]:items-center [&>summary>span]:gap-3 [&>summary>span]:text-caption [&>summary>span]:text-muted-foreground [&[open]>summary_svg]:rotate-45"
-        open={failed || undefined}
-      >
-        <summary>
+      <details className="group mt-4.5 border-t border-border" open={failed || undefined}>
+        <summary className="flex min-h-12 list-none items-center justify-between gap-3 text-caption text-primary [&::-webkit-details-marker]:hidden">
           查看完整數據表{" "}
-          <span>
-            {labels.length} 項<RiAddLine aria-hidden="true" />
+          <span className="flex items-center gap-3 text-caption text-muted-foreground">
+            {labels.length} 項
+            <RiAddLine aria-hidden="true" className="size-4.5 group-open:rotate-45" />
           </span>
         </summary>
         <div
@@ -333,7 +331,7 @@ export function DataChart({
         >
           <table
             id={tableId}
-            className="w-full border-collapse text-caption leading-[1.7] [&_[data-emphasis]]:font-bold [&_[data-emphasis]]:text-primary [&_button]:inline-flex [&_button]:min-h-11 [&_button]:items-center [&_button]:gap-3 [&_button]:text-primary [&_button]:underline [&_button]:underline-offset-4 [&_button_span]:text-caption [&_button_span]:no-underline [&_caption]:text-left [&_small]:font-normal [&_small]:whitespace-nowrap [&_tbody_tr:hover]:bg-muted [&_td]:border-b [&_td]:border-border [&_td]:tabular-nums [&_td:not([colspan])]:px-3.5 [&_td:not([colspan])]:py-3.25 [&_td:not([colspan])]:text-right [&_td:not([colspan])]:font-numeric [&_td:not([colspan])]:text-label [&_td:not([colspan])]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-3.5 [&_th]:py-3.25 [&_th]:text-right [&_th]:font-normal [&_th:first-child]:text-left [&_thead]:bg-muted [&_thead]:text-caption [&_thead]:text-muted-foreground [&_tr[data-selected]]:bg-muted"
+            className="w-full border-collapse text-caption leading-[1.7] **:data-emphasis:font-bold **:data-emphasis:text-primary [&_button]:inline-flex [&_button]:min-h-11 [&_button]:items-center [&_button]:gap-3 [&_button]:text-primary [&_button]:underline [&_button]:underline-offset-4 [&_button_span]:text-caption [&_button_span]:no-underline [&_caption]:text-left [&_small]:font-normal [&_small]:whitespace-nowrap [&_tbody_tr:hover]:bg-muted [&_td]:border-b [&_td]:border-border [&_td]:tabular-nums [&_td:not([colspan])]:px-3.5 [&_td:not([colspan])]:py-3.25 [&_td:not([colspan])]:text-right [&_td:not([colspan])]:font-numeric [&_td:not([colspan])]:text-label [&_td:not([colspan])]:whitespace-nowrap [&_th]:border-b [&_th]:border-border [&_th]:px-3.5 [&_th]:py-3.25 [&_th]:text-right [&_th]:font-normal [&_th:first-child]:text-left [&_thead]:bg-muted [&_thead]:text-caption [&_thead]:text-muted-foreground [&_tr[data-selected]]:bg-muted"
           >
             <caption className="sr-only">
               {title}，單位：{unit}

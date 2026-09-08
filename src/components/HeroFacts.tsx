@@ -53,11 +53,11 @@ function FactCard({
         <span className="font-numeric text-caption text-(--overview-muted)" aria-hidden="true">
           {number}
         </span>
-        <h3 className="text-label font-bold tracking-[0.025em]">{label}</h3>
+        <h3 className="text-label font-bold tracking-wide">{label}</h3>
         <a
           href={href}
           aria-label={`探索${label}`}
-          className="-my-2.25 -mr-2.5 ml-auto grid min-h-11 min-w-11 place-items-center rounded-[4px] text-(--overview-muted) hover:bg-[oklch(0.368_0.045_257.424)] hover:text-(--overview-ink)"
+          className="-my-2.25 -mr-2.5 ml-auto grid min-h-11 min-w-11 place-items-center rounded-[4px] text-(--overview-muted) hover:bg-(--overview-hover) hover:text-(--overview-ink)"
         >
           <RiArrowRightUpLine className="size-4.25" aria-hidden="true" />
         </a>
@@ -89,9 +89,9 @@ export function HeroFacts({
         <div className="grid flex-1 grid-cols-[minmax(0,1fr)_42%] items-center gap-4 py-6">
           <div>
             <p className="text-caption leading-[1.8] text-(--overview-muted)">被記錄的，是人生。</p>
-            <p className="mt-3.75 mb-1.5 font-numeric text-[clamp(2.5rem,4.3vw,3.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums [&>small]:ml-1 [&>small]:font-sans [&>small]:text-[1.375rem] [&>small]:tracking-[-0.015em]">
+            <p className="mt-3.75 mb-1.5 font-numeric text-[clamp(2.5rem,4.3vw,3.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums">
               <AnimatedNumber value={minorShare} format={fixed1} />
-              <small>%</small>
+              <small className="ml-1 font-sans text-[1.375rem] tracking-[-0.015em]">%</small>
             </p>
             <p className="text-label leading-[1.8]">
               當年受暴人中<strong className="block">未滿 18 歲</strong>
@@ -117,37 +117,39 @@ export function HeroFacts({
       <FactCard number={String(year)} label="受暴人的性別比例" href="#ages">
         <div className="flex-1 py-6">
           <p className="text-caption leading-[1.8] text-(--overview-muted)">全部年齡</p>
-          <div
-            className="my-5 flex h-2.25 gap-0.5 overflow-hidden rounded-[2px] [&>i]:min-w-px"
-            aria-hidden="true"
-          >
+          <div className="my-5 flex h-2.25 gap-0.5 overflow-hidden rounded-xs" aria-hidden="true">
             {genders.map((row) => (
               <i
                 key={row.label}
-                className="data-[gender=不詳]:bg-[oklch(0.604_0.042_255.685)] data-[gender=其他]:bg-[oklch(0.691_0.071_252.17)] data-[gender=女]:bg-[oklch(0.842_0.025_257.652)] data-[gender=男]:bg-(--overview-accent)"
+                className="min-w-px data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
                 data-gender={row.label}
                 style={{ width: `${share(row.value, total)}%` }}
               />
             ))}
           </div>
-          <dl className="grid grid-cols-2 gap-x-5 gap-y-6 [&_dd]:text-right [&_dd]:font-numeric [&_dd]:text-2xl [&_dd]:leading-[1.4] [&_dd]:tabular-nums [&_dd_small]:ml-0.5 [&_dd_small]:text-caption [&_dd>span]:block [&_dd>span:last-child]:mt-1 [&_dd>span:last-child]:text-caption [&_dd>span:last-child]:text-(--overview-muted) [&_dt]:pt-1 [&_dt]:text-label [&_dt]:whitespace-nowrap [&_dt_i]:mr-1.75 [&_dt_i]:inline-block [&_dt_i]:size-1.75 [&_dt_i]:rounded-full [&>div]:flex [&>div]:min-w-0 [&>div]:flex-wrap [&>div]:items-baseline [&>div]:justify-between [&>div]:gap-x-2 [&>div]:gap-y-1">
+          <dl className="grid grid-cols-2 gap-x-5 gap-y-6 [&_dd]:text-right [&_dd]:font-numeric [&_dd]:text-2xl [&_dd]:leading-[1.4] [&_dd]:tabular-nums [&_dd_small]:ml-0.5 [&_dd_small]:text-caption [&_dt]:pt-1 [&_dt]:text-label [&_dt]:whitespace-nowrap [&_dt_i]:mr-1.75 [&_dt_i]:inline-block [&_dt_i]:size-1.75 [&_dt_i]:rounded-full">
             {genders.map((row) => (
-              <div key={row.label}>
+              <div
+                key={row.label}
+                className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-2 gap-y-1"
+              >
                 <dt>
                   <i
-                    className="data-[gender=不詳]:bg-[oklch(0.604_0.042_255.685)] data-[gender=其他]:bg-[oklch(0.691_0.071_252.17)] data-[gender=女]:bg-[oklch(0.842_0.025_257.652)] data-[gender=男]:bg-(--overview-accent)"
+                    className="data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
                     data-gender={row.label}
                   />
                   {row.label}
                 </dt>
                 <dd>
-                  <span>
+                  <span className="block">
                     {row.value > 0 && share(row.value, total) < 0.1
                       ? "<0.1"
                       : fixed1(share(row.value, total))}
                     <small>%</small>
                   </span>
-                  <span>{formatNumber(row.value)} 人</span>
+                  <span className="mt-1 block text-caption text-(--overview-muted)">
+                    {formatNumber(row.value)} 人
+                  </span>
                 </dd>
               </div>
             ))}
@@ -166,9 +168,11 @@ export function HeroFacts({
         <p className="mt-4 mb-1.25 text-caption leading-[1.8] text-(--overview-muted) max-[36.25rem]:col-start-1">
           受暴人數的年度變化
         </p>
-        <p className="font-numeric text-[clamp(2.5rem,4.3vw,3.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums max-[36.25rem]:col-start-1 max-[36.25rem]:mb-4.5 max-[36.25rem]:text-[2.875rem] [&>small]:ml-1 [&>small]:text-[1.375rem] [&>small]:tracking-[-0.015em] [&>small:last-child]:font-sans">
+        <p className="font-numeric text-[clamp(2.5rem,4.3vw,3.625rem)] leading-[1.15] font-normal tracking-[-0.055em] text-(--overview-accent) tabular-nums max-[36.25rem]:col-start-1 max-[36.25rem]:mb-4.5 max-[36.25rem]:text-[2.875rem]">
           {change === null ? "—" : <AnimatedNumber value={change} format={formatChange} />}
-          {change !== null && <small>%</small>}
+          {change !== null && (
+            <small className="ml-1 font-sans text-[1.375rem] tracking-[-0.015em]">%</small>
+          )}
         </p>
         <div
           className="mt-5 mb-0 flex h-16.5 items-end gap-1.25 border-b border-(--overview-line) max-[36.25rem]:col-start-2 max-[36.25rem]:row-[2/4] max-[36.25rem]:h-15.5 max-[36.25rem]:gap-0.75 max-[36.25rem]:self-center"
@@ -178,7 +182,7 @@ export function HeroFacts({
           {trend.map((row) => (
             <div key={row.year} className="flex h-full flex-1 items-end">
               <span
-                className="min-h-px w-full rounded-[4px] bg-[oklch(0.77_0.025_245)] transition-colors duration-600 ease-out-quart data-selected:bg-(--overview-accent) motion-reduce:duration-120"
+                className="min-h-px w-full rounded-[4px] bg-(--overview-bar) transition-colors duration-600 ease-out-quart data-selected:bg-(--overview-accent) motion-reduce:duration-120"
                 style={{ height: `${(row.victims / maxVictims) * 100}%` }}
                 data-selected={row.year === year || undefined}
               />
@@ -211,9 +215,9 @@ export function HeroFacts({
             <p className="mt-0.75 mb-3.75 text-[1.75rem] leading-[1.6] font-bold tracking-[0.015em] max-[36.25rem]:mt-0.5 max-[36.25rem]:mb-2">
               <AnimatedValue value={topCity?.city ?? "無資料"} />
             </p>
-            <p className="font-numeric text-[clamp(2.25rem,3.5vw,3.25rem)] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums [&>small]:ml-1.75 [&>small]:text-caption [&>small]:tracking-[-0.015em] [&>small:last-child]:font-sans">
+            <p className="font-numeric text-[clamp(2.25rem,3.5vw,3.25rem)] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
               {topCity ? <AnimatedNumber value={topCity.rate} format={formatRate} /> : "—"}
-              <small>人</small>
+              <small className="ml-1.75 font-sans text-caption tracking-[-0.015em]">人</small>
             </p>
             <p className="text-caption leading-[1.8] text-(--overview-muted)">每 10 萬人口</p>
           </div>
@@ -249,9 +253,9 @@ export function HeroFacts({
             <p className="mt-1 mb-2 text-[1.75rem] leading-[1.6] font-bold tracking-[0.015em] wrap-anywhere max-[36.25rem]:text-[1.5rem]">
               <AnimatedValue value={leading?.label ?? "無資料"} />
             </p>
-            <p className="mb-1.5 font-numeric text-[2.375rem] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums [&>small]:ml-2 [&>small]:text-caption [&>small]:tracking-[-0.015em] [&>small:last-child]:font-sans">
+            <p className="mb-1.5 font-numeric text-[2.375rem] leading-[1.15] font-normal tracking-[-0.055em] tabular-nums">
               {leading ? <AnimatedNumber value={leading.value} /> : "—"}
-              <small>人</small>
+              <small className="ml-2 font-sans text-caption tracking-[-0.015em]">人</small>
             </p>
             <p className="text-caption leading-[1.8] text-(--overview-muted)">
               占關係紀錄{" "}
@@ -263,16 +267,17 @@ export function HeroFacts({
               %
             </p>
           </div>
-          <ol className="grid min-w-0 gap-5 self-center [&_b]:mr-2.5 [&_b]:font-numeric [&_b]:text-caption [&_b]:font-normal [&_b]:text-(--overview-muted) [&_small]:ml-0.5 [&_small]:text-caption [&_strong]:font-numeric [&_strong]:text-[1.0625rem] [&_strong]:font-medium [&_strong]:whitespace-nowrap motion-reduce:[&>li]:transform-none! [&>li:first-child>div:last-child>i]:bg-(--overview-accent) [&>li>div:first-child]:mb-2 [&>li>div:first-child]:flex [&>li>div:first-child]:items-baseline [&>li>div:first-child]:justify-between [&>li>div:first-child]:gap-4 [&>li>div:first-child]:text-caption [&>li>div:first-child>span]:wrap-anywhere">
+          <ol className="grid min-w-0 gap-5 self-center [&_b]:mr-2.5 [&_b]:font-numeric [&_b]:text-caption [&_b]:font-normal [&_b]:text-(--overview-muted) [&_small]:ml-0.5 [&_small]:text-caption [&_strong]:font-numeric [&_strong]:text-[1.0625rem] [&_strong]:font-medium [&_strong]:whitespace-nowrap">
             {relationships.slice(0, 3).map((row, index) => (
               <motion.li
                 key={row.label}
+                className="motion-reduce:transform-none!"
                 layout="position"
                 initial={false}
                 transition={{ duration: reduced ? 0 : 0.6, ease: [0.25, 1, 0.5, 1] }}
               >
-                <div>
-                  <span>
+                <div className="mb-2 flex items-baseline justify-between gap-4 text-caption">
+                  <span className="wrap-anywhere">
                     <b>{String(index + 1).padStart(2, "0")}</b>
                     {row.label}
                   </span>
@@ -281,11 +286,12 @@ export function HeroFacts({
                     <small>%</small>
                   </strong>
                 </div>
-                <div
-                  className="h-1.5 rounded-full bg-(--overview-track) [&>i]:block [&>i]:size-full [&>i]:origin-left [&>i]:rounded-full [&>i]:bg-[oklch(0.64_0.025_245)] [&>i]:transition-[transform,background-color] [&>i]:duration-600 [&>i]:ease-out-quart motion-reduce:[&>i]:transition-colors motion-reduce:[&>i]:duration-120"
-                  aria-hidden="true"
-                >
+                <div className="h-1.5 rounded-full bg-(--overview-track)" aria-hidden="true">
                   <i
+                    className={cn(
+                      "block size-full origin-left rounded-full bg-(--overview-bar-strong) transition-[transform,background-color] duration-600 ease-out-quart motion-reduce:transition-colors motion-reduce:duration-120",
+                      index === 0 && "bg-(--overview-accent)",
+                    )}
                     style={{ transform: `scaleX(${share(row.value, relationshipTotal) / 100})` }}
                   />
                 </div>

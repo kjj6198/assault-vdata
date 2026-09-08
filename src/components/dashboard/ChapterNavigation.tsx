@@ -20,7 +20,7 @@ export function ChapterNavigation({
   return (
     <div
       id="explore"
-      className="sticky top-0 z-20 border-y border-border bg-transparent shadow-[0_3px_8px_oklch(0.25_0.028_255/0.035)] backdrop-blur-lg"
+      className="sticky top-0 z-20 border-y border-border bg-transparent shadow-chapter-nav backdrop-blur-lg"
     >
       <div
         className={cn(
@@ -30,14 +30,14 @@ export function ChapterNavigation({
       >
         <nav
           aria-label="專題章節"
-          className="flex min-w-0 items-stretch gap-4 max-lg:w-full max-sm:[scrollbar-width:thin] max-sm:[scrollbar-color:var(--border)_transparent] max-sm:justify-start max-sm:overflow-x-auto sm:max-lg:justify-between lg:gap-6.5"
+          className="flex min-w-0 items-stretch gap-4 max-lg:w-full max-sm:scrollbar-thin max-sm:[scrollbar-color:var(--border)_transparent] max-sm:justify-start max-sm:overflow-x-auto sm:max-lg:justify-between lg:gap-6.5"
         >
           {sectionLinks.map((link) => (
             <a
               href={`#${link.id}`}
               key={link.id}
               aria-current={activeSection === link.id ? "true" : undefined}
-              className="inline-flex min-h-10 items-center border-b-3 border-transparent pt-0.75 text-caption whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:text-foreground hover:no-underline aria-[current=true]:border-primary aria-[current=true]:font-bold aria-[current=true]:text-primary sm:min-h-13 lg:min-h-17.5"
+              className="inline-flex min-h-10 items-center border-b-3 border-transparent pt-0.75 text-caption whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:text-foreground hover:no-underline aria-current:border-primary aria-current:font-bold aria-current:text-primary sm:min-h-13 lg:min-h-17.5"
             >
               {link.name}
             </a>
@@ -62,7 +62,7 @@ export function ChapterNavigation({
           <DataSelect
             id="year"
             label="統計年度"
-            className="min-w-[92px] border-border bg-card font-semibold tabular-nums max-sm:min-h-9 max-sm:min-w-20 max-sm:px-2 max-sm:py-1 max-sm:text-sm"
+            className="min-w-23 border-border bg-card font-semibold tabular-nums max-sm:min-h-9 max-sm:min-w-20 max-sm:px-2 max-sm:py-1 max-sm:text-sm"
             value={String(year)}
             onValueChange={(value) => onYearChange(Number(value))}
             options={[...years].reverse().map((y) => ({ value: String(y), label: String(y) }))}

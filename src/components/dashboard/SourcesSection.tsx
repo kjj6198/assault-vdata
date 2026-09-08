@@ -34,7 +34,7 @@ export function SourcesSection({ data }: { data: DashboardData }) {
           </div>
           <div>
             <h3 className={heading3}>如何閱讀這些數字？</h3>
-            <ul className="mt-4.5 list-disc pl-4.5 text-xs leading-[2] text-muted-foreground [&>li]:mb-[9px]">
+            <ul className="mt-4.5 list-disc space-y-2.25 pl-4.5 text-xs leading-loose text-muted-foreground">
               <li>「受暴人數」以人為單位；「通報件數」以件為單位，兩者不可混用。</li>
               <li>
                 所有百分比以同年度、同指標的總數為分母，包含「不詳」。四捨五入後可能不恰為 100%。
