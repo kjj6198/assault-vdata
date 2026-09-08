@@ -37,6 +37,7 @@ export function RegionsSection({ data }: { data: DashboardData }) {
           比較方式
           <DataSelect
             label="縣市比較方式"
+            className="min-h-8 gap-1.5 px-2 py-1 data-[size=default]:h-8"
             value={regionMeasure}
             onValueChange={(value) => {
               if (value === "rate" || value === "count") setRegionMeasure(value);

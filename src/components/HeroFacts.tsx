@@ -68,7 +68,10 @@ export function HeroFacts({
   const leading = relationships[0];
   return (
     <div className="facts-grid">
-      <article className="fact-card fact-people" aria-label={`${year} 年受暴人的年齡與性別`}>
+      <article
+        className="fact-card fact-people fact-underage"
+        aria-label={`${year} 年未滿 18 歲受暴人比例`}
+      >
         <div className="people-heading">
           <span>被記錄的，是人生。</span>
           <span>{year}</span>
@@ -88,9 +91,15 @@ export function HeroFacts({
           </h3>
         </div>
         <p className="people-caption">每個圓點約代表 1% 的受暴人數，含年齡不詳者。</p>
+      </article>
+      <article className="fact-card fact-people fact-sex" aria-label={`${year} 年受暴人的性別比例`}>
+        <div className="people-heading">
+          <h3>受暴人的性別比例</h3>
+          <span>{year}</span>
+        </div>
         <div className="people-gender">
           <div className="people-gender-heading">
-            <h3>當年受暴人的性別比例</h3>
+            <p>全部年齡</p>
             <a href="#ages" className="fact-detail-link" aria-label="探索年齡與性別">
               <RiArrowRightUpLine aria-hidden="true" />
             </a>

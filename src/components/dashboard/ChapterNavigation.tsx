@@ -38,7 +38,7 @@ export function ChapterNavigation({
           </label>
           <Button
             variant="ghost"
-            className="w-11 bg-transparent text-base sm:w-8.5"
+            className="w-9 bg-transparent text-sm max-sm:min-h-9 max-sm:px-2 sm:w-8.5 sm:text-base"
             aria-label="上一年"
             disabled={pending || yearIndex === 0}
             onClick={() => onYearChange(years[yearIndex - 1])}
@@ -48,14 +48,14 @@ export function ChapterNavigation({
           <DataSelect
             id="year"
             label="統計年度"
-            className="min-w-[92px] font-semibold tabular-nums"
+            className="min-w-[92px] font-semibold tabular-nums max-sm:min-h-9 max-sm:min-w-20 max-sm:px-2 max-sm:py-1 max-sm:text-sm"
             value={String(year)}
             onValueChange={(value) => onYearChange(Number(value))}
             options={[...years].reverse().map((y) => ({ value: String(y), label: String(y) }))}
           />
           <Button
             variant="ghost"
-            className="w-11 bg-transparent text-base sm:w-8.5"
+            className="w-9 bg-transparent text-sm max-sm:min-h-9 max-sm:px-2 sm:w-8.5 sm:text-base"
             aria-label="下一年"
             disabled={pending || yearIndex === years.length - 1}
             onClick={() => onYearChange(years[yearIndex + 1])}

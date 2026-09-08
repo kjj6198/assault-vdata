@@ -1,5 +1,5 @@
 import { writeFileSync } from "node:fs";
-import { converter, formatHex, inGamut, wcagContrast } from "culori";
+import { converter, inGamut, wcagContrast } from "culori";
 import { APCAcontrast, sRGBtoY } from "apca-w3";
 const colors = {
   background: [0.986, 0.005, 255],
@@ -17,6 +17,7 @@ const colors = {
   accent: [0.927, 0.026, 255],
   "accent-foreground": [0.32, 0.045, 255],
   destructive: [0.47, 0.16, 25],
+  "destructive-foreground": [0.992, 0.003, 255],
   border: [0.853, 0.022, 255],
   input: [0.635, 0.035, 255],
   ring: [0.425, 0.085, 255],
@@ -47,7 +48,7 @@ const palette = Object.fromEntries(
   Object.entries(colors).map(([name, [l, c, h]]) => {
     const value = { mode: "oklch", l, c, h };
     if (!inGamut("rgb")(value)) throw new Error(`Out of sRGB gamut: ${name}`);
-    return [name, { css: `oklch(${l} ${c} ${h})`, hex: formatHex(value) }];
+    return [name, { css: `oklch(${l} ${c} ${h})` }];
   }),
 );
 const pairs = [
@@ -56,6 +57,7 @@ const pairs = [
   ["muted-foreground", "muted", 75],
   ["foreground", "card", 75],
   ["primary-foreground", "primary", 60],
+  ["destructive-foreground", "destructive", 60],
   ["hero-foreground", "hero-background", 75],
   ["hero-muted", "hero-background", 60],
   ["primary", "muted", 60],

@@ -3,12 +3,11 @@ import type { DataRecord } from "../../lib/data";
 import palette from "../../lib/palette.json";
 import { cn } from "../../lib/utils";
 export type DashboardData = Awaited<ReturnType<typeof getDashboard>>;
-export const INK = palette["data-people"].hex,
-  CORAL = palette["data-relationships"].hex,
-  GOLD = palette["data-secondary"].hex,
-  GRAY = palette["data-unknown"].hex;
+export const INK = palette["data-people"].css,
+  CORAL = palette["data-relationships"].css,
+  GOLD = palette["data-secondary"].css,
+  GRAY = palette["data-unknown"].css;
 export const sectionLinks = [
-  { id: "overview", name: "年度重點" },
   { id: "trend", name: "歷年趨勢" },
   { id: "ages", name: "年齡與性別" },
   { id: "relationships", name: "兩造關係" },

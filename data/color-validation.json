@@ -32,6 +32,12 @@
       "apcaLc": 91.3
     },
     {
+      "foreground": "destructive-foreground",
+      "background": "destructive",
+      "wcagRatio": 7.25,
+      "apcaLc": 87.6
+    },
+    {
       "foreground": "hero-foreground",
       "background": "hero-background",
       "wcagRatio": 14.2,

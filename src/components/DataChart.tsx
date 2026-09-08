@@ -29,16 +29,21 @@ const toDatasets = ({ series }: ChartData, type: "line" | "bar") =>
     label: s.label,
     data: [...s.values],
     borderColor: s.color,
-    backgroundColor: type === "line" ? `${s.color}10` : s.color,
+    backgroundColor:
+      type === "line" ? `color-mix(in oklch, ${s.color} 6.275%, transparent)` : s.color,
     borderWidth: type === "line" ? 2.5 : 0,
     borderRadius: 6,
     borderSkipped: false,
     maxBarThickness: 22,
     pointRadius: 3,
     pointBackgroundColor: s.color,
-    pointBorderColor: palette.card.hex,
+    pointBorderColor: palette.card.css,
     pointBorderWidth: 2,
     pointHoverRadius: 6,
+    hoverBackgroundColor: `color-mix(in oklch, ${s.color} 90%, oklch(0 0 0))`,
+    hoverBorderColor: s.color,
+    pointHoverBackgroundColor: s.color,
+    pointHoverBorderColor: palette.card.css,
     fill: type === "line",
     tension: 0.15,
   }));
@@ -88,7 +93,7 @@ export function DataChart({
         const { ctx, chartArea } = chart;
         ctx.save();
         if (horizontal) {
-          ctx.fillStyle = palette.foreground.hex;
+          ctx.fillStyle = palette.foreground.css;
           ctx.font = `500 12px ${numericFont()}`;
           ctx.textBaseline = "middle";
           chart.data.datasets.forEach((dataset, seriesIndex) => {
@@ -96,12 +101,12 @@ export function DataChart({
               const label = latest.current.labels[index];
               const value = displayedValues[seriesIndex]?.get(label)?.value;
               if (seriesIndex === 0) {
-                ctx.fillStyle = palette["muted-foreground"].hex;
+                ctx.fillStyle = palette["muted-foreground"].css;
                 ctx.textAlign = "right";
                 ctx.fillText(toLabels([label], true)[0], chartArea.left - 12, bar.y);
               }
               if (value !== undefined) {
-                ctx.fillStyle = palette.foreground.hex;
+                ctx.fillStyle = palette.foreground.css;
                 ctx.textAlign = "left";
                 ctx.fillText(formatNumber(Math.round(value)), bar.x + 8, bar.y);
               }
@@ -116,15 +121,15 @@ export function DataChart({
             const progress = index % 1;
             const x = start.x + (end.x - start.x) * progress;
             const y = start.y + (end.y - start.y) * progress;
-            ctx.strokeStyle = palette["section-marker"].hex;
+            ctx.strokeStyle = palette["section-marker"].css;
             ctx.setLineDash([4, 4]);
             ctx.beginPath();
             ctx.moveTo(x, y + 9);
             ctx.lineTo(x, chartArea.bottom);
             ctx.stroke();
             ctx.setLineDash([]);
-            ctx.fillStyle = palette["data-secondary"].hex;
-            ctx.strokeStyle = palette.card.hex;
+            ctx.fillStyle = palette["data-secondary"].css;
+            ctx.strokeStyle = palette.card.css;
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.arc(x, y, 6, 0, Math.PI * 2);
@@ -164,6 +169,8 @@ export function DataChart({
             responsive: true,
             maintainAspectRatio: false,
             animation: false,
+            // Canvas accepts OKLCH directly; Chart.js's color interpolator does not.
+            animations: { colors: false },
             indexAxis: horizontal ? "y" : "x",
             interaction: { intersect: false, mode: "index" },
             layout: { padding: { right: horizontal ? 55 : 10, top: 8 } },
@@ -174,7 +181,11 @@ export function DataChart({
             plugins: {
               legend: { display: false },
               tooltip: {
-                backgroundColor: palette.foreground.hex,
+                backgroundColor: palette.foreground.css,
+                titleColor: palette["primary-foreground"].css,
+                bodyColor: palette["primary-foreground"].css,
+                footerColor: palette["primary-foreground"].css,
+                multiKeyBackground: palette.card.css,
                 padding: 12,
                 callbacks: {
                   title: (items) => latest.current.labels[items[0]?.dataIndex ?? 0] ?? "",
@@ -186,20 +197,20 @@ export function DataChart({
             scales: {
               x: {
                 beginAtZero: horizontal,
-                grid: { display: horizontal, color: palette.border.hex },
+                grid: { display: horizontal, color: palette.border.css },
                 border: { display: false },
                 ticks: {
-                  color: palette["muted-foreground"].hex,
+                  color: palette["muted-foreground"].css,
                   maxRotation: 0,
                   font: { size: 12, family: numericFont() },
                 },
               },
               y: {
                 beginAtZero: true,
-                grid: { display: !horizontal, color: palette.border.hex },
+                grid: { display: !horizontal, color: palette.border.css },
                 border: { display: false },
                 ticks: {
-                  color: horizontal ? "transparent" : palette["muted-foreground"].hex,
+                  color: horizontal ? "transparent" : palette["muted-foreground"].css,
                   font: { size: 12, family: numericFont() },
                 },
               },
