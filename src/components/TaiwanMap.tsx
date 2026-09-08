@@ -9,9 +9,10 @@ import {
 import { useState } from "react";
 import { RiDownloadLine } from "react-icons/ri";
 import { DataSelect } from "./DataSelect";
+import { AnimatedValue, AnimatedNumber } from "./StoryMotion";
 import { Card } from "./ui/card";
 import { taiwanMap, mapScale, countyColor } from "../lib/map";
-import { formatNumber, percent } from "../lib/data";
+import { fixed1, formatNumber, share } from "../lib/data";
 
 type Props = {
   year: number;
@@ -27,6 +28,11 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
   const value = byCity.get(active);
   const total = rows.reduce((n, r) => n + r.value, 0);
   const activeRow = rows.find((r) => r.city === active);
+  const activeCounty = taiwanMap.counties.find((county) => county.name === active);
+  const fillFor = (city: string) =>
+    measure === "rate"
+      ? rateColor(rows.find((r) => r.city === city)?.rate ?? null)
+      : countyColor(byCity.get(city));
   const displayValue = measure === "rate" ? (activeRow?.rate ?? null) : (value ?? null);
   const rank =
     displayValue === null
@@ -73,7 +79,7 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                     key={county.code}
                     d={county.path}
                     data-county={county.name}
-                    fill={measure === "rate" ? rateColor(row?.rate ?? null) : countyColor(count)}
+                    fill={fillFor(county.name)}
                     className={active === county.name ? "county-shape is-active" : "county-shape"}
                     tabIndex={0}
                     role="button"
@@ -96,6 +102,15 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
                 );
               })}
             </g>
+            {activeCounty && (
+              <path
+                key={activeCounty.code}
+                d={activeCounty.path}
+                fill={fillFor(activeCounty.name)}
+                className="county-lift"
+                aria-hidden="true"
+              />
+            )}
             <g className="map-compass" transform="translate(535,85)" aria-hidden="true">
               <path d="M0 20V-10m-5 8 5-8 5 8" />
               <text y="-21" textAnchor="middle">
@@ -126,33 +141,60 @@ export function TaiwanMap({ year, metric, rows, measure }: Props) {
             <p>
               {year} 年・{label}
             </p>
-            <h4>{active}</h4>
+            <h4>
+              <AnimatedValue value={active} />
+            </h4>
             <strong>
-              {measure === "rate"
-                ? formatRate(activeRow?.rate ?? null)
-                : value === undefined
-                  ? "—"
-                  : formatNumber(value)}
+              {measure === "rate" ? (
+                activeRow?.rate == null ? (
+                  <AnimatedValue value="—" />
+                ) : (
+                  <AnimatedNumber key="rate" value={activeRow.rate} format={formatRate} />
+                )
+              ) : value === undefined ? (
+                <AnimatedValue value="—" />
+              ) : (
+                <AnimatedNumber key="count" value={value} />
+              )}
               <small>{measure === "rate" ? `${unit}／十萬人` : unit}</small>
             </strong>
             <p className="map-population">
               年底人口{" "}
-              {activeRow?.population == null ? "無資料" : formatNumber(activeRow.population)} 人
+              {activeRow?.population == null ? (
+                "無資料"
+              ) : (
+                <AnimatedNumber value={activeRow.population} />
+              )}{" "}
+              人
             </p>
             <div className="map-detail-stats">
               <span>
                 {measure === "rate" ? "原始數量" : "占全國"}
                 <b>
-                  {value === undefined
-                    ? "—"
-                    : measure === "rate"
-                      ? `${formatNumber(value)} ${unit}`
-                      : `${percent(value, total)}%`}
+                  {value === undefined ? (
+                    "—"
+                  ) : measure === "rate" ? (
+                    <>
+                      <AnimatedNumber key="count" value={value} /> {unit}
+                    </>
+                  ) : (
+                    <>
+                      <AnimatedNumber key="share" value={share(value, total)} format={fixed1} />%
+                    </>
+                  )}
                 </b>
               </span>
               <span>
                 {measure === "rate" ? "縣市比率排序" : "縣市數量排序"}
-                <b>{rank === null ? "—" : `${rank} / 22`}</b>
+                <b>
+                  {rank === null ? (
+                    "—"
+                  ) : (
+                    <>
+                      <AnimatedNumber value={rank} /> / 22
+                    </>
+                  )}
+                </b>
               </span>
             </div>
           </div>

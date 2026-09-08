@@ -1,5 +1,17 @@
 import { useEffect, type ReactNode } from "react";
-import { AnimatePresence, inView, motion, useAnimate, useReducedMotion } from "motion/react";
+import {
+  AnimatePresence,
+  inView,
+  motion,
+  useAnimate,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "motion/react";
+import { formatNumber } from "../lib/data";
+
+const numberSpring = { visualDuration: 0.6, bounce: 0 };
+const formatInteger = (value: number) => formatNumber(Math.round(value));
 
 export function Reveal({ children }: { children: ReactNode }) {
   const [scope, animate] = useAnimate<HTMLDivElement>();
@@ -53,6 +65,28 @@ export function AnimatedValue({ value }: { value: string }) {
           </motion.span>
         </AnimatePresence>
       </span>
+    </span>
+  );
+}
+
+export function AnimatedNumber({
+  value,
+  format = formatInteger,
+}: {
+  value: number;
+  format?: (value: number) => string;
+}) {
+  const reduced = useReducedMotion();
+  const spring = useSpring(value, numberSpring);
+  useEffect(() => {
+    if (reduced) spring.jump(value);
+    else spring.set(value);
+  }, [reduced, spring, value]);
+  const text = useTransform(spring, format);
+  return (
+    <span className="animated-number">
+      <span className="sr-only">{format(value)}</span>
+      <motion.span aria-hidden="true">{text}</motion.span>
     </span>
   );
 }

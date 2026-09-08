@@ -1,6 +1,7 @@
 import palette from "../lib/palette.json";
 import { useEffect, useRef, useState } from "react";
 import type { Chart } from "chart.js";
+import { useReducedMotion } from "motion/react";
 import { RiAddLine } from "react-icons/ri";
 import { formatNumber } from "../lib/data";
 
@@ -14,6 +15,23 @@ type Props = {
   unit?: string;
   height?: number;
 };
+type ChartData = Pick<Props, "labels" | "series" | "unit">;
+const toLabels = (labels: string[], horizontal: boolean) =>
+  labels.map((label) => (horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label));
+const toDatasets = (series: Series[], type: "line" | "bar") =>
+  series.map((s) => ({
+    label: s.label,
+    data: s.values,
+    borderColor: s.color,
+    backgroundColor: type === "line" ? `${s.color}14` : s.color,
+    borderWidth: type === "line" ? 2.5 : 0,
+    borderRadius: 2,
+    maxBarThickness: 30,
+    pointRadius: 2.5,
+    pointHoverRadius: 5,
+    fill: type === "line",
+    tension: 0.15,
+  }));
 export function DataChart({
   title,
   labels,
@@ -24,32 +42,20 @@ export function DataChart({
   height = 310,
 }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const chartRef = useRef<Chart | null>(null);
+  const latest = useRef<ChartData>({ labels, series, unit });
+  const reduced = useReducedMotion();
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let disposed = false;
-    let chart: Chart | undefined;
     import("chart.js/auto")
       .then(({ default: ChartJS }) => {
         if (disposed || !canvas.current) return;
-        chart = new ChartJS(canvas.current, {
+        chartRef.current = new ChartJS(canvas.current, {
           type,
           data: {
-            labels: labels.map((label) =>
-              horizontal && label.length > 13 ? `${label.slice(0, 12)}…` : label,
-            ),
-            datasets: series.map((s) => ({
-              label: s.label,
-              data: s.values,
-              borderColor: s.color,
-              backgroundColor: type === "line" ? `${s.color}14` : s.color,
-              borderWidth: type === "line" ? 2.5 : 0,
-              borderRadius: 2,
-              maxBarThickness: 30,
-              pointRadius: 2.5,
-              pointHoverRadius: 5,
-              fill: type === "line",
-              tension: 0.15,
-            })),
+            labels: toLabels(latest.current.labels, horizontal),
+            datasets: toDatasets(latest.current.series, type),
           },
           options: {
             responsive: true,
@@ -63,9 +69,9 @@ export function DataChart({
                 backgroundColor: palette.foreground.hex,
                 padding: 12,
                 callbacks: {
-                  title: (items) => labels[items[0]?.dataIndex ?? 0] ?? "",
+                  title: (items) => latest.current.labels[items[0]?.dataIndex ?? 0] ?? "",
                   label: (context) =>
-                    `${context.dataset.label}：${formatNumber(Number(horizontal ? context.parsed.x : context.parsed.y))} ${unit}`,
+                    `${context.dataset.label}：${formatNumber(Number(horizontal ? context.parsed.x : context.parsed.y))} ${latest.current.unit}`,
                 },
               },
             },
@@ -95,9 +101,19 @@ export function DataChart({
       });
     return () => {
       disposed = true;
-      chart?.destroy();
+      chartRef.current?.destroy();
+      chartRef.current = null;
     };
-  }, [labels, series, type, horizontal, unit]);
+  }, [type, horizontal]);
+  useEffect(() => {
+    latest.current = { labels, series, unit };
+    const chart = chartRef.current;
+    if (!chart) return;
+    chart.data.labels = toLabels(labels, horizontal);
+    chart.data.datasets = toDatasets(series, type);
+    chart.options.animation = reduced ? false : { duration: 450, easing: "easeOutQuart" };
+    chart.update();
+  }, [labels, series, unit, type, horizontal, reduced]);
   return (
     <figure className="data-figure">
       <div className="chart-legend">

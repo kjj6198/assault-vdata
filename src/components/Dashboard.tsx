@@ -6,7 +6,8 @@ import {
   formatRate,
   type RegionMeasure,
 } from "../lib/regions";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   RiAddLine,
   RiArrowDownLine,
@@ -19,7 +20,7 @@ import {
 } from "react-icons/ri";
 import type { getDashboard } from "../lib/data.server";
 import type { DataRecord } from "../lib/data";
-import { formatNumber as num, percent } from "../lib/data";
+import { fixed1, formatNumber as num, percent, share } from "../lib/data";
 import { DataChart } from "./DataChart";
 import { TaiwanMap } from "./TaiwanMap";
 import { Button } from "./ui/button";
@@ -28,7 +29,7 @@ import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { DataSelect } from "./DataSelect";
-import { Reveal, AnimatedValue } from "./StoryMotion";
+import { Reveal, AnimatedValue, AnimatedNumber } from "./StoryMotion";
 import palette from "../lib/palette.json";
 
 type Props = {
@@ -47,6 +48,12 @@ const sectionLinks = [
   { id: "regions", name: "縣市分布" },
 ];
 const sum = (rows: DataRecord[]) => rows.reduce((n, row) => n + row.value, 0);
+const RateNumber = ({ rate }: { rate: number | null }) =>
+  rate === null ? "—" : <AnimatedNumber key="rate" value={rate} format={formatRate} />;
+const listTransition = {
+  layout: { type: "spring", visualDuration: 0.4, bounce: 0 },
+  opacity: { duration: 0.2 },
+} as const;
 function SectionHeading({
   number,
   eyebrow,
@@ -181,7 +188,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           資料與方法 <RiArrowRightUpLine aria-hidden="true" />
         </a>
       </header>
-      <main id="main">
+      <main id="main" data-pending={pending || undefined}>
         <section className="hero page-width">
           <div className="hero-copy">
             <p className="eyebrow">
@@ -320,19 +327,24 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             <div>
               <p>受暴人數</p>
               <strong>
-                <AnimatedValue value={num(victimTotal)} />
+                <AnimatedNumber value={victimTotal} />
                 <small>人</small>
               </strong>
               <span>
-                {change === null
-                  ? "資料起始年度"
-                  : `較前一年${change >= 0 ? "增加" : "減少"} ${Math.abs(change).toFixed(1)}%`}
+                {change === null ? (
+                  "資料起始年度"
+                ) : (
+                  <>
+                    較前一年{change >= 0 ? "增加" : "減少"}{" "}
+                    <AnimatedNumber value={Math.abs(change)} format={fixed1} />%
+                  </>
+                )}
               </span>
             </div>
             <div>
               <p>通報件數</p>
               <strong>
-                <AnimatedValue value={num(reportTotal)} />
+                <AnimatedNumber value={reportTotal} />
                 <small>件</small>
               </strong>
               <span>通報件數與受暴人數為不同統計口徑</span>
@@ -340,10 +352,13 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
             <div>
               <p>未滿 18 歲受暴人數</p>
               <strong>
-                <AnimatedValue value={num(minors)} />
+                <AnimatedNumber value={minors} />
                 <small>人</small>
               </strong>
-              <span>占當年受暴人數 {percent(minors, victimTotal)}%</span>
+              <span>
+                占當年受暴人數 <AnimatedNumber value={share(minors, victimTotal)} format={fixed1} />
+                %
+              </span>
             </div>
           </div>
         </div>
@@ -451,14 +466,20 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
                 {leadingRelation && (
                   <div className="relationship-insight">
                     <p>此年齡範圍中，最多紀錄的關係為</p>
-                    <h3>{leadingRelation.label}</h3>
+                    <h3>
+                      <AnimatedValue value={leadingRelation.label} />
+                    </h3>
                     <strong>
-                      {num(leadingRelation.value)}
+                      <AnimatedNumber value={leadingRelation.value} />
                       <small>人</small>
                     </strong>
                     <p>
-                      占此範圍 {percent(leadingRelation.value, relationTotal)}%<br />共{" "}
-                      {num(relationTotal)} 人，包含關係不詳者
+                      占此範圍{" "}
+                      <AnimatedNumber
+                        value={share(leadingRelation.value, relationTotal)}
+                        format={fixed1}
+                      />
+                      %<br />共 <AnimatedNumber value={relationTotal} /> 人，包含關係不詳者
                     </p>
                   </div>
                 )}
@@ -582,28 +603,52 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
           )}
           {regionRows.length ? (
             <div className="region-grid population-grid">
-              {regionRows.map((r) => (
-                <div className="region-row" key={r.city}>
-                  <span className="region-city">
-                    {r.city}
-                    <small>人口 {r.population === null ? "無資料" : num(r.population)}</small>
-                  </span>
-                  <span className="region-track" aria-hidden="true">
-                    <i
-                      style={{
-                        background: regionMeasure === "rate" ? rateColor(r.rate) : undefined,
-                        width: `${regionMeasure === "rate" ? ratePosition(r.rate ?? 0, regionRateMax) * 100 : (r.value / regionMax) * 100}%`,
-                      }}
-                    />
-                  </span>
-                  <b>{regionMeasure === "rate" ? formatRate(r.rate) : num(r.value)}</b>
-                  <span>
-                    {regionMeasure === "rate"
-                      ? `${num(r.value)} ${regionMetric === "victims" ? "人" : "件"}`
-                      : formatRate(r.rate)}
-                  </span>
-                </div>
-              ))}
+              <AnimatePresence mode="sync" initial={false}>
+                {regionRows.map((r) => (
+                  <motion.div
+                    className="region-row"
+                    key={r.city}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={listTransition}
+                  >
+                    <span className="region-city">
+                      {r.city}
+                      <small>
+                        人口{" "}
+                        {r.population === null ? "無資料" : <AnimatedNumber value={r.population} />}
+                      </small>
+                    </span>
+                    <span className="region-track" aria-hidden="true">
+                      <i
+                        style={{
+                          background: regionMeasure === "rate" ? rateColor(r.rate) : undefined,
+                          transform: `scaleX(${regionMeasure === "rate" ? ratePosition(r.rate ?? 0, regionRateMax) : r.value / regionMax})`,
+                        }}
+                      />
+                    </span>
+                    <b>
+                      {regionMeasure === "rate" ? (
+                        <RateNumber rate={r.rate} />
+                      ) : (
+                        <AnimatedNumber key="count" value={r.value} />
+                      )}
+                    </b>
+                    <span>
+                      {regionMeasure === "rate" ? (
+                        <>
+                          <AnimatedNumber key="count" value={r.value} />{" "}
+                          {regionMetric === "victims" ? "人" : "件"}
+                        </>
+                      ) : (
+                        <RateNumber rate={r.rate} />
+                      )}
+                    </span>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           ) : (
             <div className="empty-state">
