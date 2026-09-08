@@ -6,54 +6,41 @@ import { pageWidth, heading3, type DashboardData } from "./shared";
 export function SourcesSection({ data }: { data: DashboardData }) {
   const { year, years } = data;
   return (
-    <section
-      id="sources"
-      className="mt-0 scroll-mt-29.5 bg-muted py-4 sm:py-10"
-    >
+    <section id="sources" className="mt-0 scroll-mt-29.5 bg-muted py-4 sm:py-10">
       <div className={pageWidth}>
         <div className="mt-2 grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-16">
           <div>
             <h3 className={heading3}>資料來源</h3>
             <p className="mt-4.5 text-xs leading-loose text-muted-foreground">
-              本專題整理衛生福利部保護服務司的四份公開統計，涵蓋 {years[0]}—
-              {years.at(-1)}{" "}
+              本專題整理衛生福利部保護服務司的四份公開統計，涵蓋 {years[0]}—{years.at(-1)}{" "}
               年。保留原始試算表，逐格擷取並檢查加總；每筆下載資料附有來源檔名、工作表與儲存格位置。
             </p>
             <ol className="mt-5 list-[decimal-leading-zero] pl-6.25">
-              {["relationships", "demographics", "victims", "reports"].map(
-                (kind) => {
-                  const source = data.sources.find((s) => s.dataset === kind);
-                  return source ? (
-                    <li key={kind} className="py-2 pl-1.5 text-xs">
-                      <a
-                        href={source.page}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 leading-[1.9] underline underline-offset-4"
-                      >
-                        {source.title.split("(")[0]}{" "}
-                        <RiArrowRightUpLine aria-hidden="true" />
-                      </a>
-                    </li>
-                  ) : null;
-                },
-              )}
+              {["relationships", "demographics", "victims", "reports"].map((kind) => {
+                const source = data.sources.find((s) => s.dataset === kind);
+                return source ? (
+                  <li key={kind} className="py-2 pl-1.5 text-xs">
+                    <a
+                      href={source.page}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 leading-[1.9] underline underline-offset-4"
+                    >
+                      {source.title.split("(")[0]} <RiArrowRightUpLine aria-hidden="true" />
+                    </a>
+                  </li>
+                ) : null;
+              })}
             </ol>
           </div>
           <div>
             <h3 className={heading3}>如何閱讀這些數字？</h3>
             <ul className="mt-4.5 list-disc pl-4.5 text-xs leading-[2] text-muted-foreground [&>li]:mb-[9px]">
+              <li>「受暴人數」以人為單位；「通報件數」以件為單位，兩者不可混用。</li>
               <li>
-                「受暴人數」以人為單位；「通報件數」以件為單位，兩者不可混用。
+                所有百分比以同年度、同指標的總數為分母，包含「不詳」。四捨五入後可能不恰為 100%。
               </li>
-              <li>
-                所有百分比以同年度、同指標的總數為分母，包含「不詳」。四捨五入後可能不恰為
-                100%。
-              </li>
-              <li>
-                空白且當年未設的關係分類不轉為 0。2019、2021
-                年分類改制，跨年比較請參照原表。
-              </li>
+              <li>空白且當年未設的關係分類不轉為 0。2019、2021 年分類改制，跨年比較請參照原表。</li>
               <li>
                 圖表採底層儲存格加總。原表的印列合計若有差異，另存於品質註記，不擅自修改原始數值。
               </li>
@@ -99,9 +86,8 @@ export function SourcesSection({ data }: { data: DashboardData }) {
         <details className="mt-3 text-xs [&_code]:bg-secondary [&_code]:px-1.25 [&_code]:py-0.5 [&_code]:text-[11px]">
           <summary className="min-h-11 content-center">API 使用方式</summary>
           <p className="my-3 leading-loose wrap-anywhere">
-            <code>GET /api/v1/data</code> 提供完整資料。可加上 <code>year</code>
-            、<code>dataset</code>、<code>city</code> 與 <code>format=csv</code>{" "}
-            篩選。
+            <code>GET /api/v1/data</code> 提供完整資料。可加上 <code>year</code>、
+            <code>dataset</code>、<code>city</code> 與 <code>format=csv</code> 篩選。
           </p>
           <p className="my-3 leading-loose wrap-anywhere">
             dataset 支援 demographics、relationships、victims、reports。city
@@ -115,8 +101,7 @@ export function SourcesSection({ data }: { data: DashboardData }) {
             href="/api/v1/data?year=2025&dataset=victims"
             className="inline-flex items-center gap-1.5 underline"
           >
-            範例：2025 年各縣市受暴人數{" "}
-            <RiArrowRightUpLine aria-hidden="true" />
+            範例：2025 年各縣市受暴人數 <RiArrowRightUpLine aria-hidden="true" />
           </a>
         </details>
       </div>

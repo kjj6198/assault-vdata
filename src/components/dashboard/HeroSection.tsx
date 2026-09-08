@@ -1,6 +1,5 @@
 import { ratePer100k } from "../../lib/regions";
 import { useMemo } from "react";
-import { RiDownloadLine } from "react-icons/ri";
 import { HeroFacts } from "../HeroFacts";
 import { DataSelect } from "../DataSelect";
 import { AnimatedNumber } from "../StoryMotion";
@@ -37,22 +36,10 @@ export function HeroSection({
   const genderTotals = genders.map((label) => ({
     label,
     value: sum(demo.filter((r) => r.gender === label)),
-    color:
-      label === "女"
-        ? INK
-        : label === "男"
-          ? GOLD
-          : label === "其他"
-            ? CORAL
-            : GRAY,
+    color: label === "女" ? INK : label === "男" ? GOLD : label === "其他" ? CORAL : GRAY,
   }));
-  const overallRelations = useMemo(
-    () => rankRelationships(records, "全部"),
-    [records],
-  );
-  const populationByCity = new Map(
-    data.populations.map((r) => [r.city, r.population]),
-  );
+  const overallRelations = useMemo(() => rankRelationships(records, "全部"), [records]);
+  const populationByCity = new Map(data.populations.map((r) => [r.city, r.population]));
   const topRateCity = records
     .filter((r) => r.dataset === "victims")
     .map((r) => ({
@@ -102,9 +89,7 @@ export function HeroSection({
           <div className="facts-toolbar">
             <div>
               <output className="facts-eyebrow">
-                {pending
-                  ? "正在載入資料…"
-                  : `${year} 年・民國 ${year - 1911} 年`}
+                {pending ? "正在載入資料…" : `${year} 年・民國 ${year - 1911} 年`}
               </output>
               <h2 id="facts-heading">這一年，值得看見的數字</h2>
             </div>
@@ -114,9 +99,7 @@ export function HeroSection({
                 label="年度重點統計年度"
                 value={String(year)}
                 onValueChange={(value) => onYearChange(Number(value))}
-                options={[...years]
-                  .reverse()
-                  .map((y) => ({ value: String(y), label: `${y} 年` }))}
+                options={[...years].reverse().map((y) => ({ value: String(y), label: `${y} 年` }))}
               />
             </div>
           </div>
