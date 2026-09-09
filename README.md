@@ -4,7 +4,7 @@ English | [繁體中文](README-ch.md)
 
 ## What it is
 
-An interactive site in Traditional Chinese for exploring Taiwan's public sexual assault statistics from 2008 to 2025. It shows annual trends, age and gender breakdowns, relationships between victims and offenders, and comparisons across all 22 counties and cities. Charts include data tables, and records are available as CSV or JSON.
+An interactive site in Traditional Chinese for exploring Taiwan's public sexual assault statistics from 2008 to 2025. It shows annual trends, age and gender breakdowns, suspect gender proportions for 2015–2025, relationships between victims and offenders, and comparisons across all 22 counties and cities. Charts include data tables, and records are available as CSV or JSON.
 
 The site uses Ministry of Health and Welfare statistics and Ministry of the Interior population data. Recorded victims and reports are separate measures; these statistics do not capture unreported cases.
 

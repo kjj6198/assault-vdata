@@ -51,6 +51,32 @@ for source in SOURCES:
     kind = source['dataset']
     # The 2019-only attachment duplicates the later consolidated 2019–2020 release.
     if source['file'] == 'relationships-2019.ods': continue
+    if kind == 'suspects':
+        path = ROOT / 'data/raw' / source['file']
+        check(hashlib.sha256(path.read_bytes()).hexdigest() == source['sha256'], f'Hash mismatch: {path}')
+        workbook = openpyxl.load_workbook(path, data_only=True)
+        for title in ['2015~2018', '2019~2020', '歷年(2021~)']:
+            ws = workbook[title]
+            columns = [c.column for c in ws[4] if '性侵害嫌疑人年齡統計' in str(c.value)]
+            check(len(columns) == 1, f'Expected one suspect total column: {title}')
+            col = columns[0]
+            check(ws.cell(6, col).value == '合計', f'Expected suspect total: {title}')
+            year = None
+            for row in ws.iter_rows(min_row=8):
+                if row[0].value is not None:
+                    # Exclude quarters and half-years, which duplicate the annual observations.
+                    match = re.fullmatch(r'\d{3}年\s*(20\d{2})', str(row[0].value))
+                    year = int(match[1]) if match else None
+                if year is None: continue
+                label = row[2].value
+                if label == '計 Total':
+                    total(source, year, row[col-1].value)
+                    continue
+                genders = {'男 Male': '男', '女 Female': '女', '其他 Other': '其他', '不詳Unknown': '不詳'}
+                check(label in genders, f'Unexpected suspect gender: {title} {row[0].row} {label}')
+                record(source, title, row[0].row, col, year, row[col-1].value, gender=genders[label])
+        check(sorted(t['year'] for t in totals if t['dataset'] == kind) == list(range(2015, 2026)), 'Suspect year coverage')
+        continue
     sheet, table = rows(source)
     year = None
     if kind in ['victims', 'reports']:
@@ -112,7 +138,7 @@ check(len(keys)==len(set(keys)),'Duplicate records')
 years=sorted(set(r['year'] for r in records))
 for year in years:
     annual={t['dataset']:t['value'] for t in totals if t['year']==year}
-    check(len(annual)==4,f'Incomplete source coverage: {year}')
+    check(len(annual)==(5 if year >= 2015 else 4),f'Incomplete source coverage: {year}')
     check(annual['victims']==annual['demographics']==annual['relationships'],f'National totals differ: {year}')
     for kind, expected in annual.items():
         check(sum(r['value'] for r in records if r['year']==year and r['dataset']==kind)==expected, f'Total {kind} {year}')

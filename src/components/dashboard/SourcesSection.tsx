@@ -3,7 +3,7 @@ import { formatNumber as num } from "../../lib/data";
 import { useI18n } from "../../i18n";
 import { pageWidth, heading3, type DashboardData } from "./shared";
 
-const datasetKinds = ["relationships", "demographics", "victims", "reports"] as const;
+const datasetKinds = ["relationships", "demographics", "victims", "reports", "suspects"] as const;
 /** Quality notes quote the source's own age spelling, for example "0~6歲未滿". */
 const normalizeAge = (age: string) => age.replace(/^(\d+)~(\d+)歲未滿$/, "$1–未滿$2歲");
 

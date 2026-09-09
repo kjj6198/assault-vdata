@@ -86,5 +86,13 @@
     "page": "https://dep.mohw.gov.tw/dops/cp-1303-59312-105.html",
     "url": "https://www.mohw.gov.tw/dl-100264-8b56dd2a-7830-4bf1-a13b-9ca3d59a8fed.html",
     "sha256": "844c942345c5c7acb3fef08e39116060832bde9af9eae4299491f0148804f150"
+  },
+  {
+    "dataset": "suspects",
+    "file": "suspects-2015-2025.xlsx",
+    "title": "性侵害事件通報被害及嫌疑人概況（2026/3/20 更新）",
+    "page": "https://dep.mohw.gov.tw/DOs/fp-5337-62357-113.html",
+    "url": "https://www.mohw.gov.tw/dl-22350-52e594ab-786b-4cdc-bd31-9fd4c2b279ed.html",
+    "sha256": "ecbb48f33048038976b8e92306880badb8165d639088241241ef5e09828fee5d"
   }
 ]

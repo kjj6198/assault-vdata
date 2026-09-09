@@ -6,6 +6,7 @@ import { HeroSection } from "./dashboard/HeroSection";
 import { ChapterNavigation } from "./dashboard/ChapterNavigation";
 import { TrendSection } from "./dashboard/TrendSection";
 import { DemographicsSection } from "./dashboard/DemographicsSection";
+import { SuspectsSection } from "./dashboard/SuspectsSection";
 import { RelationshipsSection } from "./dashboard/RelationshipsSection";
 import { RegionsSection } from "./dashboard/RegionsSection";
 import { SourcesSection } from "./dashboard/SourcesSection";
@@ -37,6 +38,7 @@ export function Dashboard({ data, onYearChange, pending }: Props) {
         <ChapterNavigation data={data} onYearChange={onYearChange} pending={pending} />
         <TrendSection data={data} onYearChange={onYearChange} />
         <DemographicsSection data={data} />
+        <SuspectsSection data={data} />
         <RelationshipsSection data={data} />
         <RegionsSection data={data} />
         <SourcesSection data={data} />

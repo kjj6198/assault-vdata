@@ -7,7 +7,14 @@ export const INK = palette["data-people"].css,
   CORAL = palette["data-relationships"].css,
   GOLD = palette["data-secondary"].css,
   GRAY = palette["data-unknown"].css;
-export const sectionIds = ["trend", "ages", "relationships", "regions", "sources"] as const;
+export const sectionIds = [
+  "trend",
+  "ages",
+  "suspects",
+  "relationships",
+  "regions",
+  "sources",
+] as const;
 export const pageWidth =
   "mx-auto w-[calc(100%-40px)] sm:w-[calc(100%-64px)] lg:w-[min(1120px,calc(100%-96px))]";
 export const eyebrow =

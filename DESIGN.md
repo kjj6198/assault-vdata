@@ -26,21 +26,26 @@ The same lint configuration enables Oxlint's native React Compiler rules as erro
 
 ## Sources and coverage
 
-The snapshot downloaded on **2026-09-08 (Asia/Tokyo)** contains **5,722 atomic count records for 2008–2025**. All four datasets cover all 18 years. Counts retain zero values and unknown categories.
+The four original datasets downloaded on **2026-09-08 (Asia/Tokyo)** cover 2008–2025. The user-supplied suspect workbook, added on 2026-09-10, covers 2015–2025. Together they contain **5,760 atomic count records**. Counts retain zero values and unknown categories.
 
-| Dataset         | Source                                                                    | Unit    |
-| --------------- | ------------------------------------------------------------------------- | ------- |
-| `relationships` | [Age × relationship](https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html) | People  |
-| `demographics`  | [Age × gender](https://dep.mohw.gov.tw/dops/cp-1303-59309-105.html)       | People  |
-| `victims`       | [People by city](https://dep.mohw.gov.tw/dops/cp-1303-59311-105.html)     | People  |
-| `reports`       | [Reports by city](https://dep.mohw.gov.tw/dops/cp-1303-59312-105.html)    | Reports |
+| Dataset         | Source                                                                                         | Unit    |
+| --------------- | ---------------------------------------------------------------------------------------------- | ------- |
+| `relationships` | [Age × relationship](https://dep.mohw.gov.tw/dops/cp-1303-59308-105.html)                      | People  |
+| `demographics`  | [Age × gender](https://dep.mohw.gov.tw/dops/cp-1303-59309-105.html)                            | People  |
+| `victims`       | [People by city](https://dep.mohw.gov.tw/dops/cp-1303-59311-105.html)                          | People  |
+| `suspects`      | [Victim and suspect overview, table 3.2.2](https://dep.mohw.gov.tw/DOs/fp-5337-62357-113.html) | People  |
+| `reports`       | [Reports by city](https://dep.mohw.gov.tw/dops/cp-1303-59312-105.html)                         | Reports |
 
 - `data/raw/`: original XLSX/ODS downloads and source page snapshots. The relationship page currently publishes ODS files; the other three sources provide XLSX.
-- `data/sources.json`: source pages, direct attachment URLs, filenames, and SHA-256 hashes for all 11 attachments. The consolidated 2019–2020 relationship release is used instead of counting the overlapping 2019-only attachment again.
+- `data/sources.json`: source pages, direct attachment URLs, filenames, and SHA-256 hashes for all 12 attachments. The consolidated 2019–2020 relationship release is used instead of counting the overlapping 2019-only attachment again.
 - `data/clean.json`: normalized data, source metadata, national totals, and quality notes.
 - `data/validation.json`: extraction validation report and known source inconsistencies.
 
 Every atomic record includes `dataset`, Gregorian `year`, nonnegative integer `value`, its dimensions, and `source`, `sheet`, `row`, `column`. Spreadsheet coordinates are **one-based**. Age bands are lower-inclusive and upper-exclusive except the open-ended 65+ band. The files contain aggregated public statistics, not individual case records.
+
+The supplied files `3.2.2性侵害事件通報被害及嫌疑人概況_1150320.xlsx` and its `(1)` copy have the same SHA-256 hash. One copy is preserved as `data/raw/suspects-2015-2025.xlsx`. The extractor reads annual suspect gender totals from sheets `2015~2018`, `2019~2020`, and `歷年(2021~)`, locating the suspect columns by header. It excludes quarterly, half-year, and duplicate county-sheet totals. `data:fetch` preserves this pinned local source. The attachment URL may receive later ministry updates; the checked-in workbook and hash identify the version used here.
+
+Suspect percentages use the annual suspect total, independently of victim totals. The workbook has no suspect data before 2015. It has no Other category for 2015–2018, combines other gender identities and unknown gender as Other in 2019–2020, and separates Other from Unknown from 2021 onward. The UI preserves those categories and shows missing years explicitly. For 2025, male 7,664 + female 828 + other 0 + unknown 276 = 8,768 suspects.
 
 ### Interpretation and source discrepancies
 
@@ -80,12 +85,12 @@ GET /api/v1/data?year=2025&dataset=reports&city=臺北市
 GET /api/v1/data?year=2025&format=csv
 ```
 
-| Parameter | Values                                                |
-| --------- | ----------------------------------------------------- |
-| `year`    | Four-digit available year, 2008–2025 in this snapshot |
-| `dataset` | `demographics`, `relationships`, `victims`, `reports` |
-| `city`    | Exact source city name; valid only for city datasets  |
-| `format`  | `json` (default), `csv`                               |
+| Parameter | Values                                                            |
+| --------- | ----------------------------------------------------------------- |
+| `year`    | Four-digit available year, 2008–2025 in this snapshot             |
+| `dataset` | `demographics`, `relationships`, `victims`, `reports`, `suspects` |
+| `city`    | Exact source city name; valid only for city datasets              |
+| `format`  | `json` (default), `csv`                                           |
 
 Omitted filters select all records. Invalid values and unknown query parameters return HTTP 400. JSON contains `schemaVersion`, `count`, `records`, `sources`, and `qualityNotes`. Metadata lists coverage, source links, quality notes, and measure definitions. CSV uses UTF-8 with BOM, CRLF, quoted fields, and provenance columns; metadata and quality notes remain available through JSON. Responses use a one-hour public cache. No network calls to the ministry are made at runtime.
 

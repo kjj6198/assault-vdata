@@ -26,7 +26,7 @@ export function RegionsSection({ data }: { data: DashboardData }) {
     });
   return (
     <section id="regions" className={cn(pageWidth, storySection)}>
-      <SectionHeading number="04" eyebrow={t.regions.eyebrow} title={t.regions.title}>
+      <SectionHeading number="05" eyebrow={t.regions.eyebrow} title={t.regions.title}>
         {t.regions.intro}
       </SectionHeading>
       <div className="mb-5.5 flex flex-wrap items-start gap-x-6 gap-y-3 sm:items-center">

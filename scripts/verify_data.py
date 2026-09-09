@@ -1,7 +1,7 @@
 """Independent cell-level verification using only the Python standard library.
 Reads the XML inside XLSX/ODS directly, independently of the extraction libraries.
 """
-import hashlib, json, pathlib, re, xml.etree.ElementTree as ET, zipfile
+import hashlib, json, pathlib, posixpath, re, xml.etree.ElementTree as ET, zipfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 database = json.loads((ROOT/'data/clean.json').read_text())
 ODS = {'t': 'urn:oasis:names:tc:opendocument:xmlns:table:1.0', 'o': 'urn:oasis:names:tc:opendocument:xmlns:office:1.0'}
@@ -13,14 +13,19 @@ for source in database['sources']:
     values={}
     with zipfile.ZipFile(path) as archive:
         if path.suffix=='.xlsx':
-            root=ET.fromstring(archive.read('xl/worksheets/sheet1.xml'))
-            for c in root.findall('.//s:c',XLSX):
-                v=c.find('s:v',XLSX)
-                if v is None or c.attrib.get('t') in ['s','str']: continue
-                match=re.fullmatch(r'([A-Z]+)(\d+)',c.attrib['r'])
-                col=0
-                for char in match[1]: col=col*26+ord(char)-64
-                values[(int(match[2]),col)]=float(v.text)
+            relations=ET.fromstring(archive.read('xl/_rels/workbook.xml.rels'))
+            targets={r.attrib['Id']:posixpath.normpath(posixpath.join('xl',r.attrib['Target'])).lstrip('/') for r in relations}
+            workbook=ET.fromstring(archive.read('xl/workbook.xml'))
+            for sheet in workbook.findall('s:sheets/s:sheet',XLSX):
+                target=targets[sheet.attrib['{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id']]
+                root=ET.fromstring(archive.read(target))
+                for c in root.findall('.//s:c',XLSX):
+                    v=c.find('s:v',XLSX)
+                    if v is None or c.attrib.get('t') in ['s','str','e']: continue
+                    match=re.fullmatch(r'([A-Z]+)(\d+)',c.attrib['r'])
+                    col=0
+                    for char in match[1]: col=col*26+ord(char)-64
+                    values[(sheet.attrib['name'],int(match[2]),col)]=float(v.text)
         else:
             root=ET.fromstring(archive.read('content.xml'))
             table=root.find('.//t:table',ODS)
@@ -30,11 +35,11 @@ for source in database['sources']:
                     repeated=int(c.attrib.get('{'+ODS['t']+'}number-columns-repeated',1))
                     v=c.attrib.get('{'+ODS['o']+'}value')
                     if v is not None:
-                        for offset in range(min(repeated,40)): values[(row_number,col+offset)]=float(v)
+                        for offset in range(min(repeated,40)): values[(table.attrib['{'+ODS['t']+'}name'],row_number,col+offset)]=float(v)
                     col+=repeated
     cells[source['file']]=values
 for record in database['records']:
-    value=cells[record['source']][(record['row'],record['column'])]
+    value=cells[record['source']][(record['sheet'],record['row'],record['column'])]
     assert value==record['value'],record
-assert len(database['records'])==len({(r['source'],r['row'],r['column']) for r in database['records']})
+assert len(database['records'])==len({(r['source'],r['sheet'],r['row'],r['column']) for r in database['records']})
 print(f"Verified {len(database['records'])} unique records against original XML cells; all {len(database['sources'])} SHA-256 hashes match.")

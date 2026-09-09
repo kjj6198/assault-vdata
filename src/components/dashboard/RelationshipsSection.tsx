@@ -46,7 +46,7 @@ export function RelationshipsSection({ data }: { data: DashboardData }) {
       className="mt-4.5 scroll-mt-35 bg-surface-alt sm:mt-8 lg:scroll-mt-24"
     >
       <div className={cn(pageWidth, storySection, "pb-16.25")}>
-        <SectionHeading number="03" eyebrow={t.relationships.eyebrow} title={t.relationships.title}>
+        <SectionHeading number="04" eyebrow={t.relationships.eyebrow} title={t.relationships.title}>
           {t.relationships.intro}
         </SectionHeading>
         <div className="grid grid-cols-[minmax(0,1fr)] gap-8 sm:grid-cols-[minmax(240px,0.8fr)_minmax(0,1.7fr)] sm:gap-10 lg:gap-18.5">

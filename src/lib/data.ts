@@ -10,6 +10,7 @@ const origin = {
   column: count,
 };
 export const recordSchema = z.discriminatedUnion("dataset", [
+  z.object({ ...origin, dataset: z.literal("suspects"), gender: z.string() }),
   z.object({ ...origin, dataset: z.literal("demographics"), age: z.string(), gender: z.string() }),
   z.object({
     ...origin,
@@ -20,7 +21,13 @@ export const recordSchema = z.discriminatedUnion("dataset", [
   z.object({ ...origin, dataset: z.literal("victims"), city: z.string() }),
   z.object({ ...origin, dataset: z.literal("reports"), city: z.string() }),
 ]);
-export const datasetNames = ["demographics", "relationships", "victims", "reports"] as const;
+export const datasetNames = [
+  "demographics",
+  "relationships",
+  "victims",
+  "reports",
+  "suspects",
+] as const;
 export const sourceSchema = z.object({
   dataset: z.enum(datasetNames),
   file: z.string(),

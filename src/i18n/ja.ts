@@ -39,6 +39,7 @@ export const ja = {
     relationships: "両者の関係",
     regions: "県市別分布",
     sources: "データ出典",
+    suspects: "容疑者の性別",
     yearLabel: "統計年",
     previousYear: "前の年",
     nextYear: "次の年",
@@ -95,6 +96,23 @@ export const ja = {
       `${first}年から${last}年まで、通報システムに記録された被害者数はどのように変化したでしょうか。`,
     chartTitle: "年別被害者数",
     hint: "折れ線上の年を選ぶか、上の年セレクターを使ってください。",
+  },
+  suspects: {
+    eyebrow: "容疑者の性別 / Suspect gender",
+    title: "通報された容疑者の男女比は？",
+    intro:
+      "通報記録における容疑者の性別分布を人数で示します。容疑者数と被害者数は別々に集計しています。",
+    heading: (year: number) => `${year}年・容疑者の性別割合`,
+    total: (count: string) => `容疑者数 ${count}人`,
+    gender: "性別",
+    count: "人数",
+    percentage: "容疑者全体に占める割合",
+    denominator: "割合の分母は、その年の容疑者総数です。原表の「その他」と「不詳」も含みます。",
+    classificationNote:
+      "2015–2018年は「その他」の区分がありません。2019–2020年の「その他」には性別不詳を含み、2021年以降は別々に集計しています。未設定の区分はゼロで補いません。年をまたぐ比較では定義の違いにご注意ください。",
+    unavailable: (year: number) =>
+      `提供されたファイルには${year}年の容疑者データがありません。上の年度メニューで2015–2025年を選択してください。`,
+    download: "この年の容疑者の性別データをCSVでダウンロード",
   },
   demographics: {
     eyebrow: "年齢と性別 / Demographics",
@@ -229,8 +247,9 @@ export const ja = {
   sources: {
     heading: "データ出典",
     intro: (first: number, last: number) =>
-      `本プロジェクトは衛生福利部保護服務司の4つの公開統計を整理したもので、${first}年から${last}年を対象としています。`,
+      `本プロジェクトは衛生福利部の公開統計を整理したもので、${first}年から${last}年を対象としています。容疑者の性別データは2015–2025年を対象としています。`,
     dataset: {
+      suspects: "性暴力通報における被害者と容疑者の概況",
       relationships: "性暴力被害者の年齢と両者の関係のクロス集計",
       demographics: "性暴力被害者の年齢と性別のクロス集計",
       victims: "性暴力事件の県市別被害者数と比率",

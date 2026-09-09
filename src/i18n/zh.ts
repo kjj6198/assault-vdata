@@ -35,6 +35,7 @@ export const zh = {
     relationships: "兩造關係",
     regions: "縣市分布",
     sources: "資料來源",
+    suspects: "嫌疑人性別",
     yearLabel: "統計年度",
     previousYear: "上一年",
     nextYear: "下一年",
@@ -91,6 +92,22 @@ export const zh = {
       `從 ${first} 年到 ${last} 年，通報系統記錄下的受暴人數如何改變？`,
     chartTitle: "歷年受暴人數",
     hint: "點選折線上的年份，或使用上方年度選單。",
+  },
+  suspects: {
+    eyebrow: "嫌疑人性別 / Suspect gender",
+    title: "通報中的嫌疑人，男女各占多少？",
+    intro: "查看通報紀錄中嫌疑人的性別分布，統計單位為人。嫌疑人數與受暴人數分開計算。",
+    heading: (year: number) => `${year} 年・嫌疑人性別比例`,
+    total: (count: string) => `嫌疑人共 ${count} 人`,
+    gender: "性別",
+    count: "人數",
+    percentage: "占全部嫌疑人",
+    denominator: "各項比例以當年度全部嫌疑人數為分母，包含原表的其他與不詳。",
+    classificationNote:
+      "2015–2018 年未設「其他」；2019–2020 年「其他」包含性別不詳；2021 年起「其他」與「不詳」分開列示。未設的分類不補零，跨年比較請留意定義差異。",
+    unavailable: (year: number) =>
+      `提供的檔案未包含 ${year} 年嫌疑人資料。可查詢 2015–2025 年，請使用上方年度選單切換。`,
+    download: "下載本年度嫌疑人性別資料 CSV",
   },
   demographics: {
     eyebrow: "年齡與性別 / Demographics",
@@ -220,8 +237,9 @@ export const zh = {
   sources: {
     heading: "資料來源",
     intro: (first: number, last: number) =>
-      `本專題整理衛生福利部保護服務司的四份公開統計，涵蓋 ${first}—${last} 年。`,
+      `本專題整理衛生福利部的公開統計，涵蓋 ${first}–${last} 年；嫌疑人性別資料涵蓋 2015–2025 年。`,
     dataset: {
+      suspects: "性侵害事件通報被害及嫌疑人概況",
       relationships: "性侵害案件被害人年齡與兩造關係交叉統計",
       demographics: "性侵害案件被害人年齡與性別交叉統計",
       victims: "性侵害案件各縣市受暴人數及比率",

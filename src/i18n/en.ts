@@ -36,6 +36,7 @@ export const en = {
     relationships: "Relationships",
     regions: "Regions",
     sources: "Sources",
+    suspects: "Suspect gender",
     yearLabel: "Year",
     previousYear: "Previous year",
     nextYear: "Next year",
@@ -93,6 +94,24 @@ export const en = {
       `From ${first} to ${last}, how did the number of victims in the reporting system change?`,
     chartTitle: "Victims by year",
     hint: "Select a year on the line, or use the year selector above.",
+  },
+  suspects: {
+    eyebrow: "Suspect gender",
+    title: "What is the gender breakdown of reported suspects?",
+    intro:
+      "Gender distribution of suspects in reported cases, counted in people. Suspect and victim totals are calculated separately.",
+    heading: (year: number) => `${year} · Suspects by gender`,
+    total: (count: string) => `${count} suspects in total`,
+    gender: "Gender",
+    count: "People",
+    percentage: "Share of all suspects",
+    denominator:
+      "Each percentage uses all suspects in the selected year, including the published Other and Unknown categories.",
+    classificationNote:
+      "Other was not a category in 2015–2018. In 2019–2020, Other included unknown gender. From 2021, Other and Unknown are separate. Unpublished categories are not filled with zeros; definitions differ across years.",
+    unavailable: (year: number) =>
+      `The supplied workbook has no suspect data for ${year}. Select a year from 2015 to 2025 using the year menu above.`,
+    download: "Download suspect gender data for this year as CSV",
   },
   demographics: {
     eyebrow: "Demographics",
@@ -231,8 +250,9 @@ export const en = {
   sources: {
     heading: "Sources",
     intro: (first: number, last: number) =>
-      `This project compiles four public statistics from the Department of Protective Services, Ministry of Health and Welfare, covering ${first}—${last}.`,
+      `This project compiles public statistics from the Ministry of Health and Welfare, covering ${first}–${last}. Suspect gender data covers 2015–2025.`,
     dataset: {
+      suspects: "Victims and suspects in reported sexual assault cases",
       relationships: "Sexual assault victims by age and victim-offender relationship",
       demographics: "Sexual assault victims by age and gender",
       victims: "Sexual assault victims and rates by county and city",

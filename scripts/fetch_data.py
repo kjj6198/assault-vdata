@@ -37,4 +37,6 @@ def source_files(item):
 if __name__ == '__main__':
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
         files = [f for group in pool.map(source_files, SOURCES.items()) for f in group]
+    # Keep the user-supplied, pinned suspect workbook when refreshing the other sources.
+    files.extend(s for s in json.loads((ROOT / 'data/sources.json').read_text()) if s['dataset'] == 'suspects')
     (ROOT / 'data/sources.json').write_text(json.dumps(files, ensure_ascii=False, indent=2) + '\n')
