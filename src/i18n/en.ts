@@ -67,6 +67,9 @@ export const en = {
       allAges: "All ages",
       note: "Denominator: all victims, including other and unknown",
     },
+    suspects: {
+      label: "Suspects by gender",
+    },
     change: {
       label: "Compared with the previous year",
       lede: "Annual change in victims",

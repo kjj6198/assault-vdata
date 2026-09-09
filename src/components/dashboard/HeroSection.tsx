@@ -43,6 +43,11 @@ export function HeroSection({
     value: sum(demo.filter((r) => r.gender === key)),
     color: key === "女" ? INK : key === "男" ? GOLD : key === "其他" ? CORAL : GRAY,
   }));
+  const suspectRecords = records.filter((r) => r.dataset === "suspects");
+  const suspectGenders = ["男", "女", "其他", "不詳"].flatMap((key) => {
+    const record = suspectRecords.find((r) => r.gender === key);
+    return record ? [{ key, label: name("gender", key), value: record.value }] : [];
+  });
   const overallRelations = useMemo(() => rankRelationships(records, ALL), [records]);
   const populationByCity = new Map(data.populations.map((r) => [r.city, r.population]));
   const topRateCity = records
@@ -132,6 +137,7 @@ export function HeroSection({
             trend={trend}
             topCity={topRateCity}
             genders={genderTotals}
+            suspects={suspectGenders}
             minors={minors}
             relationships={overallRelations}
           />

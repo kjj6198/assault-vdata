@@ -65,6 +65,9 @@ export const zh = {
       allAges: "全部年齡",
       note: "以全部受暴人數為分母，含其他與不詳",
     },
+    suspects: {
+      label: "嫌疑人的性別比例",
+    },
     change: {
       label: "與前一年相比",
       lede: "受暴人數的年度變化",

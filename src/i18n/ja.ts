@@ -69,6 +69,9 @@ export const ja = {
       allAges: "全年齢",
       note: "被害者総数を分母とし、その他と不詳を含みます",
     },
+    suspects: {
+      label: "容疑者の性別の割合",
+    },
     change: {
       label: "前年との比較",
       lede: "被害者数の年間変化",

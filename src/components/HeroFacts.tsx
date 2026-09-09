@@ -19,6 +19,7 @@ type Props = {
   trend: { year: number; victims: number }[];
   topCity: { city: string; rate: number } | undefined;
   genders: { key: string; label: string; value: number }[];
+  suspects: { key: string; label: string; value: number }[];
   minors: number;
   relationships: { label: string; value: number }[];
 };
@@ -69,6 +70,51 @@ function FactCard({
   );
 }
 
+function GenderBreakdown({ genders, total }: Pick<Props, "genders" | "total">) {
+  const { t } = useI18n();
+  return (
+    <>
+      <div className="my-5 flex h-2.25 gap-0.5 overflow-hidden rounded-xs" aria-hidden="true">
+        {genders.map((row) => (
+          <i
+            key={row.key}
+            className="min-w-px data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
+            data-gender={row.key}
+            style={{ width: `${share(row.value, total)}%` }}
+          />
+        ))}
+      </div>
+      <dl className="grid grid-cols-2 gap-x-5 gap-y-6 [&_dd]:text-right [&_dd]:font-numeric [&_dd]:text-2xl [&_dd]:leading-[1.4] [&_dd]:tabular-nums [&_dd_small]:ml-0.5 [&_dd_small]:text-caption [&_dt]:pt-1 [&_dt]:text-label [&_dt]:whitespace-nowrap [&_dt_i]:mr-1.75 [&_dt_i]:inline-block [&_dt_i]:size-1.75 [&_dt_i]:rounded-full">
+        {genders.map((row) => (
+          <div
+            key={row.key}
+            className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-2 gap-y-1"
+          >
+            <dt>
+              <i
+                className="data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
+                data-gender={row.key}
+              />
+              {row.label}
+            </dt>
+            <dd>
+              <span className="block">
+                {row.value > 0 && share(row.value, total) < 0.1
+                  ? "<0.1"
+                  : fixed1(share(row.value, total))}
+                <small>%</small>
+              </span>
+              <span className="mt-1 block text-caption text-(--overview-muted)">
+                {formatNumber(row.value)} {t.unit.people}
+              </span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </>
+  );
+}
+
 export function HeroFacts({
   year,
   total,
@@ -77,12 +123,14 @@ export function HeroFacts({
   trend,
   topCity,
   genders,
+  suspects,
   minors,
   relationships,
 }: Props) {
   const { t, name } = useI18n();
   const reduced = useReducedMotionPreference();
   const minorShare = share(minors, total);
+  const suspectTotal = suspects.reduce((sum, row) => sum + row.value, 0);
   const maxVictims = Math.max(1, ...trend.map((row) => row.victims));
   const relationshipTotal = relationships.reduce((sum, row) => sum + row.value, 0);
   const leading = relationships[0];
@@ -127,43 +175,7 @@ export function HeroFacts({
           <p className="text-caption leading-[1.8] text-(--overview-muted)">
             {t.facts.gender.allAges}
           </p>
-          <div className="my-5 flex h-2.25 gap-0.5 overflow-hidden rounded-xs" aria-hidden="true">
-            {genders.map((row) => (
-              <i
-                key={row.key}
-                className="min-w-px data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
-                data-gender={row.key}
-                style={{ width: `${share(row.value, total)}%` }}
-              />
-            ))}
-          </div>
-          <dl className="grid grid-cols-2 gap-x-5 gap-y-6 [&_dd]:text-right [&_dd]:font-numeric [&_dd]:text-2xl [&_dd]:leading-[1.4] [&_dd]:tabular-nums [&_dd_small]:ml-0.5 [&_dd_small]:text-caption [&_dt]:pt-1 [&_dt]:text-label [&_dt]:whitespace-nowrap [&_dt_i]:mr-1.75 [&_dt_i]:inline-block [&_dt_i]:size-1.75 [&_dt_i]:rounded-full">
-            {genders.map((row) => (
-              <div
-                key={row.key}
-                className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-2 gap-y-1"
-              >
-                <dt>
-                  <i
-                    className="data-[gender=不詳]:bg-(--overview-unknown) data-[gender=其他]:bg-(--overview-other) data-[gender=女]:bg-(--overview-female) data-[gender=男]:bg-(--overview-accent)"
-                    data-gender={row.key}
-                  />
-                  {row.label}
-                </dt>
-                <dd>
-                  <span className="block">
-                    {row.value > 0 && share(row.value, total) < 0.1
-                      ? "<0.1"
-                      : fixed1(share(row.value, total))}
-                    <small>%</small>
-                  </span>
-                  <span className="mt-1 block text-caption text-(--overview-muted)">
-                    {formatNumber(row.value)} {t.unit.people}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <GenderBreakdown genders={genders} total={total} />
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
           * {t.facts.gender.note}
@@ -258,14 +270,9 @@ export function HeroFacts({
         </p>
       </FactCard>
 
-      <FactCard
-        number="05"
-        label={t.facts.relation.label}
-        href="#relationships"
-        className="col-span-full"
-      >
-        <div className="grid flex-1 grid-cols-1 gap-6 py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] sm:gap-8">
-          <div className="min-w-0 sm:border-r sm:border-(--overview-line) sm:pr-6">
+      <FactCard number="05" label={t.facts.relation.label} href="#relationships">
+        <div className="grid flex-1 grid-cols-1 gap-6 py-6">
+          <div className="min-w-0">
             <p className="text-caption leading-[1.8] text-(--overview-muted)">
               {t.facts.relation.lede}
             </p>
@@ -327,6 +334,26 @@ export function HeroFacts({
         </div>
         <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
           * {t.facts.relation.note}
+        </p>
+      </FactCard>
+      <FactCard number="06" label={t.facts.suspects.label} href="#suspects">
+        {suspects.length === 0 ? (
+          <div className="flex-1 py-6">
+            <p className="text-2xl font-bold">{t.noData}</p>
+            <p className="mt-3 text-caption leading-[1.8] text-(--overview-muted)">
+              {t.suspects.unavailable(year)}
+            </p>
+          </div>
+        ) : (
+          <div className="flex-1 py-6">
+            <p className="text-caption leading-[1.8] text-(--overview-muted)">
+              {t.suspects.total(formatNumber(suspectTotal))}
+            </p>
+            <GenderBreakdown genders={suspects} total={suspectTotal} />
+          </div>
+        )}
+        <p className="mt-auto min-h-12 border-t border-(--overview-line) py-4 text-xs leading-[1.8] text-pretty text-(--overview-muted)">
+          * {t.suspects.denominator}
         </p>
       </FactCard>
     </div>
